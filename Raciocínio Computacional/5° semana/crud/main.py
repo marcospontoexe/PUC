@@ -8,23 +8,28 @@ import os   #usado para limpar o prompt de comando
 
 
 while True:
-
+    # retorna um int relacionada à lista de entrada (menu principal)
     opcao = menuPrincipal(["Gerenciar estudantes", "Gerenciar professores", "Gerenciar disciplinas", "Gerenciar turmas", "Gerenciar matrículas", "Sair"])
-    limpar_prompt()
+    limpar_prompt() #limpa a tela
     
     if opcao == 1:
         escolha = "estudantes"
+        menuOp(escolha, ["Incluir", "Listar", "Atualizar", "Excluir", "Voltar ao menu principal"])  # menu de operação
     elif opcao == 2:
         escolha = "professores"
+        print("Em desenvolvimento!")
     elif opcao == 3:
         escolha = "disciplinas"
+        print("Em desenvolvimento!")
     elif opcao == 4:
         escolha = "turmas"
+        print("Em desenvolvimento!")
     elif opcao == 5:
         escolha = "matrículas"
+        print("Em desenvolvimento!")
     elif opcao == 6:
         cabeçalho("Saindo... Até logo!")
         break
 
-    menuOp(escolha, ["Incluir", "Listar", "Atualizar", "Excluir", "Voltar ao menu principal"])
+    #menuOp(escolha, ["Incluir", "Listar", "Atualizar", "Excluir", "Voltar ao menu principal"]) # menu de operação
     #limpar_prompt()

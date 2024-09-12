@@ -1,6 +1,11 @@
 
 
 def leiaInt(i):
+    """
+    Essa função pede para o usuário digitar um número inteiro, saindo da função apenas quando a condição for fatisfeita.
+    :param i: String usada para solicitar um valor ao usuário
+    :param temp: Int
+    """
     while True:
         try:
             while True:
@@ -20,7 +25,12 @@ def leiaInt(i):
 
 
 
-def leiaNome(n):
+def leiaString(n):
+    """
+    Essa função pede para o usuário digitar uma String, saindo da função apenas quando a condição for fatisfeita.
+    :param n: String usada para solicitar um valor ao usuário
+    :param temp: String
+    """
     while True:
         temp = input(n).strip()
         if temp == "" or temp.isalpha() == False:
