@@ -20,7 +20,6 @@ def incluir(op):
     :param op: String relacionada à opção que será inclusa no banco de dados
     """
     if op.upper().strip() == "ESTUDANTES":
-        #estudantes.append(leiaString("Digite o nome: "))
         dados["código"] = leiaInt("Digite o código do estudante: ")
         dados["nome"] = leiaString("Digite o nome do estudante: ")
         dados["cpf"] = str(leiaInt("Digite o CPF do estudante: "))
@@ -49,7 +48,22 @@ def atualizar(op):
     Essa função atualiza os valores do banco da dados
     :param op: String relacionada à opção que será atualizada
     """
-    print("Em desenvolvimento!")
+    if op.upper().strip() == "ESTUDANTES":
+        if len(estudantes) == 0: # o banco de dados estaja sem cadastros
+            print("Não há estudantes para atualizar!")
+        else:
+            atualiza = leiaInt("Digite o código do estudante a ser atualizado: ")
+            for i, aluno in enumerate(estudantes):  # percorre cada dicionário na lista
+                if aluno.get('código') == atualiza:
+                    estudantes.pop(i)  #apaga o item da posição iterada 
+                    dados["código"] = leiaInt("Digite o novo código do estudante: ")
+                    dados["nome"] = leiaString("Digite o novo nome do estudante: ")
+                    dados["cpf"] = str(leiaInt("Digite o novo CPF do estudante: "))
+                    estudantes.insert(i, dados) # insere o novo dicionária à lista
+                    print(f"Estudante com o código {atualiza} foi atualizado.")
+                    break   # sai do for
+            else:
+                print(f"Estudante com o código {atualiza} não foi encontrado.")
         
 def excluir(op):
     """
@@ -61,9 +75,13 @@ def excluir(op):
             print("Não há estudantes para excluir!")
         else:
             apagar = leiaInt("Digite o código do estudante a ser excluido: ")
-            for cod in estudantes: # percorre cada índice da lista
-                if cod[0][0] == apagar:
-                    estudantes.pop(cod)   #apaga o item da posição iterada
+            for i, aluno in enumerate(estudantes):  # percorre cada dicionário na lista
+                if aluno.get('código') == apagar: 
+                    estudantes.pop(i)  #apaga o item da posição iterada
+                    print(f"Estudante com o código {apagar} foi excluído.")
+                    break   # sai do for
+            else:
+                print(f"Estudante com o código {apagar} não foi encontrado.")
 
 def menuPrincipal(lista):
     """
