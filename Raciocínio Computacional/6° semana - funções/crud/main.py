@@ -4,7 +4,7 @@ from biblioteca.interface import *   #importa todos as funções do módulo inte
 from biblioteca.trat_erros import *
 import os   #usado para limpar o prompt de comando
 
-
+estudantes = []
 
 
 while True:
@@ -14,7 +14,7 @@ while True:
     
     if opcao == 1:
         escolha = "estudantes"
-        menuOp(escolha, ["Incluir", "Listar", "Atualizar", "Excluir", "Voltar ao menu principal"])  # menu de operação
+        menuOp(escolha, ["Incluir", "Listar", "Atualizar", "Excluir", "Voltar ao menu principal"], estudantes)  # menu de operação
     elif opcao == 2:
         escolha = "professores"
         print("Em desenvolvimento!")
