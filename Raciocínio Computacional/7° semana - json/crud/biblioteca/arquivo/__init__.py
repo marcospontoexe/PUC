@@ -1,5 +1,0 @@
-def abrirArquivo():
-
-
-def salvarArquivo():
-    
