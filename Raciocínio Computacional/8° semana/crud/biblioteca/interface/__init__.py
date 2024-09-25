@@ -38,13 +38,14 @@ def incluir(op):
         else:
             dados["nome"] = leiaString("Digite o nome do estudante: ")
             dados["cpf"] = str(leiaInt("Digite o CPF do estudante: "))
+            limpar_prompt()
             alunos.append(dados.copy()) 
             criarJson(alunos, "estudantes", diretorioDados)
             #limpar_prompt()
 
     elif op == "professores":
         dados["código"] = leiaInt("Digite o código do professor: ")
-        docentes = abrirJson("professor", diretorioDados)
+        docentes = abrirJson("professores", diretorioDados)
         #verifica se o código já existe
         if len(docentes) > 0:
             for i, profs in enumerate(docentes):  # percorre cada dicionário na lista
@@ -56,6 +57,7 @@ def incluir(op):
         else:
             dados["nome"] = leiaString("Digite o nome do professor: ")
             dados["cpf"] = str(leiaInt("Digite o CPF do professor: "))
+            limpar_prompt()
             docentes.append(dados.copy()) 
             criarJson(docentes, "professores", diretorioDados)
             #limpar_prompt()
@@ -80,32 +82,47 @@ def listar(op):
             print("Não há estudantes cadastrados!")
         else:
             print("Estudantes cadastrados:".center(50))
-            print("-"*50)
-            print(f"|CÓDIGO{'':^12}", end='|')
+            print("-"*58)
+            # print(f"|CÓDIGO{'':^12}", end='|')
+            print("|"+"CÓDIGO".center(12), end='|')
             print("NOME".center(30), end='|')
-            print(f"CPF{'':^12}|")
+            print("CPF".center(12)+"|")
+            # print(f"CPF{'':^12}|")
             
-            print("-"*50)
+            print("-"*58)
             # for e in alunos: # percorre cada índice da lista
             #     for k, v in e.items():  # percorre cada índice do dicionário
             #         print(f"{k:<7}: {v:->30}", end=' | ')
             #     print("") 
             
             for i, aluno in enumerate(alunos):  # percorre cada dicionário na lista
-                print(f"|{aluno.get('código'):<10}", end='|') 
-                print(f"{aluno.get('nome'):<30}", end='|')
-                print(f"{aluno.get('cpf'):<12}|")
+                print(f"|{aluno.get('código'):^12}", end='|') 
+                print(f" {aluno.get('nome'):-<29}", end='|')
+                print(f" {aluno.get('cpf'):<11}|")
 
     elif op == "professores":
         docentes = abrirJson("professores", diretorioDados)
         if len(docentes) == 0: # o banco de dados estaja sem cadastros
             print("Não há professores cadastrados!")
         else:
-            print("Professores cadastrados:")
-            for e in docentes: # percorre cada índice da lista
-                for k, v in e.items():  # percorre cada índice do dicionário
-                    print(f"{k:<7}: {v:->30}", end=' | ')
-                print("")
+            print("Professores cadastrados:".center(50))
+            print("-"*58)
+            # print(f"|CÓDIGO{'':^12}", end='|')
+            print("|"+"CÓDIGO".center(12), end='|')
+            print("NOME".center(30), end='|')
+            print("CPF".center(12)+"|")
+            # print(f"CPF{'':^12}|")
+            
+            print("-"*58)
+            # for e in alunos: # percorre cada índice da lista
+            #     for k, v in e.items():  # percorre cada índice do dicionário
+            #         print(f"{k:<7}: {v:->30}", end=' | ')
+            #     print("") 
+            
+            for i, prof in enumerate(docentes):  # percorre cada dicionário na lista
+                print(f"|{prof.get('código'):^12}", end='|') 
+                print(f" {prof.get('nome'):-<29}", end='|')
+                print(f" {prof.get('cpf'):<11}|")
 
     return None          
 
@@ -125,6 +142,7 @@ def atualizar(op):
             for i, aluno in enumerate(alunos):  # percorre cada dicionário na lista
                 if aluno.get('código') == atualiza:
                     alunos.pop(i)  #apaga o item da posição iterada 
+                    #limpar_prompt()
                     dados["código"] = leiaInt("Digite o novo código do estudante: ")
                     dados["nome"] = leiaString("Digite o novo nome do estudante: ")
                     dados["cpf"] = str(leiaInt("Digite o novo CPF do estudante: "))
@@ -134,6 +152,24 @@ def atualizar(op):
                     return None  # encerra a função
             else:
                 print(f"Estudante com o código {atualiza} não foi encontrado.")
+    elif op == "professores":
+        docentes = abrirJson("professores", diretorioDados)
+        if len(docentes) == 0: # o banco de dados estaja sem cadastros
+            print("Não há professores para atualizar!")
+        else:
+            atualiza = leiaInt("Digite o código do professor a ser atualizado: ")
+            for i, prof in enumerate(docentes):  # percorre cada dicionário na lista
+                if prof.get('código') == atualiza:
+                    docentes.pop(i)  #apaga o item da posição iterada 
+                    dados["código"] = leiaInt("Digite o novo código do professor: ")
+                    dados["nome"] = leiaString("Digite o novo nome do professor: ")
+                    dados["cpf"] = str(leiaInt("Digite o novo CPF do professor: "))
+                    docentes.insert(i, dados) # insere o novo dicionária à lista
+                    criarJson(docentes, "professores", diretorioDados)
+                    print(f"Professor com o código {atualiza} foi atualizado.")
+                    return None  # encerra a função
+            else:
+                print(f"Professor com o código {atualiza} não foi encontrado.")
     return None
     
 def excluir(op):
@@ -156,6 +192,20 @@ def excluir(op):
                     return None   # encerra a função
             else:
                 print(f"Estudante com o código {apagar} não foi encontrado.")
+    elif op == "professores":
+        docentes = abrirJson("professores", diretorioDados)
+        if len(docentes) == 0: # o banco de dados estaja sem cadastros
+            print("Não há professores para excluir!")
+        else:
+            apagar = leiaInt("Digite o código do professor a ser excluido: ")
+            for i, prof in enumerate(docentes):  # percorre cada dicionário na lista
+                if prof.get('código') == apagar: 
+                    docentes.pop(i)  #apaga o item da posição iterada
+                    criarJson(docentes, "professores", diretorioDados)
+                    print(f"Professor com o código {apagar} foi excluído.")
+                    return None   # encerra a função
+            else:
+                print(f"Professor com o código {apagar} não foi encontrado.")
     return None
 
 def menuPrincipal(lista):
