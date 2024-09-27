@@ -5,7 +5,6 @@ import platform
 
 diretorioDados = "banco de dados"
 
-
 def cabeçalho(txt):
     """
     Essa função imprime na tela um cabeçalho
@@ -34,7 +33,7 @@ def incluir(op):
                     dadosExistente = True
                     break 
         if dadosExistente:
-            print(f"Código {dados["código"]} já existe!")
+            print(f"Código {dados['código']} já existe!")
         else:
             dados["nome"] = leiaString("Digite o nome do estudante: ")
             dados["cpf"] = str(leiaInt("Digite o CPF do estudante: "))
@@ -53,7 +52,7 @@ def incluir(op):
                     dadosExistente = True
                     break 
         if dadosExistente:
-            print(f"Código {dados["código"]} já existe!")
+            print(f"Código {dados['código']} já existe!")
         else:
             dados["nome"] = leiaString("Digite o nome do professor: ")
             dados["cpf"] = str(leiaInt("Digite o CPF do professor: "))
@@ -62,9 +61,57 @@ def incluir(op):
             criarJson(docentes, "professores", diretorioDados)
             #limpar_prompt()
         
-    # elif op == "disciplinas":
+    elif op == "disciplinas":
+        dados["código"] = leiaInt("Digite o código da disciplina: ")
+        disciplina = abrirJson("disciplinas", diretorioDados)
+        #verifica se o código já existe
+        if len(disciplina) > 0:
+            for i, materia in enumerate(disciplina):  # percorre cada dicionário na lista
+                if materia.get('código') == dados["código"]:
+                    dadosExistente = True
+                    break 
+        if dadosExistente:
+            print(f"Código {dados['código']} já existe!")
+        else:
+            dados["nome"] = leiaString("Digite o nome da disciplina: ")
+            limpar_prompt()
+            disciplina.append(dados.copy()) 
+            criarJson(disciplina, "disciplinas", diretorioDados)
         
-    # elif op == "turmas":
+    elif op == "turmas":
+        dados["código"] = leiaInt("Digite o código da turma: ")
+        lista = abrirJson("turmas", diretorioDados)
+        #verifica se o código já existe
+        if len(lista) > 0:
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                if dic.get('código') == dados["código"]:
+                    dadosExistente = True
+                    break 
+        if dadosExistente:
+            print(f"Código {dados['código']} já existe!")
+        else:
+            dados["codProf"] = leiaInt("Digite o código do professor: ")
+            dados["codDisciplina"] = leiaInt("Digite o código da disciplina: ")
+            limpar_prompt()
+            lista.append(dados.copy()) 
+            criarJson(lista, "turmas", diretorioDados)
+
+    elif op == "matrículas":
+        dados["código"] = leiaInt("Digite o código da matrícula: ")
+        lista = abrirJson("matrículas", diretorioDados)
+        #verifica se o código já existe
+        if len(lista) > 0:
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                if dic.get('código') == dados["código"]:
+                    dadosExistente = True
+                    break 
+        if dadosExistente:
+            print(f"Código {dados['código']} já existe!")
+        else:
+            dados["codEstudante"] = leiaInt("Digite o código do estudante: ")
+            limpar_prompt()
+            lista.append(dados.copy()) 
+            criarJson(lista, "matrículas", diretorioDados)
     
     # else op == "matrículas":
        
@@ -81,7 +128,9 @@ def listar(op):
         if len(alunos) == 0: # o banco de dados estaja sem cadastros
             print("Não há estudantes cadastrados!")
         else:
-            print("Estudantes cadastrados:".center(50))
+            # print("\033[7;35;44mEstudantes cadastrados:\033[m".center(58))
+            txt = "\033[7;35;44mEstudantes cadastrados:\033[m"
+            print(f"{txt:^58}")
             print("-"*58)
             # print(f"|CÓDIGO{'':^12}", end='|')
             print("|"+"CÓDIGO".center(12), end='|')
@@ -105,26 +154,71 @@ def listar(op):
         if len(docentes) == 0: # o banco de dados estaja sem cadastros
             print("Não há professores cadastrados!")
         else:
-            print("Professores cadastrados:".center(50))
+            print("\033[7;35;44mProfessores cadastrados:\033[m".center(58))
             print("-"*58)
             # print(f"|CÓDIGO{'':^12}", end='|')
             print("|"+"CÓDIGO".center(12), end='|')
             print("NOME".center(30), end='|')
             print("CPF".center(12)+"|")
             # print(f"CPF{'':^12}|")
-            
             print("-"*58)
-            # for e in alunos: # percorre cada índice da lista
-            #     for k, v in e.items():  # percorre cada índice do dicionário
-            #         print(f"{k:<7}: {v:->30}", end=' | ')
-            #     print("") 
             
             for i, prof in enumerate(docentes):  # percorre cada dicionário na lista
                 print(f"|{prof.get('código'):^12}", end='|') 
                 print(f" {prof.get('nome'):-<29}", end='|')
                 print(f" {prof.get('cpf'):<11}|")
+    
+    elif op == "disciplinas":
+        disciplina = abrirJson("disciplinas", diretorioDados)
+        if len(disciplina) == 0: # o banco de dados estaja sem cadastros
+            print("Não há disciplinas cadastradas!")
+        else:
+            print("\033[7;35;44mDisciplinas cadastradas:\033[m".center(45))
+            print("-"*45)
+            # print(f"|CÓDIGO{'':^12}", end='|')
+            print("|"+"CÓDIGO".center(12), end='|')
+            print("NOME".center(30)+"|")
+            print("-"*45)
+            
+            for i, materia in enumerate(disciplina):  # percorre cada dicionário na lista
+                print(f"|{materia.get('código'):^12}", end='|') 
+                print(f" {materia.get('nome'):<29}|")
 
-    return None          
+    elif op == "turmas":
+        lista = abrirJson("turmas", diretorioDados)
+        if len(lista) == 0: # o banco de dados estaja sem cadastros
+            print("Não há turmas cadastradas!")
+        else:
+            print("\033[7;35;44mTurmas cadastradas:\033[m".center(64))
+            print("-"*64)
+            # print(f"|CÓDIGO{'':^12}", end='|')
+            print("|"+"CÓDIGO DA TURMA".center(17), end='|')
+            print("CÓDIGO DO PROFESSOR".center(21), end='|') 
+            print("CÓDIGO DA DISCIPLINA".center(22)+"|")
+            print("-"*64)
+
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                print(f"|{dic.get('código'):^17}", end='|') 
+                print(f"{dic.get('codProf'):^21}", end='|')
+                print(f"{dic.get('codDisciplina'):^22}|")
+    
+    elif op == "matrículas":
+        lista = abrirJson("matrículas", diretorioDados)
+        if len(lista) == 0: # o banco de dados estaja sem cadastros
+            print("Não há matrículas cadastradas!")
+        else:
+            print("\033[7;35;44mMatrículas cadastradas:\033[m".center(41))
+            print("-"*41)
+            # print(f"|CÓDIGO{'':^12}", end='|')
+            print("|"+"CÓDIGO DA TURMA".center(17), end='|')
+            print("CÓDIGO DA ESTUDANTE".center(21)+"|")
+            print("-"*41)
+
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                print(f"|{dic.get('código'):^17}", end='|') 
+                print(f"{dic.get('codEstudante'):^21}|")
+               
+    return None     
 
 def atualizar(op):
     """
@@ -152,6 +246,7 @@ def atualizar(op):
                     return None  # encerra a função
             else:
                 print(f"Estudante com o código {atualiza} não foi encontrado.")
+
     elif op == "professores":
         docentes = abrirJson("professores", diretorioDados)
         if len(docentes) == 0: # o banco de dados estaja sem cadastros
@@ -170,8 +265,64 @@ def atualizar(op):
                     return None  # encerra a função
             else:
                 print(f"Professor com o código {atualiza} não foi encontrado.")
-    return None
+
+    elif op == "disciplinas":
+        disciplina = abrirJson("disciplinas", diretorioDados)
+        if len(disciplina) == 0: # o banco de dados estaja sem cadastros
+            print("Não há disciplinas para atualizar!")
+        else:
+            atualiza = leiaInt("Digite o código da disciplina a ser atualizada: ")
+            for i, materia in enumerate(disciplina):  # percorre cada dicionário na lista
+                if materia.get('código') == atualiza:
+                    disciplina.pop(i)  #apaga o item da posição iterada 
+                    dados["código"] = leiaInt("Digite o novo código da disciplina: ")
+                    dados["nome"] = leiaString("Digite o novo nome da disciplina: ")
+                    disciplina.insert(i, dados) # insere o novo dicionária à lista
+                    criarJson(disciplina, "disciplinas", diretorioDados)
+                    print(f"Disciplina com o código {atualiza} foi atualizado.")
+                    return None  # encerra a função
+            else:
+                print(f"Disciplina com o código {atualiza} não foi encontrada.")
+        
+    elif op == "turmas":
+        lista = abrirJson("turmas", diretorioDados)
+        if len(lista) == 0: # o banco de dados estaja sem cadastros
+            print("Não há turmas para atualizar!")
+        else:
+            atualiza = leiaInt("Digite o código da turma a ser atualizada: ")
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                if dic.get('código') == atualiza:
+                    lista.pop(i)  #apaga o item da posição iterada 
+                    dados["código"] = leiaInt("Digite o novo código da turma: ")
+                    dados["codProf"] = leiaInt("Digite o novo código do professor: ")
+                    dados["codDisciplina"] = leiaInt("Digite o novo código da disciplina: ")
+                    lista.insert(i, dados) # insere o novo dicionária à lista
+                    criarJson(lista, "turmas", diretorioDados)
+                    print(f"Turma com o código {atualiza} foi atualizado.")
+                    return None  # encerra a função
+            else:
+                print(f"Turma com o código {atualiza} não foi encontrada.")
     
+    elif op == "matrículas":
+        lista = abrirJson("matrículas", diretorioDados)
+        if len(lista) == 0: # o banco de dados estaja sem cadastros
+            print("Não há matrículas para atualizar!")
+        else:
+            atualiza = leiaInt("Digite o código da matrícula a ser atualizada: ")
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                if dic.get('código') == atualiza:
+                    lista.pop(i)  #apaga o item da posição iterada 
+                    dados["código"] = leiaInt("Digite o novo código da matrícula: ")
+                    dados["codEstudante"] = leiaInt("Digite o novo código do estudante: ")
+                    lista.insert(i, dados) # insere o novo dicionária à lista
+                    criarJson(lista, "matrículas", diretorioDados)
+                    print(f"Matrícula com o código {atualiza} foi atualizado.")
+                    return None  # encerra a função
+            else:
+                print(f"Matrícula com o código {atualiza} não foi encontrada.")
+    return None
+
+
 def excluir(op):
     """
     Essa função exclui os valores do banco da dados
@@ -192,6 +343,7 @@ def excluir(op):
                     return None   # encerra a função
             else:
                 print(f"Estudante com o código {apagar} não foi encontrado.")
+
     elif op == "professores":
         docentes = abrirJson("professores", diretorioDados)
         if len(docentes) == 0: # o banco de dados estaja sem cadastros
@@ -206,6 +358,50 @@ def excluir(op):
                     return None   # encerra a função
             else:
                 print(f"Professor com o código {apagar} não foi encontrado.")
+    
+    elif op == "disciplinas":
+        disciplina = abrirJson("disciplinas", diretorioDados)
+        if len(disciplina) == 0: # o banco de dados estaja sem cadastros
+            print("Não há disciplinas para excluir!")
+        else:
+            apagar = leiaInt("Digite o código da disciplina a ser excluida: ")
+            for i, materia in enumerate(disciplina):  # percorre cada dicionário na lista
+                if materia.get('código') == apagar: 
+                    disciplina.pop(i)  #apaga o item da posição iterada
+                    criarJson(disciplina, "disciplinas", diretorioDados)
+                    print(f"Disciplina com o código {apagar} foi excluída.")
+                    return None   # encerra a função
+            else:
+                print(f"Professor com o código {apagar} não foi encontrado.")
+    elif op == "turmas":
+        lista = abrirJson("turmas", diretorioDados)
+        if len(lista) == 0: # o banco de dados estaja sem cadastros
+            print("Não há turmas para excluir!")
+        else:
+            apagar = leiaInt("Digite o código da turma a ser excluida: ")
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                if dic.get('código') == apagar: 
+                    lista.pop(i)  #apaga o item da posição iterada
+                    criarJson(lista, "turmas", diretorioDados)
+                    print(f"Turma com o código {apagar} foi excluída.")
+                    return None   # encerra a função
+            else:
+                print(f"Turma com o código {apagar} não foi encontrado.")
+
+    elif op == "matrículas":
+        lista = abrirJson("matrículas", diretorioDados)
+        if len(lista) == 0: # o banco de dados estaja sem cadastros
+            print("Não há matrículas para excluir!")
+        else:
+            apagar = leiaInt("Digite o código da matrícula a ser excluida: ")
+            for i, dic in enumerate(lista):  # percorre cada dicionário na lista
+                if dic.get('código') == apagar: 
+                    lista.pop(i)  #apaga o item da posição iterada
+                    criarJson(lista, "matrículas", diretorioDados)
+                    print(f"Matrícula com o código {apagar} foi excluída.")
+                    return None   # encerra a função
+            else:
+                print(f"Matrícula com o código {apagar} não foi encontrado.")
     return None
 
 def menuPrincipal(lista):
