@@ -6,7 +6,7 @@ package financiamento;
 
 public class Financiamento {
     /**
-     * A classe Financiamento() calcula o financiamento imobiliários
+     * A classe Financiamento() calcula o financiamento imobiliário
      *
      */
 
@@ -17,24 +17,31 @@ public class Financiamento {
 
     //MÉTODOS
     public Financiamento(double valor, int prazo, double taxa){
-        this.valorImovel = valor;
-        this.prazoFinanciamento = prazo;
-        this.taxaJurosAnual = taxa;
+        /**
+         * Este é o método construtor que inicia um objeto.
+         * @param Double com o valor do imóvel.
+         * @param Int com o prazo od financiamento em anos.
+         * @param Double com a taxa de jurus anual.
+         */
+        setValorImovel(valor);
+        setPrazoFinanciamento(prazo);
+        setTaxaJurosAnual(taxa);
     }
 
     public double calcularPagamentoMensal(){
         /**
-         * Este método calcula o pagamento mensal do financiamento.
-         * @param Double com o valor do imóvel.
-         * @param Int com o prazo od financiamento em anos.
-         * @param Double com a taxa de jurus anual.
+         * Este método calcula o pagamento mensal do financiamento imobiliário.
          * @return Double com o valor do pagamento mensal do financiamento.
          */
-        // Pagamento mensal = (valor do imóvel / (prazo do financiamento em anos * 12)) * (1 + (taxa anual / 12))
+        return (getValorImovel()/(getPrazoFinanciamento()*12))*(1+(getTaxaJurosAnual()/12));
     }
 
     public double calcularTotalPago(){
-        //Total do pagamento = pagamento mensal * prazo do financiamento em anos * 12'
+        /**
+         * Este método calcula o valor total pago do financiamento imobiliário.
+         * @return Double com o valor total pago do financiamento imobiliário.
+         */
+        return this.calcularPagamentoMensal()*getPrazoFinanciamento()*12;
     }
 
     public double getValorImovel() {
