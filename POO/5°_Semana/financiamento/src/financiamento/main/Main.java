@@ -1,7 +1,9 @@
 package financiamento.main;
 
+import financiamento.modelo.Apartamento;
 import financiamento.modelo.Casa;
 import financiamento.modelo.Financiamento;
+import financiamento.modelo.Terreno;
 import financiamento.util.InterfaceUsuario;
 import java.util.ArrayList;
 import java.util.Scanner;   // para manipular entrada de dados
@@ -27,15 +29,15 @@ public class Main {
             listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual));
             System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", listaFinanciamentos.get(contador).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", listaFinanciamentos.get(contador).calcularTotalPago());
-            valorTotalImoveis += valorImovel;
-            valorTotalFinanciamentos += listaFinanciamentos.get(contador).calcularTotalPago();
+            //valorTotalImoveis += valorImovel;
+            //valorTotalFinanciamentos += listaFinanciamentos.get(contador).calcularTotalPago();
 
             System.out.printf("Simulando o financiamento do %d° apartamento...\n", contador+1);
-            listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual));
+            listaFinanciamentos.add(new Apartamento(valorImovel, prazoAnos, juroAnual));
             System.out.printf("Pagamento mensal do apartamento financiada: %.2f R$\n", listaFinanciamentos.get(contador+1).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento da apartamento: %.2f R$\n\n", listaFinanciamentos.get(contador+1).calcularTotalPago());
-            valorTotalImoveis += valorImovel;
-            valorTotalFinanciamentos += listaFinanciamentos.get(contador+1).calcularTotalPago();
+            //valorTotalImoveis += valorImovel;
+            //valorTotalFinanciamentos += listaFinanciamentos.get(contador+1).calcularTotalPago();
             try {
                 // Delay de 2 segundos (2000 milissegundos)
                 Thread.sleep(2000);
@@ -44,12 +46,12 @@ public class Main {
                 System.out.println("A pausa foi interrompida!");
             }
 
-            System.out.printf("Simulando o financiamento do %d° terreno...\n", contador+2);
-            listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual));
+            System.out.printf("Simulando o financiamento do %d° terreno...\n", contador+1);
+            listaFinanciamentos.add(new Terreno(valorImovel, prazoAnos, juroAnual));
             System.out.printf("Pagamento mensal do terreno financiado: %.2f R$\n", listaFinanciamentos.get(contador+2).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento do terreno: %.2f R$\n\n", listaFinanciamentos.get(contador+2).calcularTotalPago());
-            valorTotalImoveis += valorImovel;
-            valorTotalFinanciamentos += listaFinanciamentos.get(contador+2).calcularTotalPago();
+            //valorTotalImoveis += valorImovel;
+            //valorTotalFinanciamentos += listaFinanciamentos.get(contador+2).calcularTotalPago();
             try {
                 // Delay de 2 segundos (2000 milissegundos)
                 Thread.sleep(2000);
@@ -84,6 +86,12 @@ public class Main {
                 contador += 1;
             }
         }
+
+        for (Financiamento f : listaFinanciamentos) { // imprime elemento por elemento
+            valorTotalImoveis += f.getValorImovel();
+            valorTotalFinanciamentos += f.calcularTotalPago();
+        }
+
         System.out.printf("O valor total pago nos imóveis é: %.2f R$\n", valorTotalImoveis);
         System.out.printf("O valor total pago nos financiamentos é: %.2f R$\n", valorTotalFinanciamentos);
     }

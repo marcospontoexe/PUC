@@ -62,7 +62,7 @@ public class Financiamento {
     }
 
     public double getTaxaJurosAnual() {
-        return this.taxaJurosAnual;
+        return (this.taxaJurosAnual)/100;
     }
 
     protected void setTaxaJurosAnual(double JurosAnual) {

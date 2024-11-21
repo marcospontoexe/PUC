@@ -11,6 +11,8 @@ public class Apartamento extends Financiamento{
          * @param Double com a taxa de jurus anual.
          */
         super(valor, prazo, taxa);      // chama o construtor da classe mãe
+        setTaxamensal();
+        setPrazomensal();
     }
 
     public double calcularPagamentoMensal(){
@@ -18,7 +20,9 @@ public class Apartamento extends Financiamento{
          * Este método calcula o pagamento mensal do financiamento imobiliário de apartamento.
          * @return Double com o valor do pagamento mensal do financiamento do apartamento.
          */
-        return (super.getValorImovel() * getTaxamensal() * Math.pow(1+getTaxamensal(), getPrazomensal())) / Math.pow(1+getTaxamensal(), getPrazomensal()) - 1;
+        return (super.getValorImovel() * getTaxamensal() * Math.pow(1+getTaxamensal(), getPrazomensal())) / Math.pow(1+getTaxamensal(), getPrazomensal())-1;
+        //double valor = (super.getValorImovel() * (1 + getTaxamensal() * getTaxamensal()) ^ (getPrazomensal()) / ((1 + getPrazomensal()) ^ getPrazomensal() - 1);
+        //return valor;
     }
 
     public double getTaxamensal() {
@@ -27,7 +31,6 @@ public class Apartamento extends Financiamento{
 
     private void setTaxamensal() {
         this.taxamensal = super.getTaxaJurosAnual()/12;         // 'taxamensal' recebe o taxa anual da classe mãe dividido por 12 meses
-
     }
 
     public int getPrazomensal() {
