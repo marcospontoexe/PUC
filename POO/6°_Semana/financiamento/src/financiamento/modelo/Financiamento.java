@@ -4,7 +4,7 @@ package financiamento.modelo;
  * @author Marcos Daniel Santana
  */
 
-public class Financiamento {
+public abstract class Financiamento {
     /**
      * A classe Financiamento() calcula o financiamento imobiliário
      *
@@ -29,15 +29,9 @@ public class Financiamento {
         setTaxaJurosAnual(taxa);
     }
 
-    public double calcularPagamentoMensal(){
-        /**
-         * Este método calcula o pagamento mensal do financiamento imobiliário.
-         * @return Double com o valor do pagamento mensal do financiamento.
-         */
-        return (getValorImovel()/(getPrazoFinanciamento()*12))*(1+(getTaxaJurosAnual()/12));
-    }
+    public abstract double calcularPagamentoMensal();
 
-    public double calcularTotalPago(){
+    public final double calcularTotalPago(){    // método final, não pode ser sobrescrito nas classes filhas
         /**
          * Este método calcula o valor total pago do financiamento imobiliário.
          * @return Double com o valor total pago do financiamento imobiliário.

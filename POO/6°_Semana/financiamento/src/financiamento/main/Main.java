@@ -14,8 +14,9 @@ import java.util.Locale;
  */
 public class Main {
     public static void main(String[] args) {
-        int contador = 0, prazoAnos = 0;
-        double valorTotalImoveis = 0, valorTotalFinanciamentos = 0, valorImovel = 0, juroAnual =0;
+        int contador = 0, prazoAnos = 0, andares = 0, garagem = 0;
+        double valorTotalImoveis = 0, valorTotalFinanciamentos = 0, valorImovel = 0, juroAnual =0, tamanhoTerreno = 0, areaConstruida = 0;
+        String tipoTerreno = "";
         Locale.setDefault(new Locale("pt", "BR"));     //define as configurações regionais deste código para pt-BR (português do Brasil), troca o . pela ,
         Scanner teclado = new Scanner(System.in);
         ArrayList<Financiamento> listaFinanciamentos = new ArrayList<Financiamento>();  // instancia um arraylist de objetos da classe "Financiamento"
@@ -26,32 +27,29 @@ public class Main {
             valorImovel = pessoa.getValorImovel();
             prazoAnos = pessoa.getPrazoFinanciamentoAnos();
             juroAnual = pessoa.getTaxaJurusAnual();
-            listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual));
+            tamanhoTerreno = pessoa.getTamanhoTerreno();
+            areaConstruida = pessoa.getAreaConstruida();
+            listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual, tamanhoTerreno, areaConstruida));
             System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", listaFinanciamentos.get(contador).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", listaFinanciamentos.get(contador).calcularTotalPago());
-            //valorTotalImoveis += valorImovel;
-            //valorTotalFinanciamentos += listaFinanciamentos.get(contador).calcularTotalPago();
 
             System.out.printf("Simulando o financiamento do %d° apartamento...\n", contador+1);
-            listaFinanciamentos.add(new Apartamento(valorImovel, prazoAnos, juroAnual));
+            try {
+                // Delay de 2 segundos (2000 milissegundos)
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // Tratar a exceção caso a thread seja interrompida
+                System.out.println("A pausa foi interrompida!");
+            }
+            andares = pessoa.getAndares();
+            garagem = pessoa.getVagasGaragem();
+            listaFinanciamentos.add(new Apartamento(valorImovel, prazoAnos, juroAnual, garagem, andares));
             System.out.printf("Pagamento mensal do apartamento financiada: %.2f R$\n", listaFinanciamentos.get(contador+1).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento da apartamento: %.2f R$\n\n", listaFinanciamentos.get(contador+1).calcularTotalPago());
-            //valorTotalImoveis += valorImovel;
-            //valorTotalFinanciamentos += listaFinanciamentos.get(contador+1).calcularTotalPago();
-            try {
-                // Delay de 2 segundos (2000 milissegundos)
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                // Tratar a exceção caso a thread seja interrompida
-                System.out.println("A pausa foi interrompida!");
-            }
+            System.out.printf("dados do apartamento:\n %s \n", listaFinanciamentos.get(contador+1).toString());
+
 
             System.out.printf("Simulando o financiamento do %d° terreno...\n", contador+1);
-            listaFinanciamentos.add(new Terreno(valorImovel, prazoAnos, juroAnual));
-            System.out.printf("Pagamento mensal do terreno financiado: %.2f R$\n", listaFinanciamentos.get(contador+2).calcularPagamentoMensal());
-            System.out.printf("Pagamento total do financiamento do terreno: %.2f R$\n\n", listaFinanciamentos.get(contador+2).calcularTotalPago());
-            //valorTotalImoveis += valorImovel;
-            //valorTotalFinanciamentos += listaFinanciamentos.get(contador+2).calcularTotalPago();
             try {
                 // Delay de 2 segundos (2000 milissegundos)
                 Thread.sleep(2000);
@@ -59,6 +57,10 @@ public class Main {
                 // Tratar a exceção caso a thread seja interrompida
                 System.out.println("A pausa foi interrompida!");
             }
+            tipoTerreno = pessoa.getTipoTerreno();
+            listaFinanciamentos.add(new Terreno(valorImovel, prazoAnos, juroAnual, tipoTerreno));
+            System.out.printf("Pagamento mensal do terreno financiado: %.2f R$\n", listaFinanciamentos.get(contador+2).calcularPagamentoMensal());
+            System.out.printf("Pagamento total do financiamento do terreno: %.2f R$\n\n", listaFinanciamentos.get(contador+2).calcularTotalPago());
 
             System.out.println("Deseja continuar? (S/N):");
             String resposta = teclado.nextLine();              //recebe uma string de teclado
