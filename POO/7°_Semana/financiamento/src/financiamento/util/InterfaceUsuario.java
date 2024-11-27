@@ -2,6 +2,9 @@ package financiamento.util;
 import javax.lang.model.type.NullType;
 import java.util.Locale;
 import java.util.Scanner;   // para manipular entrada de dados
+//Para exibir um número com vírgula no lugar de ponto como separador decimal
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class InterfaceUsuario {
     /**
@@ -9,12 +12,15 @@ public class InterfaceUsuario {
      * @author Marcos Daniel Santana
      */
     static Scanner teclado = new Scanner(System.in);    //Cria um objeto estático para a classe "InterfaceUsuario()". "teclado" é o mesmo para todos os objetos da classe "InterfaceUsuario()"
-    //Scanner teclado;
+    // Configura o formato para usar vírgula como separador decimal
+    DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+    DecimalFormat formatador = new DecimalFormat("#,##0.00", simbolos);
     //MÉTODOS
 
     public InterfaceUsuario(){
         Locale.setDefault(new Locale("pt", "BR"));     //define as configurações regionais deste código para pt-BR (português do Brasil), troca o . pela ,
-        //this.teclado = new Scanner(System.in);
+        simbolos.setDecimalSeparator(',');
+        simbolos.setGroupingSeparator('.'); // Opcional: usa ponto como separador de milhares
     }
 
     public double getValorImovel(){
@@ -25,23 +31,29 @@ public class InterfaceUsuario {
         double valor = -1; // caso não seja possível capturar um valor do usuário, o método retorna -1, indicando erro
         System.out.println("Digite o valor do imóvel financiado :");
         while (true) {
-            if(teclado.hasNextDouble()){  // Verifica se o valor digitado é um double
-                valor = teclado.nextDouble();
+            try {
+                String entrada = teclado.next();    // lê a entrada do usuário como uma string, independente do tipo.
+                entrada = entrada.replace(',', '.');   // Substitui a vírgula pelo ponto, para suportar o separador decimal padrão do Java
+                valor = Double.parseDouble(entrada); // Tenta converter a string para double, caso não consiga lança uma exeção
+
                 if (valor > 50000 && valor <= 1000000) {    // Verifica se o valor está entre cinquenta mil e um milhão de reais
                     return valor;
-                }
-                else if(valor > 1000000){
+                } else if (valor > 1000000) {
                     System.out.println("Esse sistema não financia imóvel a partir de 1 milhão de reais!");
-                }
-                else if(valor < 50000){
+                } else if (valor < 50000) {
                     System.out.println("O valor digitado deve ser maior que cinquenta mil reais!");
-                }
-                else{
+                } else {
                     System.out.println("O valor digitado está incorreto!");
                 }
-            }else{
-                System.out.println("Valor incorreto!. Digite um valor numérico (R$) usando vírgula: ");
-                teclado.next(); // Limpa a entrada inválida
+            }
+            catch (NumberFormatException e){
+                // Captura exceções inesperadas, exibe uma mensagem de erro e permite nova tentativa
+                System.out.println("Entrada inválida! Por favor, digite um valor numérico válido (use vírgula como separador decimal).");
+                System.out.println("Erro: " + e.getMessage());
+            }
+            finally {
+                String valorFormatado = formatador.format(valor);
+                System.out.printf("Valor do imóvel: %s RS.\n", valorFormatado);
             }
         }
     }
@@ -54,8 +66,10 @@ public class InterfaceUsuario {
         int valor = -1;     // caso não seja possível capturar um valor do usuário, o método retorna -1, indicando erro
         System.out.println("Digite o prazo do financiamento em anos:");
         while (true) {
-            if(teclado.hasNextInt()){  // Verifica se o valor digitado é um tipo int
-                valor = teclado.nextInt();
+            try{
+                String entrada = teclado.next(); // Lê a entrada do usuário como string
+                valor = Integer.parseInt(entrada); // tenta converter a string para um número inteiro
+
                 if (valor >= 5 && valor <= 35) {    // Verifica se o período está entre 5 e 35 anos
                     return valor;
                 }
@@ -69,9 +83,11 @@ public class InterfaceUsuario {
                     System.out.println("O valor digitado está incorreto!");
                 }
             }
-            else{
-                System.out.println("Valor incorreto!. Digite um valor numérico inteiro: ");
-                teclado.next(); // Limpa a entrada inválida
+            catch (NumberFormatException e) {
+                System.out.println("Valor incorreto! Digite um valor numérico inteiro:");
+            }
+            finally {
+                System.out.printf("Prazo de %d anos.\n", valor);
             }
         }
     }
@@ -84,8 +100,11 @@ public class InterfaceUsuario {
         double valor = -1;      // caso não seja possível capturar um valor do usuário, o método retorna -1, indicando erro
         System.out.println("Digite a taxa de juros anual:");
         while (true) {
-            if(teclado.hasNextDouble()){  // Verifica se o valor digitado é um double maior que zero
-                valor = teclado.nextDouble();
+            try {
+                String entrada = teclado.next();    // lê a entrada do usuário como uma string, independente do tipo.
+                entrada = entrada.replace(',', '.');   // Substitui a vírgula pelo ponto, para suportar o separador decimal padrão do Java
+                valor = Double.parseDouble(entrada); // Tenta converter a string para double, caso não consiga lança uma exeção
+
                 if (valor >= 2 && valor <= 100) {    // Verifica se a taxa de jurus anual está entre 2% e 100%
                     return valor;
                 }
@@ -98,9 +117,15 @@ public class InterfaceUsuario {
                 else {
                     System.out.println("O valor digitado está incorreto!");
                 }
-            }else{
-                System.out.println("Valor incorreto!. Digite um valor numérico usando vírgula: ");
-                teclado.next(); // Limpa a entrada inválida
+            }
+            catch (NumberFormatException e){
+                // Captura exceções inesperadas, exibe uma mensagem de erro e permite nova tentativa
+                System.out.println("Entrada inválida! Por favor, digite um valor numérico válido (use vírgula como separador decimal).");
+                System.out.println("Erro: " + e.getMessage());
+            }
+            finally {
+                String valorFormatado = formatador.format(valor);
+                System.out.printf("Taxa anual: %s %%.\n", valorFormatado);
             }
         }
     }
@@ -113,8 +138,10 @@ public class InterfaceUsuario {
         int valor = -1;     // caso não seja possível capturar um valor do usuário, o método retorna -1, indicando erro
         System.out.println("Digite a quantidade vagas de garagem:");
         while (true) {
-            if(teclado.hasNextInt()){  // Verifica se o valor digitado é um tipo int
-                valor = teclado.nextInt();
+            try{
+                String entrada = teclado.next(); // Lê a entrada do usuário como string
+                valor = Integer.parseInt(entrada); // tenta converter a string para um número inteiro
+
                 if (valor >= 0 && valor <= 10) {    // Verifica se a quantidade de garagens está entre 0 e 10
                     return valor;
                 }
@@ -128,9 +155,11 @@ public class InterfaceUsuario {
                     System.out.println("O valor digitado está incorreto!");
                 }
             }
-            else{
-                System.out.println("Valor incorreto!. Digite um valor numérico inteiro: ");
-                teclado.next(); // Limpa a entrada inválida
+            catch (NumberFormatException e) {
+                System.out.println("Valor incorreto! Digite um valor numérico inteiro:");
+            }
+            finally {
+                System.out.printf("Vagas de garagem: %d.\n", valor);
             }
         }
     }
@@ -144,8 +173,10 @@ public class InterfaceUsuario {
         System.out.println("Digite a quantidade de andares:");
 
         while (true) {
-            if(teclado.hasNextInt()){  // Verifica se o valor digitado é um tipo int
-                valor = teclado.nextInt();
+            try {
+                String entrada = teclado.next(); // Lê a entrada do usuário como string
+                valor = Integer.parseInt(entrada); // tenta converter a string para um número inteiro
+
                 if (valor > 0 && valor <= 5) {    // Verifica se a quantidade de andares está entre 1 e 5
                     return valor;
                 }
@@ -162,9 +193,11 @@ public class InterfaceUsuario {
                     System.out.println("O valor digitado está incorreto!");
                 }
             }
-            else{
-                System.out.println("Valor incorreto!. Digite um valor numérico inteiro: ");
-                teclado.next(); // Limpa a entrada inválida
+            catch (NumberFormatException e) {
+                System.out.println("Valor incorreto! Digite um valor numérico inteiro:");
+            }
+            finally {
+                System.out.printf("Quantidade de andares: %d.\n", valor);
             }
         }
     }
@@ -177,8 +210,11 @@ public class InterfaceUsuario {
         double valor = -1;      // caso não seja possível capturar um valor do usuário, o método retorna -1, indicando erro
         System.out.println("Digite a área construída em metros:");
         while (true) {
-            if(teclado.hasNextDouble()){  // Verifica se o valor digitado é um double maior que zero
-                valor = teclado.nextDouble();
+            try {
+                String entrada = teclado.next();    // lê a entrada do usuário como uma string, independente do tipo.
+                entrada = entrada.replace(',', '.');   // Substitui a vírgula pelo ponto, para suportar o separador decimal padrão do Java
+                valor = Double.parseDouble(entrada); // Tenta converter a string para double, caso não consiga lança uma exeção
+
                 if (valor >= 30 && valor <= 5000) {    // Verifica se a área construída está entre 30 e 5 mil metros quadrado
                     return valor;
                 }
@@ -191,9 +227,15 @@ public class InterfaceUsuario {
                 else {
                     System.out.println("O valor digitado está incorreto!");
                 }
-            }else{
-                System.out.println("Valor incorreto!. Digite um valor numérico usando vírgula: ");
-                teclado.next(); // Limpa a entrada inválida
+            }
+            catch (NumberFormatException e){
+                // Captura exceções inesperadas, exibe uma mensagem de erro e permite nova tentativa
+                System.out.println("Entrada inválida! Por favor, digite um valor numérico válido (use vírgula como separador decimal).");
+                System.out.println("Erro: " + e.getMessage());
+            }
+            finally {
+                String valorFormatado = formatador.format(valor);
+                System.out.printf("Área construida: %s m².\n", valorFormatado);
             }
         }
     }
@@ -206,8 +248,11 @@ public class InterfaceUsuario {
         double valor = -1;      // caso não seja possível capturar um valor do usuário, o método retorna -1, indicando erro
         System.out.println("Digite o tamanho da área do terreno em metros:");
         while (true) {
-            if(teclado.hasNextDouble()){  // Verifica se o valor digitado é um double maior que zero
-                valor = teclado.nextDouble();
+            try{
+                String entrada = teclado.next();    // lê a entrada do usuário como uma string, independente do tipo.
+                entrada = entrada.replace(',', '.');   // Substitui a vírgula pelo ponto, para suportar o separador decimal padrão do Java
+                valor = Double.parseDouble(entrada); // Tenta converter a string para double, caso não consiga lança uma exeção
+
                 if (valor >= 40 && valor <= 96800) {    // Verifica se a área construída está entre 40 e 96800 metros quadrado
                     return valor;
                 }
@@ -220,48 +265,61 @@ public class InterfaceUsuario {
                 else {
                     System.out.println("O valor digitado está incorreto!");
                 }
-            }else{
-                System.out.println("Valor incorreto!. Digite um valor numérico usando vírgula: ");
-                teclado.next(); // Limpa a entrada inválida
+            }
+            catch (NumberFormatException e){
+                // Captura exceções inesperadas, exibe uma mensagem de erro e permite nova tentativa
+                System.out.println("Entrada inválida! Por favor, digite um valor numérico válido (use vírgula como separador decimal).");
+                System.out.println("Erro: " + e.getMessage());
+            }
+            finally {
+                String valorFormatado = formatador.format(valor);
+                System.out.printf("Tamanho do terreno: %s m².\n", valorFormatado);
             }
         }
     }
 
-    public String getTipoTerreno(){
+    public String getTipoTerreno() {
         /**
          * Este método pede ao usuário para que digite o tipo do terreno.
          * @return String com o valor digitado pelo usuário, caso o valor retornado seja NULL não foi possível capturar os dados fornecidos pelo usuário.
          */
-        String valor = null;      // caso não seja possível capturar um valor do usuário, o método retorna um valor nulo, indicando erro
+        String terreno = null; // caso não seja possível capturar um valor do usuário, o método retorna um valor nulo, indicando erro
         System.out.println("Digite o tipo do terreno (residencial ou comercial):");
-        valor = teclado.nextLine();
-        while(valor.isEmpty()) {  // garante que a string não esteja vazia
-            System.out.println("Você não digitou nada! Digite residencial ou comercial:");
-            valor = teclado.nextLine();
-        }
-        while(!(valor.matches("[a-zA-Z]+"))){ //garante que seja digitado apenas letras
-            System.out.println("Digite apenas letras:");
-            valor = teclado.nextLine();
-        }
-        valor = valor.replaceAll("\\s+", "").toUpperCase();// Remove espaços em branco e converte para maiúsculas
-        while(valor.charAt(0) != 'R' && valor.charAt(0) != 'C'){ // garante que o usuário digite a resposta correta
-            System.out.println("Valor incorreto! Digite residencial ou comercial:");
-            valor = teclado.nextLine();
-            valor = valor.replaceAll("\\s+", "").toUpperCase();
-            while(valor.isEmpty() || !(valor.matches("[a-zA-Z]+"))) {
-                System.out.println("Valor incorreto! Digite residencial ou comercial:");
+        String valor = teclado.nextLine();
+        while (true) {
+            try {
                 valor = teclado.nextLine();
+
+                // Garante que a entrada não esteja vazia
+                if (valor.isEmpty()) {
+                    throw new IllegalArgumentException("Você não digitou nada! Digite residencial ou comercial.");
+                }
+
+                // Garante que sejam digitadas apenas letras
+                if (!valor.matches("[a-zA-Z\\s]+")) { // Permite letras e espaços
+                    throw new IllegalArgumentException("Digite apenas letras.");
+                }
+
+                // Remove espaços em branco e converte para maiúsculas
                 valor = valor.replaceAll("\\s+", "").toUpperCase();
+
+                // Garante que o valor seja "RESIDENCIAL" ou "COMERCIAL"
+                if (valor.charAt(0) != 'R' && valor.charAt(0) != 'C') {
+                    throw new IllegalArgumentException("Valor incorreto! Digite residencial ou comercial.");
+                }
+
+                // Retorna o tipo do terreno correspondente
+                terreno = (valor.charAt(0) == 'R') ? "residencial" : "comercial";
+                return terreno;
+
             }
-        }
-        if(valor.charAt(0) == 'R'){
-            return "residencial";
-        }
-        else if(valor.charAt(0) == 'C'){
-            return "comercial";
-        }
-        else{
-            return null;
+            catch (IllegalArgumentException e) {
+                // Exibe a mensagem de erro para o usuário
+                System.out.println(e.getMessage());
+            }
+            finally {
+                System.out.printf("Tipo do terreno: %s.\n", terreno);
+            }
         }
     }
 }

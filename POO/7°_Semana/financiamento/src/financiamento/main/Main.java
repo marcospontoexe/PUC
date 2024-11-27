@@ -14,7 +14,7 @@ import java.util.Locale;
  */
 public class Main {
     public static void main(String[] args) {
-        int contador = 0, prazoAnos = 0, andares = 0, garagem = 0;
+        int contador = 0, indice = 0, prazoAnos = 0, andares = 0, garagem = 0;
         double valorTotalImoveis = 0, valorTotalFinanciamentos = 0, valorImovel = 0, juroAnual =0, tamanhoTerreno = 0, areaConstruida = 0;
         String tipoTerreno = "";
         Locale.setDefault(new Locale("pt", "BR"));     //define as configurações regionais deste código para pt-BR (português do Brasil), troca o . pela ,
@@ -30,8 +30,9 @@ public class Main {
             tamanhoTerreno = pessoa.getTamanhoTerreno();
             areaConstruida = pessoa.getAreaConstruida();
             listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual, tamanhoTerreno, areaConstruida));
-            System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", listaFinanciamentos.get(contador).calcularPagamentoMensal());
-            System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", listaFinanciamentos.get(contador).calcularTotalPago());
+            System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
+            System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
+            indice += 1;
 
             System.out.printf("Simulando o financiamento do %d° apartamento...\n", contador+1);
             try {
@@ -40,14 +41,15 @@ public class Main {
             } catch (InterruptedException e) {
                 // Tratar a exceção caso a thread seja interrompida
                 System.out.println("A pausa foi interrompida!");
+                System.out.println("Erro: " + e.getMessage());
             }
             andares = pessoa.getAndares();
             garagem = pessoa.getVagasGaragem();
             listaFinanciamentos.add(new Apartamento(valorImovel, prazoAnos, juroAnual, garagem, andares));
-            System.out.printf("Pagamento mensal do apartamento financiada: %.2f R$\n", listaFinanciamentos.get(contador+1).calcularPagamentoMensal());
-            System.out.printf("Pagamento total do financiamento da apartamento: %.2f R$\n\n", listaFinanciamentos.get(contador+1).calcularTotalPago());
-            System.out.printf("dados do apartamento:\n %s \n", listaFinanciamentos.get(contador+1).toString());
-
+            System.out.printf("Pagamento mensal do apartamento financiada: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
+            System.out.printf("Pagamento total do financiamento da apartamento: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
+            System.out.printf("dados do apartamento:\n %s \n", listaFinanciamentos.get(indice).toString());
+            indice += 1;
 
             System.out.printf("Simulando o financiamento do %d° terreno...\n", contador+1);
             try {
@@ -56,11 +58,13 @@ public class Main {
             } catch (InterruptedException e) {
                 // Tratar a exceção caso a thread seja interrompida
                 System.out.println("A pausa foi interrompida!");
+                System.out.println("Erro: " + e.getMessage());
             }
             tipoTerreno = pessoa.getTipoTerreno();
             listaFinanciamentos.add(new Terreno(valorImovel, prazoAnos, juroAnual, tipoTerreno));
-            System.out.printf("Pagamento mensal do terreno financiado: %.2f R$\n", listaFinanciamentos.get(contador+2).calcularPagamentoMensal());
-            System.out.printf("Pagamento total do financiamento do terreno: %.2f R$\n\n", listaFinanciamentos.get(contador+2).calcularTotalPago());
+            System.out.printf("Pagamento mensal do terreno financiado: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
+            System.out.printf("Pagamento total do financiamento do terreno: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
+            indice += 1;
 
             System.out.println("Deseja continuar? (S/N):");
             String resposta = teclado.nextLine();              //recebe uma string de teclado
