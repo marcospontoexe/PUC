@@ -1,7 +1,14 @@
 package financiamento.modelo;
 
+//Para exibir um número com vírgula no lugar de ponto como separador decimal
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 public final class Terreno extends Financiamento {      // classe final, não pode gerar classes filhas
     private String TipoTerreno;
+    private String valorFormatado;
+    DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+    DecimalFormat formatador = new DecimalFormat("#,##0.00", simbolos);
 
     public Terreno(double valor, int prazo, double taxa, String terreno){
         /**
@@ -12,6 +19,8 @@ public final class Terreno extends Financiamento {      // classe final, não po
          */
         super(valor, prazo, taxa);
         setTipoTerreno(terreno);
+        simbolos.setDecimalSeparator(',');
+        simbolos.setGroupingSeparator('.'); // Opcional: usa ponto como separador de milhares
     }
 
     @Override
@@ -29,5 +38,21 @@ public final class Terreno extends Financiamento {      // classe final, não po
 
     private void setTipoTerreno(String tipoTerreno) {
         this.TipoTerreno = tipoTerreno;
+    }
+
+    //método especial
+    @Override
+    public String toString() {  // retorna uma string com o estado dos atributos
+        StringBuilder sb = new StringBuilder();
+        sb.append("Dados do terreno:" + "\n");
+        valorFormatado = formatador.format(this.getValorImovel());
+        sb.append(String.format("Valor: %s R$.\n", valorFormatado));
+        sb.append(String.format("Prazo: %d anos.\n", this.getPrazoFinanciamento() ));
+        valorFormatado = formatador.format(this.getTaxaJurosAnual()*100);
+        sb.append(String.format("Taxa de jurus anual: %s %%.\n", valorFormatado));
+        sb.append(String.format("Tipo do terreno: %s.\n", this.getTipoTerreno()));
+
+
+        return sb.toString();
     }
 }

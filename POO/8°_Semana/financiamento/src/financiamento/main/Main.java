@@ -8,6 +8,9 @@ import financiamento.util.InterfaceUsuario;
 import java.util.ArrayList;
 import java.util.Scanner;   // para manipular entrada de dados
 import java.util.Locale;
+//Para exibir um número com vírgula no lugar de ponto como separador decimal
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 /**
  * @author Marcos Daniel Santana
@@ -16,9 +19,14 @@ public class Main {
     public static void main(String[] args) {
         int contador = 0, indice = 0, prazoAnos = 0, andares = 0, garagem = 0;
         double valorTotalImoveis = 0, valorTotalFinanciamentos = 0, valorImovel = 0, juroAnual =0, tamanhoTerreno = 0, areaConstruida = 0;
-        String tipoTerreno = "";
+        String tipoTerreno = "", valorFormatado="";
         Locale.setDefault(new Locale("pt", "BR"));     //define as configurações regionais deste código para pt-BR (português do Brasil), troca o . pela ,
         Scanner teclado = new Scanner(System.in);
+
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator(',');
+        simbolos.setGroupingSeparator('.'); // Opcional: usa ponto como separador de milhares
+        DecimalFormat formatador = new DecimalFormat("#,##0.00", simbolos);
         ArrayList<Financiamento> listaFinanciamentos = new ArrayList<Financiamento>();  // instancia um arraylist de objetos da classe "Financiamento"
         InterfaceUsuario pessoa = new InterfaceUsuario();
 
@@ -32,6 +40,7 @@ public class Main {
             listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual, tamanhoTerreno, areaConstruida));
             System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
+            System.out.println(listaFinanciamentos.get(indice).toString());
             indice += 1;
 
             System.out.printf("Simulando o financiamento do %d° apartamento...\n", contador+1);
@@ -48,7 +57,7 @@ public class Main {
             listaFinanciamentos.add(new Apartamento(valorImovel, prazoAnos, juroAnual, garagem, andares));
             System.out.printf("Pagamento mensal do apartamento financiada: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento da apartamento: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
-            System.out.printf("dados do apartamento:\n %s \n", listaFinanciamentos.get(indice).toString());
+            System.out.println(listaFinanciamentos.get(indice).toString());
             indice += 1;
 
             System.out.printf("Simulando o financiamento do %d° terreno...\n", contador+1);
@@ -64,6 +73,7 @@ public class Main {
             listaFinanciamentos.add(new Terreno(valorImovel, prazoAnos, juroAnual, tipoTerreno));
             System.out.printf("Pagamento mensal do terreno financiado: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
             System.out.printf("Pagamento total do financiamento do terreno: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
+            System.out.println(listaFinanciamentos.get(indice).toString());
             indice += 1;
 
             System.out.println("Deseja continuar? (S/N):");
@@ -97,8 +107,9 @@ public class Main {
             valorTotalImoveis += f.getValorImovel();
             valorTotalFinanciamentos += f.calcularTotalPago();
         }
-
-        System.out.printf("O valor total pago nos imóveis é: %.2f R$\n", valorTotalImoveis);
-        System.out.printf("O valor total pago nos financiamentos é: %.2f R$\n", valorTotalFinanciamentos);
+        valorFormatado = formatador.format(valorTotalImoveis);
+        System.out.printf("O valor total pago nos imóveis é: %s R$\n", valorFormatado);
+        valorFormatado = formatador.format(valorTotalFinanciamentos);
+        System.out.printf("O valor total pago nos financiamentos é: %s R$\n", valorFormatado);
     }
 }
