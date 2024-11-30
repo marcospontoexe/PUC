@@ -1,22 +1,30 @@
 package financiamento.util;
 import javax.lang.model.type.NullType;
+import java.io.FileReader;
 import java.util.Locale;
 import java.util.Scanner;   // para manipular entrada de dados
 //Para exibir um número com vírgula no lugar de ponto como separador decimal
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
+import java.io.FileWriter; //para manipular arquivos
+//exeções
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class InterfaceUsuario {
     /**
      * Esta classe é responsável por lidar com a entrada de dados do usuário
      * @author Marcos Daniel Santana
      */
+    static FileWriter arquivo = null;   // objeto para escrita de arquivo
+    static FileReader leitor = null;   // objeto para leitura de arquivo
     static Scanner teclado = new Scanner(System.in);    //Cria um objeto estático para a classe "InterfaceUsuario()". "teclado" é o mesmo para todos os objetos da classe "InterfaceUsuario()"
     // Configura o formato para usar vírgula como separador decimal
     DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
     DecimalFormat formatador = new DecimalFormat("#,##0.00", simbolos);
-    //MÉTODOS
 
+    //MÉTODOS
     public InterfaceUsuario(){
         Locale.setDefault(new Locale("pt", "BR"));     //define as configurações regionais deste código para pt-BR (português do Brasil), troca o . pela ,
         simbolos.setDecimalSeparator(',');
@@ -322,4 +330,47 @@ public class InterfaceUsuario {
             }
         }
     }
+
+    public void gravarDados(String nomeArquivo, String texto){
+        /**
+         * Este método tenta abrir um artquivo .txt, caso não exista, cria um arquivo .txt para gravar uma string fornecida.
+         * @param String nome do arqivo .txt.
+         * @param String com o valor a ser gravado.
+         */
+        //tenta abrir um artquivo .txt, caso não exista, cria um arquivo .txt
+        try{
+            arquivo = new FileWriter(nomeArquivo, true);  // tenta abrir no modo escrita o arquivo na pasta local
+            arquivo.write(texto);        //escreve a string 'texto' no 'arquivo'
+            arquivo.close();        //fecha o arquivo
+        }
+        catch (FileNotFoundException e){
+            System.out.println("O arquivo não foi encontrado.");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void lerDados(String nomeArquivo){
+        /**
+         * Este método tenta abrir um artquivo .txt para leitura de dados.
+         * @param String nome do arqivo .txt
+         */
+        int caractere = 0;    //inteiro que recebe o valor ASCII do arquivo lido
+        //tenta abrir um artquivo .txt
+        try{
+            leitor = new FileReader(nomeArquivo);  // tenta abrir no modo leitura o arquivo na pasta local
+            while ((caractere = leitor.read()) != -1){   // lê caractere por caractere convertido para o padrão ASCII, quando receber -1 significa and of file
+                System.out.print((char)caractere);
+            }
+            leitor.close();        //fecha o arquivo
+        }
+        catch (FileNotFoundException e){
+            System.out.println("O arquivo não foi encontrado.");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }
