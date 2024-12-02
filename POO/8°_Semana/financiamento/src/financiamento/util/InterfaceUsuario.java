@@ -1,16 +1,17 @@
 package financiamento.util;
+import financiamento.modelo.Financiamento;
+
 import javax.lang.model.type.NullType;
-import java.io.FileReader;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;   // para manipular entrada de dados
 //Para exibir um número com vírgula no lugar de ponto como separador decimal
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-import java.io.FileWriter; //para manipular arquivos
 //exeções
-import java.io.FileNotFoundException;
-import java.io.IOException;
+
 
 public class InterfaceUsuario {
     /**
@@ -19,6 +20,8 @@ public class InterfaceUsuario {
      */
     static FileWriter arquivo = null;   // objeto para escrita de arquivo
     static FileReader leitor = null;   // objeto para leitura de arquivo
+    static ObjectOutputStream ObjetoGravado = null;     //Objeto para gravar um objeto serializavel
+    static ObjectInputStream Objetolido = null;     //Objeto para ler um objeto serializavel
     static Scanner teclado = new Scanner(System.in);    //Cria um objeto estático para a classe "InterfaceUsuario()". "teclado" é o mesmo para todos os objetos da classe "InterfaceUsuario()"
     // Configura o formato para usar vírgula como separador decimal
     DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
@@ -337,10 +340,12 @@ public class InterfaceUsuario {
          * @param String nome do arqivo .txt.
          * @param String com o valor a ser gravado.
          */
+        System.out.printf("Gravando dados no arquivo %s.\n", nomeArquivo);
         //tenta abrir um artquivo .txt, caso não exista, cria um arquivo .txt
         try{
             arquivo = new FileWriter(nomeArquivo, true);  // tenta abrir no modo escrita o arquivo na pasta local
             arquivo.write(texto);        //escreve a string 'texto' no 'arquivo'
+            arquivo.flush();          //limpa o buffer
             arquivo.close();        //fecha o arquivo
         }
         catch (FileNotFoundException e){
@@ -353,7 +358,7 @@ public class InterfaceUsuario {
 
     public void lerDados(String nomeArquivo){
         /**
-         * Este método tenta abrir um artquivo .txt para leitura de dados.
+         * Este método tenta abrir um objeto.
          * @param String nome do arqivo .txt
          */
         int caractere = 0;    //inteiro que recebe o valor ASCII do arquivo lido
@@ -372,5 +377,51 @@ public class InterfaceUsuario {
             e.printStackTrace();
         }
     }
+
+    public void gravarObjeto(String nomeArquivo, ArrayList classe){
+        /**
+         * Este método tenta gravar um objeto.
+         * @param String nome do arqivo que gravará um objeto.
+         * @param ArrayList com os objetos a serem gravados.
+         */
+        try{
+            System.out.printf("Gravando dados no arquivo %s.\n", nomeArquivo);
+            ObjetoGravado = new ObjectOutputStream(new FileOutputStream(nomeArquivo));  // Instancia o objeto 'ObjetoGravado' e cria um arquivo para salvar o objeto recebido
+            ObjetoGravado.writeObject(classe);    // salvar o objeto recebido para dentro do arquivo 'nomeArquivo'
+            ObjetoGravado.flush();  //limpa o buffer
+            ObjetoGravado.close(); //fecha o obeto 'ObjetoGravado'
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void lerObjeto(String nomeArquivo){
+        /**
+         * Este método tenta ler um objeto pertecente a determinada classe .
+         * @param String com o nome do arqivo que gravará um objeto.
+         */
+        try {
+            Objetolido = new ObjectInputStream(new FileInputStream(nomeArquivo));  // Instancia o objeto 'Objetolido' para abrir o objeto serializado recebido
+            ArrayList<Financiamento> listaLida = (ArrayList<Financiamento>) Objetolido.readObject();
+            System.out.printf("Lista de financiamentos lida do arquivo: %s\n", nomeArquivo);
+            for (Financiamento f : listaLida) {
+                System.out.println(f);
+            }
+            Objetolido.close(); //fecha o obeto 'ObjetoGravado'
+        }
+        catch (EOFException e){ // quando chega ao final do arquivo
+            System.out.println("Sucesso ao ler o objeto salvo!");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e){
+            System.out.println("A classe não foi encontrada!");
+        }
+
+    }
+
 
 }

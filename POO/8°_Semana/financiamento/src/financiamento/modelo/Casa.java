@@ -2,12 +2,13 @@ package financiamento.modelo;
 
 import financiamento.util.AumentoMaiorDoQueJurosException;
 //Para exibir um número com vírgula no lugar de ponto como separador decimal
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
 import java.sql.SQLOutput;
 
-public class Casa extends Financiamento {
+public class Casa extends Financiamento implements Serializable {
     //Atributos
     private double tamanhoAreaConstruida, tamanhoTerreno;
     private String valorFormatado;

@@ -1,44 +1,44 @@
 Dados do 1° financiamneto:
 Dados da casa:
 Valor: 500.000,00 R$.
-Prazo: 10 anos.
+Prazo: 30 anos.
 Taxa de jurus anual: 10,00 %.
-Tamanho do terreno: 50,00 m²
-Área construida: 50,00 m²
+Tamanho do terreno: 80,00 m²
+Área construida: 100,00 m²
 
 Dados do apartamento:
 Valor: 500.000,00 R$.
-Prazo: 10 anos.
+Prazo: 30 anos.
 Taxa de jurus anual: 10,00 %.
 Vagas de garagem: 2.
-Quantidade de andares: 2.
+Quantidade de andares: 1.
 
 Dados do terreno:
 Valor: 500.000,00 R$.
-Prazo: 10 anos.
+Prazo: 30 anos.
 Taxa de jurus anual: 10,00 %.
 Tipo do terreno: comercial.
 ----------------------------------------------------------------------------
 Dados do 2° financiamneto:
 Dados da casa:
-Valor: 450.000,00 R$.
-Prazo: 30 anos.
+Valor: 100.000,00 R$.
+Prazo: 35 anos.
 Taxa de jurus anual: 8,00 %.
-Tamanho do terreno: 60,00 m²
-Área construida: 70,00 m²
+Tamanho do terreno: 50,00 m²
+Área construida: 50,00 m²
 
 Dados do apartamento:
-Valor: 450.000,00 R$.
-Prazo: 30 anos.
+Valor: 100.000,00 R$.
+Prazo: 35 anos.
 Taxa de jurus anual: 8,00 %.
-Vagas de garagem: 1.
-Quantidade de andares: 1.
+Vagas de garagem: 3.
+Quantidade de andares: 3.
 
 Dados do terreno:
-Valor: 450.000,00 R$.
-Prazo: 30 anos.
+Valor: 100.000,00 R$.
+Prazo: 35 anos.
 Taxa de jurus anual: 8,00 %.
 Tipo do terreno: residencial.
 ----------------------------------------------------------------------------
-O valor total pago nos imóveis é: 2.850.000,00 R$
-O valor total pago nos financiamentos é: 3.520.163,33 R$
+O valor total pago nos imóveis é: 1.800.000,00 R$
+O valor total pago nos financiamentos é: 3.005.816,67 R$

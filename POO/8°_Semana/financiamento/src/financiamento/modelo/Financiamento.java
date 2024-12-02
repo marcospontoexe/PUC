@@ -1,10 +1,12 @@
 package financiamento.modelo;
 
+import java.io.Serializable;
+
 /**
  * @author Marcos Daniel Santana
  */
 
-public abstract class Financiamento {
+public abstract class Financiamento implements Serializable {
     /**
      * A classe Financiamento() calcula o financiamento imobiliário
      *

@@ -31,9 +31,10 @@ public class Main {
 
     public static void main(String[] args) {
         int contador = 0, indice = 0, prazoAnos = 0, andares = 0, garagem = 0;
-        double valorTotalImoveis = 0, valorTotalFinanciamentos = 0, valorImovel = 0, juroAnual =0, tamanhoTerreno = 0, areaConstruida = 0;
+        double valorTotalImoveis = 0, valorTotalFinanciamentos = 0, valorImovel = 0, juroAnual =0, tamanhoTerreno = 0, areaConstruida = 0, mensal =0, total = 0;
         String tipoTerreno = "", valorFormatado="", informacaoFinanciamento ="";
         String arquivo = "dados.txt";   //nome do arquivo gravado
+        String arquivoObjeto = "financiamento.test";     //nome do arquivo com o objeto serializado gravado
         Locale.setDefault(new Locale("pt", "BR"));     //define as configurações regionais deste código para pt-BR (português do Brasil), troca o . pela ,
         Scanner teclado = new Scanner(System.in);
 
@@ -44,7 +45,7 @@ public class Main {
         DecimalFormat formatador = new DecimalFormat("#,##0.00", simbolos);
         ArrayList<Financiamento> listaFinanciamentos = new ArrayList<Financiamento>();  // instancia um arraylist de objetos da classe "Financiamento"
         InterfaceUsuario pessoa = new InterfaceUsuario();
-        
+
         while (true){
             pessoa.gravarDados(arquivo, String.format("Dados do %d° financiamneto:\n", contador+1));
             //region financiamneto da casa
@@ -55,8 +56,10 @@ public class Main {
             tamanhoTerreno = pessoa.getTamanhoTerreno();
             areaConstruida = pessoa.getAreaConstruida();
             listaFinanciamentos.add(new Casa(valorImovel, prazoAnos, juroAnual, tamanhoTerreno, areaConstruida));
-            System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", listaFinanciamentos.get(indice).calcularPagamentoMensal());
-            System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", listaFinanciamentos.get(indice).calcularTotalPago());
+            mensal = listaFinanciamentos.get(indice).calcularPagamentoMensal();
+            total = listaFinanciamentos.get(indice).calcularTotalPago();
+            System.out.printf("Pagamento mensal da casa financiada: %.2f R$\n", mensal);
+            System.out.printf("Pagamento total do financiamento da casa: %.2f R$\n\n", total);
             informacaoFinanciamento = listaFinanciamentos.get(indice).toString();
             System.out.println(informacaoFinanciamento);
             pessoa.gravarDados(arquivo, informacaoFinanciamento);
@@ -120,7 +123,8 @@ public class Main {
             }
         }
 
-        for (Financiamento f : listaFinanciamentos) { // imprime elemento por elemento
+        pessoa.gravarObjeto(arquivoObjeto, listaFinanciamentos);    // grava o arraylist com os objetos de financiamento para dentro de um arquivo (arquivoObjeto)
+        for (Financiamento f : listaFinanciamentos) { // elemento por elemento
             valorTotalImoveis += f.getValorImovel();
             valorTotalFinanciamentos += f.calcularTotalPago();
         }
@@ -130,8 +134,12 @@ public class Main {
         valorFormatado = formatador.format(valorTotalFinanciamentos);
         pessoa.gravarDados(arquivo, String.format("O valor total pago nos financiamentos é: %s R$\n", valorFormatado));
         System.out.printf("O valor total pago nos financiamentos é: %s R$\n", valorFormatado);
-
+        System.out.println("##############################################");
         System.out.println("Dados do arquivo gravado:");
         pessoa.lerDados(arquivo);
+        System.out.println("##############################################");
+
+        System.out.println("Dados do objeto gravado:");
+        pessoa.lerObjeto(arquivoObjeto);
     }
 }
