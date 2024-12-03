@@ -42,3 +42,18 @@ Tipo do terreno: residencial.
 ----------------------------------------------------------------------------
 O valor total pago nos imóveis é: 1.800.000,00 R$
 O valor total pago nos financiamentos é: 3.005.816,67 R$
+Dados do 1° financiamneto:
+Dados da casa:
+Valor: 500.000,00 R$.
+Prazo: 10 anos.
+Taxa de jurus anual: 10,00 %.
+Tamanho do terreno: 50,00 m²
+Área construida: 50,00 m²
+
+Dados do apartamento:
+Valor: 500.000,00 R$.
+Prazo: 10 anos.
+Taxa de jurus anual: 10,00 %.
+Vagas de garagem: 2.
+Quantidade de andares: 2.
+
