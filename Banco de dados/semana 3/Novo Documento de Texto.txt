@@ -1,0 +1,165 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `mydb` ;
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+SHOW WARNINGS;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Cardapio`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Cardapio` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Cardapio` (
+  `idCardapio` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(45) NOT NULL,
+  `Preco` DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`idCardapio`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`CepCliente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`CepCliente` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`CepCliente` (
+  `idCepCliente` VARCHAR(10) NOT NULL,
+  `Cep` VARCHAR(10) NOT NULL,
+  `Rua` VARCHAR(45) NOT NULL,
+  `NumeroResidencial` INT NOT NULL,
+  `Cidade` VARCHAR(45) NOT NULL,
+  `Complemento` VARCHAR(45) NULL,
+  PRIMARY KEY (`idCepCliente`),
+  UNIQUE INDEX `Cep_UNIQUE` (`Cep` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Cliente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Cliente` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Cliente` (
+  `idCliente` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(45) NOT NULL,
+  `Cep` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (`idCliente`),
+  INDEX `fk_Cliente_CepCliente1_idx` (`Cep` ASC) VISIBLE,
+  CONSTRAINT `fk_Cliente_CepCliente1`
+    FOREIGN KEY (`Cep`)
+    REFERENCES `mydb`.`CepCliente` (`idCepCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Entregadores`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Entregadores` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Entregadores` (
+  `idEntregadores` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(45) NOT NULL,
+  `Celular` VARCHAR(17) NOT NULL,
+  PRIMARY KEY (`idEntregadores`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Pedido` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Pedido` (
+  `idPedido` INT NOT NULL AUTO_INCREMENT,
+  `Status` ENUM('1', '2', '3') NOT NULL,
+  `Data` DATE NOT NULL,
+  `CodCliente` INT NOT NULL,
+  `CodEntregador` INT NOT NULL,
+  PRIMARY KEY (`idPedido`),
+  INDEX `fk_Pedido_Cliente_idx` (`CodCliente` ASC) VISIBLE,
+  INDEX `fk_Pedido_Entregadores1_idx` (`CodEntregador` ASC) VISIBLE,
+  CONSTRAINT `fk_Pedido_Cliente`
+    FOREIGN KEY (`CodCliente`)
+    REFERENCES `mydb`.`Cliente` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Pedido_Entregadores1`
+    FOREIGN KEY (`CodEntregador`)
+    REFERENCES `mydb`.`Entregadores` (`idEntregadores`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Item_Pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Item_Pedido` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Item_Pedido` (
+  `CodPedido` INT NOT NULL,
+  `CodLanche` INT NOT NULL,
+  `Quantidade` INT NOT NULL,
+  PRIMARY KEY (`CodPedido`, `CodLanche`),
+  INDEX `fk_Item_Pedido_Cardapio1_idx` (`CodLanche` ASC) VISIBLE,
+  CONSTRAINT `fk_Item_Pedido_Pedido1`
+    FOREIGN KEY (`CodPedido`)
+    REFERENCES `mydb`.`Pedido` (`idPedido`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Item_Pedido_Cardapio1`
+    FOREIGN KEY (`CodLanche`)
+    REFERENCES `mydb`.`Cardapio` (`idCardapio`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`ClienteTelefones`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`ClienteTelefones` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`ClienteTelefones` (
+  `idClienteTelefones` INT NOT NULL,
+  `Telefone` VARCHAR(17) NOT NULL,
+  PRIMARY KEY (`idClienteTelefones`, `Telefone`),
+  CONSTRAINT `fk_ClienteTelefones_Cliente1`
+    FOREIGN KEY (`idClienteTelefones`)
+    REFERENCES `mydb`.`Cliente` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
