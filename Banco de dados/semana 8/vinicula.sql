@@ -1,9 +1,29 @@
-CREATE VIEW mydb.listaVinhos AS
-select nomeVinho, anoVinho, nomeVinicula, nomeRegiao from mydb.vinho as vinho join mydb.vinicula as vinicula	#juntando a instancia vinho com a instância venicula
-on vinho.codVinho = vinicula.codVinicula		#fazendo a conexão entre as duas instancias
-join mydb.regiao as reg		#juntando a instancia Item_Pedido com a instância de conexão
-on vinicula.codVinicula = reg.codRegiao;		#fazendo a conexão entre as duas instancias
+# criação das views
+CREATE VIEW mydb.Vinicula_view AS
+SELECT codVinicula, nomeVinicula FROM mydb.vinicula;
 
-select * from mydb.listaVinhos
+SELECT * FROM mydb.Vinicula_view;
 
-drop view mydb.listaVinhos
+SHOW CREATE VIEW mydb.Vinicula_view;
+
+
+select mydb.vinho.nomeVinho AS `nomeVinho`,`mydb`.`vinho`.`anoVinho` AS `anoVinho`,`mydb`.`vinicula`.`nomeVinicula` AS `nomeVinicula`,`reg`.`nomeRegiao` AS `nomeRegiao` from ((`mydb`.`vinho` join `mydb`.`vinicula` on((`mydb`.`vinho`.`codVinho` = `mydb`.`vinicula`.`codVinicula`))) join `mydb`.`regiao` `reg` on((`mydb`.`vinicula`.`codVinicula` = `reg`.`codRegiao`)))
+
+CREATE VIEW mydb.listavinhos AS 
+
+select * from Cliente as c join Pedido as p	#juntando a instancia Cliente com a instância Pedido
+on c.idCliente = p.CodCliente		#fazendo a conexão entre as duas instancias
+join Item_Pedido as ip		#juntando a instancia Item_Pedido com a instância de conexão
+on ip.CodPedido = p.idPedido		#fazendo a conexão entre as duas instancias
+
+
+
+
+# criação de usuário e permissões
+CREATE USER 'Somellier'@'localhost' IDENTIFIED BY '';
+
+GRANT SELECT ON mydb.vinho TO 'Somellier'@'localhost';
+
+GRANT SELECT ON mydb.vinicula_view TO 'Somellier'@'localhost';
+
+ALTER USER 'Somellier'@'localhost' WITH MAX_QUERIES_PER_HOUR 3;
