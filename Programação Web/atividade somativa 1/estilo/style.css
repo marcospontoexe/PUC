@@ -1,0 +1,22 @@
+@charset "UTF-8";            /*incluindo regra para acentuações*/
+
+/* Estilo para Mobile */
+
+:root{      /* declaração de variáveis*/
+    --fonte_padrão: Arial, Helvetica, sans-serif;
+    --fonte_destaque: 'Bebas Neue', cursive;
+    --fonte_android: 'Idroid';
+
+    --cor_0:  #84E1AD;
+    --cor_1:  #3CD782;
+    --cor_2: #7ad8a47e;
+    --cor_3:  #1A5C38;
+    --cor_4:  #1a5c3879;
+    
+}
+
+*{        /*configurações globais*/
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;         /* a borda faz parte da conta de largura da tela*/
+}

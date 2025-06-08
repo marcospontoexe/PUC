@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
+    <meta name="keywords" content="html, caracteres, emojis">       <!-- palavras chaves usadas pelo navegador-->
+    <meta name="description" content="página principal">    <!-- descrição da página, usada pelo navegador-->
+    <link rel="stylesheet" href="estilo/style.css">     <!-- usa estilo externo -->
+    <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
+    <title>Panificadora</title>
+</head>
+<body>
+    <div class="sidebar">
+        <a class="active" href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="contact.html">Contact</a>
+        <a href="about.html">About</a>
+    </div>
+
+    <div class="content">
+        <h2 class="titleTop">Cupcake Backery Shop</h2>
+        <h3 class="titleBottom">Menu tradicional</h3>
+        
+        <div class="first">
+            <div class="menu">
+                <img class="imgStamp" src="imagem/cupcake_1.jpg" alt="cupcake 1">
+                <input class="modalButton" type="button" value="Saiba mais..." onclick="openModal('CupFlavor1');">
+            </div>
+            <div class="menu">
+                <img class="imgStamp" src="imagem/cupcake_2.jpg" alt="cupcake 2">
+                <input class="modalButton" type="button" value="Saiba mais..." onclick="openModal('CupFlavor2');">
+            </div>
+            <div class="menu">
+                <img class="imgStamp" src="imagem/cupcake_3.jpg" alt="cupcake 3">
+                <input class="modalButton" type="button" value="Saiba mais..." onclick="openModal('CupFlavor3');">
+            </div>
+        </div>
+        <div class="second">
+            <div class="menu">
+                <img class="imgStamp" src="imagem/cupcake_4.jpg" alt="cupcake 4">
+                <input class="modalButton" type="button" value="Saiba mais..." onclick="openModal('CupFlavor4');">
+            </div>
+            <div class="menu">
+                <img class="imgStamp" src="imagem/cupcake_5.jpg" alt="cupcake 5">
+                <input class="modalButton" type="button" value="Saiba mais..." onclick="openModal('CupFlavor5');">
+            </div>
+            <div class="menu">
+                <img class="imgStamp" src="imagem/cupcake_6.jpg" alt="cupcake 6">
+                <input class="modalButton" type="button" value="Saiba mais..." onclick="openModal('CupFlavor6');">
+            </div>
+        </div>
+    </div>
+
+    <div id="knowMore" class="Modal">
+        <header>
+            <span onclick="closeModal(); classtopright">X</span>
+        </header>
+        <div>
+            <p id="txt1" class="infoH"></p>
+            <p id="txt2" class="info"></p>
+            <p id="txt3" class="info"></p>
+        </div>
+    </div>
+    <script src="script/script.js"></script>
+</body>
+</html>
