@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
+    <meta name="keywords" content="cupcake">       <!-- palavras chaves usadas pelo navegador-->
+    <meta name="description" content="processamento do php">    <!-- descrição da página, usada pelo navegador-->
+    <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
+    <title>Panificadora</title>
 </head>
 <body>
-    
+    <header>
+        <h1>Resultado do processamento</h1>
+    </header>
+    <main>
+        <?php
+            $nome = $_POST["name"] ?? "sem nome";     // com operador de coalescência nula 
+            $email = $_POST["email"] ?? "sem email";
+            $num_celular = $_POST["celular"] ?? "sem celular";
+            $nasc = $_POST["dt_nasc"] ?? "sem data de nascimento";
+            $termo = $_POST["agree-term"] ?? "sem concordancia";
+            
+            echo "<p>Seja bem vindo(a) $nome.</p>";
+
+        ?>
+        <br>
+        <a href="javascript:history.go(-1)">Voltar para a página anterior.</a>
+    </main>
 </body>
 </html>
