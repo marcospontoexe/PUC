@@ -2,27 +2,22 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Formulário de cadastro</title>
-    <link rel="stylesheet" href="estilo/layout.css" type="text/css">     <!-- usa estilo externo -->
-
-    
     <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
     <meta name="keywords" content="formulário">       <!-- palavras chaves usadas pelo navegador-->
     <meta name="description" content="página de formulário">    <!-- descrição da página, usada pelo navegador-->
-    <link rel="stylesheet" href="estilo/layout.css" type="text/css">     <!-- usa estilo externo -->
+    <link rel="stylesheet" href="estilo/style.css" type="text/css">     <!-- usa estilo externo -->
     <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
-    <title>Panificadora</title>
+    <title>Formulário de cadastro</title>
 </head>
 
 <body>
 
     <div class="sidebar">
-        <a class="active" href="index.html">Home</a>
+        <a href="index.html">Home</a>
         <a href="news.html">News</a>
-        <a href="contact.html">Contact</a>
+        <a class="active" href="contact.html" target="_blank" rel="next" >Contact</a> 
         <a href="about.html">About</a>
     </div>
 
@@ -30,7 +25,7 @@
         <h2 class="titleTop">Cupcake Backery Shop</h2>
         <h3 class="titleBottom">Deixe o seu Contato!</h3>
         <div class="contact-form">
-            <form method="POST" action="formAction.html">
+            <form method="GET" action="contact_action.html" autocomplete="on">
                 <div class="form-group">
                     <label for="iname"><i class="fa fa-user" aria-hidden="true"></i></label>
                     <input type="text" name="name" id="iname" placeholder="Seu Nome" required>
@@ -41,7 +36,9 @@
                 </div><br>
                 <div class="form-group">
                     <label for="icelular"><i class="fa fa-phone" aria-hidden="true"></i></label>
-                    <input type="tel" name="celular" id="icelular" pattern="\(\d{2}\)\s\d{4,5}-\d{4}$" placeholder="Seu celular" title="(xx) xxxxx-xxxx" required>
+                    <input type="tel" name="celular" id="icelular" pattern="^\(\d{2}\)\s\d{4,5}-\d{4}$" 
+                    onkeydown="return mascaraTelefone(event)" placeholder="Seu celular" title="(xx) xxxxx-xxxx" required>
+            
                 </div><br>
                 <div class="form-group">
                     <label for="idt_nasc"><i class="fa fa-birthday-cake" aria-hidden="true"></i></label>
@@ -58,7 +55,9 @@
             </form>
         </div>
     </div>
+
     <script src="script/script.js"></script>
+    
 </body>
 
 </html>

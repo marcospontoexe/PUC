@@ -15,11 +15,11 @@
     </header>
     <main>
         <?php
-            $nome = $_POST["name"] ?? "sem nome";     // com operador de coalescência nula 
-            $email = $_POST["email"] ?? "sem email";
-            $num_celular = $_POST["celular"] ?? "sem celular";
-            $nasc = $_POST["dt_nasc"] ?? "sem data de nascimento";
-            $termo = $_POST["agree-term"] ?? "sem concordancia";
+            $nome = $_GET["name"] ?? "sem nome";     // com operador de coalescência nula 
+            $email = $_GET["email"] ?? "sem email";
+            $num_celular = $_GET["celular"] ?? "sem celular";
+            $nasc = $_GET["dt_nasc"] ?? "sem data de nascimento";
+            $termo = $_GET["agree-term"] ?? "sem concordancia";
             
             echo "<p>Seja bem vindo(a) $nome.</p>";
 
