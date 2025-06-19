@@ -23,8 +23,6 @@
 
 
 .sidebar {
-    margin: 0;
-    padding: 0;
     width: 200px;
     background-color: #f1f1f1;
     position: fixed;
@@ -48,17 +46,15 @@
 }
 
 
-
-
 .content {
     padding: 1px 16px;
     position: inherit;
     margin-left: 200px;
-    width: 700px;
     background: #fff;
     display: grid;
     overflow: auto;
-    height: 100%;
+    width: 40vw;
+    height: 100vh;
 }
 .content .titleTop {
     position: relative;
@@ -90,7 +86,7 @@
     background: #fff;
     padding: 40px;
 }
-.modal {
+.Modal {
     position: absolute;
     display: none;
     left: 30%;
@@ -99,15 +95,15 @@
     background-color: rgb(252, 244, 220);
     border-radius: 10px;
     padding: 5px 5px;
-    box-shadow: 0 25px 25px rgb(0 0 0 / 30%);
+    box-shadow: 0 25px 25px rgb(0 0 0 / 30%);    
 }
-.modal .info {
+.Modal .info {
     color: crimson;
     font-size: medium;
     padding-left: 10px;
     text-align: center;
 }
-.modal .infoH {
+.Modal .infoH {
     color: crimson;
     font-size: medium;
     text-transform: uppercase;
