@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
+    <meta name="keywords" content="formulário">       <!-- palavras chaves usadas pelo navegador-->
+    <meta name="description" content="página de formulário">    <!-- descrição da página, usada pelo navegador-->
+    <link rel="stylesheet" href="estilo/style.css" type="text/css">     <!-- usa estilo externo -->
+    <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
+    <title>Formulário de cadastro</title>
+</head>
+
+<body>
+    <header class="titleTop">
+        <h2 >Cupcake Backery Shop</h2>  
+    </header>
+
+    <nav class="sidebar">
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a class="active" href="form.html" target="_blank" rel="next" >Contact</a> 
+        <a href="about.html">About</a>
+    </nav>
+
+    <main>
+        <h3 class="titleBottom">Deixe o seu Contato!</h3>       
+        <section class="content">
+            <form method="GET" action="formAction.html" autocomplete="on">
+                <fieldset>
+                    <legend>Cadastro de novo cliente</legend> 
+                    <div class="form-group">
+                        <label for="iname"><i class="fa fa-user" aria-hidden="true"></i></label>
+                        <input type="text" name="name" id="iname" placeholder="Seu Nome" required>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="iemail"><i class="fa fa-envelope" aria-hidden="true"></i></label>
+                        <input type="email" name="email" id="iemail" placeholder="Seu Email" required>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="icelular"><i class="fa fa-phone" aria-hidden="true"></i></label>
+                        <input type="tel" name="celular" id="icelular" pattern="^\(\d{2}\)\s\d{4,5}-\d{4}$" 
+                        onkeydown="return mascaraTelefone(event)" placeholder="Seu celular" title="(xx) xxxxx-xxxx" required>
+                
+                    </div><br>
+                    <div class="form-group">
+                        <label for="idt_nasc"><i class="fa fa-birthday-cake" aria-hidden="true"></i></label>
+                        <input type="date" name="dt_nasc" id="idt_nasc" title="Data de Nascimento">
+                    </div><br>
+                </fieldset>
+                <div class="form-group">
+                    <input type="checkbox" name="agree-term" id="iagree-term" class="agree-term" required />
+                    <label for="iagree-term" class="label-agree-term"><span><span></span></span>Eu concordo com os <a href="#" class="term-service">termos de serviço</a></label>
+                </div><br>
+                <div class="form-group form-button">
+                    <input type="submit" class="form-submit" value="Enviar">
+                    <input type="reset" class="form-submit" value="Limpar">
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>    
+        <p>Desenvolvido por Marcos Daniel Santana</p>
+    </footer>
+
+    <script src="script/script.js"></script>
+    
+</body>
+
+</html>
+

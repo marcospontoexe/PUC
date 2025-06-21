@@ -77,13 +77,7 @@ function mascaraTelefone(event) {
     }
 }
 
-// Espera até que o DOM esteja totalmente carregado
-document.addEventListener('DOMContentLoaded', function () {
 
-    // Adiciona event listener ao campo de telefone para aplicar a máscara
-    document.getElementById('celular').addEventListener('keydown', mascaraTelefone);
-    
-});
 
 
 
