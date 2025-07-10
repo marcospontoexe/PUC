@@ -1,0 +1,331 @@
+@charset "UTF-8";            /*incluindo regra para acentuações*/
+
+/* Estilo para Mobile */
+
+:root{      /* declaração de variáveis*/ 
+ 
+    --cor_0: #E66456;
+    --cor_1: #f3f3f3;
+    --cor_2: #916A66;
+    --cor_3: #6B5463;
+    --cor_4: #570000;
+    --cor_5: #EFC88B;
+    --cor_6: #7F9172;
+    --cor_7: #929487;
+    --cor_8: #000;
+
+    --fonte_0: 'Arial, sans-serif';
+    --fonte_1: cursive;
+    
+}
+
+*{        /*configurações globais*/
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;         /* a borda faz parte da conta de largura da tela*/
+    font-family: var(--fonte_1);
+}
+
+main{
+    background-color: var(--cor_7);
+    align-content: center;
+    position: relative;                 /* qualquer valor diferente de 'static' irá ancorar o posicionamento de qualquer box filha que tenha posicionamento 'absolute'*/
+    height: calc(93vh - 65px); /* 100vh - header - footer */
+}
+
+.sidebar {
+    width: 200px;
+    background-color: var(--cor_5);
+    overflow: auto;
+    float: left;
+    height: calc(93vh - 65px); /* 100vh - header - footer */
+    min-height:  250px;
+}
+
+.sidebar a {
+    display: block;
+    color: var(--cor_3);
+    padding: 16px;
+    text-decoration: none;
+    font-weight: 700;
+}
+.sidebar a.active {
+    background-color: var(--cor_3);
+    color: var(--cor_5);
+}
+.sidebar a:hover:not(.active) {
+    background-color: var(--cor_2);
+    color: var(--cor_5);
+}
+
+
+.content {
+    padding: 1px 16px;
+    position: inherit;
+    margin: auto;
+    display: grid;
+    overflow: auto;
+    width: 40vw;
+    height: 75vh;
+    align-content: center;
+    /* Quando a largura da tela for menor doque "min-widt", a box para de diminuir e aparece a barra de rolagem horizontal*/
+    min-width: 280px;
+    /* quando a largura da tela for maior que 760px (largura da imagem) a box main se mantém com tamanho fixo de 800px menos os 20px+20px de pad*/
+    max-width: 410px;
+
+    min-height:  240px;
+    
+}
+.titleTop {
+    position: relative;
+    background-color: var(--cor_0);
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--cor_1);
+    height: 100px;
+    font-size: 3vw;            /* a fonte se adapta à largura da viewport*/
+    padding: 5px;
+}
+.titleTop .menuRight{
+    position: absolute;
+    display: inline-block;
+    right: 0%;    
+    margin: 0% 1% 1% 0%;
+
+}
+
+.menuRight>p{
+    margin: 0;
+    padding: 0;  
+    font-size: 0.3em;
+}
+
+.titleBottom {
+    position: relative;
+    max-height: 40px;
+    text-align: center;
+    margin: 10px auto;
+    color: var(--cor_1);
+}
+.content .first {
+    position: relative;
+    margin: auto;
+    padding: 40px;
+}
+.content .second {
+    position: relative;
+    margin: auto;
+    padding: 40px;
+}
+
+.Modal {
+    position: absolute;
+    display: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 300px;
+    background-color: var(--cor_5);
+    border-radius: 10px;
+    padding: 5px 5px;
+    box-shadow: 0 25px 25px rgb(0 0 0 / 30%);    
+}
+.Modal .info {
+    color: var(--cor_7);
+    font-size: medium;
+    padding-left: 10px;
+    text-align: center;
+}
+.Modal .infoH {
+    color: var(--cor_0);
+    font-size: medium;
+    text-transform: uppercase;
+    padding-left: 10px;
+    text-align: center;
+}
+.content .menu {
+    position: relative;
+    width: 30%;
+    display: inline-block;
+    border-radius: 10px;
+}
+.content .menuNews {
+    position: relative;
+    width: 30%;
+    display: inline-block;
+    border-radius: 10px;
+    margin: auto;
+}
+.content .menu .imgStamp {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 25px 25px rgba(0, 0, 0, 0.3);
+}
+.content .menuNews .imgStampNews {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 40%;
+    border: 3px dotted var(--cor_10);
+
+}
+.overlay {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--cor_3);
+    overflow: hidden;
+    width: 100%;
+
+    transition: .9s ease;
+}
+.menuNews:hover .overlay {
+    bottom: 0;
+    height: 100%;
+}
+.textImg {
+    white-space: nowrap;
+    color: var(--cor_1);
+    font-size: medium;
+    text-align: center;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+.content .menu .modalButton {
+    outline: none;
+    background-color: var(--cor_5);
+    color: var(--cor_2);
+    width: 100%;
+    font-size: 17px;
+    border: none;
+    border-radius: 10px;
+    padding: 7px 7px;
+    box-shadow: 0 25px 25px rgb(0 0 0 / 30%);
+    cursor: pointer
+}
+.topright {
+    position: absolute;
+    right: 5px;
+    border-radius: 4px;
+    padding: 2px;
+    top: 0;
+    background-color: var(--cor_0);
+    color: var(--cor_5);
+    cursor: pointer
+}
+
+#id0L{
+    float: left;
+    margin-left: 10%;
+    max-width:400px
+}
+#id0C{
+    float: right;
+    margin-right: 10%;
+    max-width:400px
+}
+
+form {
+    text-align: left;
+    min-width: 315px;
+    /* quando a largura da tela for maior que 760px (largura da imagem) a box main se mantém com tamanho fixo de 800px menos os 20px+20px de pad*/
+    max-width: 410px;
+
+    min-height:  240px;
+}
+
+fieldset{
+    color: var(--cor_5);
+}
+
+.form-submit {
+    display: inline-block;
+    background: var(--cor_0);
+    color: var(--cor_5);
+    border-bottom: none;
+    width: auto;
+    padding: 15px 39px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    margin: 25px 25px 25px 15px;
+    cursor: pointer
+}
+.form-submit:hover {
+    background: var(--cor_6);
+}
+.form-group {
+    position: relative;
+    margin: 0px 0px 25px 15px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+label {
+    color: var(--cor_1);
+}
+input {
+    outline: none;
+    width: 100%;
+    display: block;
+    color: var(--cor_7);
+    font-size: 17px;
+    border: none;
+    border-bottom: 1px solid var(--cor_2);
+    padding: 6px 30px;
+    box-sizing: border-box
+}
+::placeholder {
+    color: var(--cor_7);
+    font-size: medium;
+}
+.label-agree-term {
+    position: relative;
+    top: 0%;
+}
+.agree-term {
+    display: inline-block;
+    width: auto
+}
+.term-service {
+    font-size: 13px;
+    color: var(--cor_5)
+}
+input[type=checkbox]+label {
+    display: inline-block;
+    line-height: 1.5em;
+    margin-top: 6px;
+}
+
+p {
+    margin-bottom: 0;
+    font-size: 16px;
+    color: var(--cor_5);
+    text-align: center;
+}
+
+footer{
+    background-color: var(--cor_0);
+    padding: 5px;
+    text-align: center;
+    height: 40px;
+    width: 100vw;
+    clear: both;        /* caso tenha algum elemento flutuando à esquerda ou direita, limpa o contexto e fica a baixo dos elementos flutuantes*/
+    position: fixed;        /* mantém o posicionamneto fixo na tela*/
+    bottom: 0;
+    display: block;
+}
+
+footer>p{
+    color: var(--cor_1);
+    font-size: 1.5em;
+    font-family: var(--fonte_0);
+}

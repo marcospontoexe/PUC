@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
+    <meta name="keywords" content="descrição do site">       <!-- palavras chaves usadas pelo navegador-->
+    <meta name="description" content="descrição do site">    <!-- descrição da página, usada pelo navegador-->
+    <link rel="stylesheet" href="estilo/style.css" type="text/css">     <!-- usa estilo externo -->
+    <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
+    <title>About</title>
+</head>
+<body>
+    <header class="titleTop">
+            <h2>Cupcake Backery Shop</h2>
+    </header>
+    <nav class="sidebar">
+        <a href="index.html" target="_self" rel="next">Home</a>
+        <a href="news.html" target="_self" rel="next">News</a>
+        <a href="form.html" target="_blank" rel="next">Pedir</a> 
+        <a class="active"  href="about.html" target="_self" rel="next">About</a>
+    </nav>
+    </nav>
+
+    <main>
+        <h2 class="titleBottom">Sobre nós</h3>
+        <section class="content"> 
+            <p>
+                1° atividade formativa da disciplica de <strong>Programação web</strong>.
+                <br>
+                Realizada por <strong>Marcos Daniel Santana</strong>, participante do grupo 262.
+                <br>
+            </p>
+            <br>         
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Iste nostrum vitae distinctio fugiat mollitia eos, fugit dolorum, 
+                sit voluptatem atque amet, iusto impedit. Maiores, earum sunt magni exercitationem esse quam. 
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+        </p>
+        <br>
+    
+        </section>
+
+        <article id="knowMore" class="Modal">
+            <header>
+                <span onclick="closeModal();" class="topright">X</span>
+            </header>
+            <div>
+                <p id="txt1" class="infoH"></p>
+                <p id="txt2" class="info"></p>
+                <p id="txt3" class="info"></p>
+            </div>
+        </article>
+    </main>
+
+    <footer>    
+        <p>Desenvolvido por Marcos Daniel Santana</p>
+    </footer>
+</body>
+</html>
+
+
+

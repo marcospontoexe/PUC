@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
+    <meta name="keywords" content="dados do cliente">       <!-- palavras chaves usadas pelo navegador-->
+    <meta name="description" content="dados do cliente">    <!-- descrição da página, usada pelo navegador-->
+    <link rel="stylesheet" href="estilo/style.css" type="text/css">     <!-- usa estilo externo -->
+    <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
+    <title>dados do cliente</title>
+</head>
+<body>
+    <header class="titleTop">
+            <h2>Cupcake Backery Shop</h2>
+    </header>
+    <nav class="sidebar">
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a class="active" href="form.html" target="_blank" rel="next" >Pedir</a> 
+        <a href="about.html">About</a>
+    </nav>
+    <main>
+        <h2 class="titleBottom">Dados do cliente</h3>
+        <section class="content"> 
+            <div class="infoCliente">
+                <script>
+                    // Função para calcular a idade
+                    function calcularIdade(dataNasc) {
+                        if (!dataNasc) return "Não informado";
+                        const hoje = new Date();
+                        const nasc = new Date(dataNasc);
+                        let idade = hoje.getFullYear() - nasc.getFullYear();
+                        const m = hoje.getMonth() - nasc.getMonth();
+                        if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
+                            idade--;
+                        }
+                        return idade;
+                    }
+
+                    const params = new URLSearchParams(window.location.search);
+                    const nome = params.get("name") || "Não informado";
+                    const email = params.get("email") || "Não informado";
+                    const telefone = params.get("celular") || "Não informado";
+                    const dataNasc = params.get("dt_nasc") || "";
+                    const agree = params.get("agree-term") || "";
+
+                    document.write(`<p style="font-size: 2vw;"><strong>Nome: </strong> ${nome}</p><br>`);
+                    document.write(`<p style="font-size: 2vw;"><strong>E-mail: </strong> ${email}</p><br>`);
+                    document.write(`<p style="font-size: 2vw;"><strong>Telefone: </strong> ${telefone}</p><br>`);
+                    document.write(`<p style="font-size: 2vw;"><strong>Idade: </strong> ${calcularIdade(dataNasc)} anos.</p><br>`);
+                    document.write(`<p style="font-size: 2vw;"><strong>Termo aceito: </strong> ${agree}.</p><br>`);
+                    
+                </script>
+                
+            </div>
+        </section>
+
+    </main>
+
+    <footer>    
+        <p>Desenvolvido por Marcos Daniel Santana</p>
+    </footer>
+
+    
+</body>
+</html>
+
+
+

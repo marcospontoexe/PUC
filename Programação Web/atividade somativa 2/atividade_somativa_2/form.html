@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">          <!-- configurção de meta-dados, configuração de padrão de caracteres usados-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      <!--O site ocupará 100% da janela-->
+    <meta name="keywords" content="Página de pedidos">       <!-- palavras chaves usadas pelo navegador-->
+    <meta name="description" content="Página de pedidos">    <!-- descrição da página, usada pelo navegador-->
+    <link rel="stylesheet" href="estilo/style.css" type="text/css">     <!-- usa estilo externo -->
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <link rel="shortcut icon" href="imagem/Bakery.png" type="image/x-icon">     <!-- adiciona um favicon -->
+    <script type="text/javascript" src="script/myScriptClinic.js"></script>
+    <title>Página de pedidos</title>
+</head>
+
+<body>
+    <header class="titleTop">
+        <h2 >Cupcake Backery Shop</h2>  
+    </header>
+
+    <nav class="sidebar">
+        <a href="index.html" target="_self" rel="next">Home</a>
+        <a href="news.html" target="_self" rel="next">News</a>
+        <a class="active" textImghref="form.html" target="_blank" rel="next">Pedir</a> 
+        <a href="about.html" target="_self" rel="next">About</a>
+    </nav>
+
+    <main>
+        <h3 class="titleBottom">Faça seu pedido!</h3>   
+        
+        <!-- LOGIN FAIL MODAL: login incorreto ou cadastro incorreto --> 
+        <?php
+            $msg        = "";
+            $msg_header = "";
+            if(isset($_SESSION['nao_autenticado'])){ 
+                $msg        = $_SESSION['mensagem'];
+                $msg_header = $_SESSION['mensagem_header'];
+        ?>
+        <div id="LF" class="w3-modal " style="display:block;">
+            <?php 
+                }else{ 
+            ?>
+        <div id="LF" class="w3-modal " style="display:none;">
+            <?php
+                unset($_SESSION['nao_autenticado']);
+                }
+            ?>
+            <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
+                <div class="w3-center"> 
+                    <span onclick="document.getElementById('LF').style.display='none'" class="w3-button w3-xlarge w3-transparent w3-display-topright" title="Close Modal">×</span>
+                
+                    <h2 class="w3-center w3-xxlarge "><?php echo $msg_header; ?></h2>
+                    <p class="w3-container w3-card-4 w3-light-grey w3-text-IE w3-margin"><?php echo $msg; ?></p>
+                </div>
+                <br>
+            </div>
+        </div>
+
+        <!-- LOGIN MODAL: pop up para realizar Login --> 
+        <div id="id0L">
+            <form action="login.php" method="POST">
+                <fieldset>
+                    <legend>Login</legend>
+                    <div class="form-group">
+                        <label for="iLogin"></label>
+                        <input type="text" name="Login" id="iLogin" placeholder="nome.sobrenome" required>
+                    </div>
+
+                    <div class="form-group"> 
+                        <label for="iSenha"></label>
+                        <input type="password" name="Senha" id="iSenha" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,8}" 
+                        placeholder="sua senha" title="Deve conter ao menos um número, uma letra maiúscula, uma letra minúscula, um caracter especial, e ter de 6 a 8 caracteres" 
+                        required autocomplete="current-password">
+                    </div> <br>
+                    
+                    <label for="imostrarSenha"><b>Mostrar senha</b></label>
+                    <input type="checkbox" name="mostrarSenha" id="imostrarSenha" onclick="mostrarOcultarSenhaLogin()"> 
+                    <br>
+                </fieldset>
+                <div class="form-group form-button">
+                    <input type="submit" class="form-submit" value="Enviar">
+                </div>
+            </form>
+         
+        </div>
+
+        <!-- LOGIN CADASTRO: pop up para realizar Cadastro - --> 
+        <div id="id0C">
+            <form action="cadastro.php" method="POST">
+                <fieldset>
+                    <legend>Cadastrar</legend>
+                    <div class="form-group"> 
+                        <label for="inome"><b>Nome de usuário</b>*</label>
+                        <input name="nome" id="inome" type="text" placeholder="Nome">
+                   
+                        <label for="iLogin"><b>Login</b>*</label>                        
+                        <input name="Login" id="iLogin" pattern="[a-zA-Z]{2,20}\.[a-zA-Z]{2,20}" placeholder="nome.sobrenome" title="nome.sobrenome" required>
+                   
+                        <label for="icelular"><b>Celular</b>*</label> 
+                        <input name="celular" id="icelular"  type="tel" maxlength="15" placeholder="(XX) XXXXX-XXXX" title="(XX) XXXXX-XXXX"  pattern="^\\(\d{2}\)\s\d{4,5}-\d{4}$" required onkeydown="return mascaraTelefone(event)"> 
+            
+                        <label for="iSenha1"><b>Senha</b>*</label> 
+                        <input name="Senha1" id="iSenha1" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,8}"
+                        title="Deve conter ao menos um número, uma letra maiúscula, uma letra minúscula, um caracter especial, e ter de 6 a 8 caracteres" 
+                        required> 
+                    
+                        <label for="iSenha2"><b>Confirma Senha</b>*</label> 
+                        <input name="Senha2" id="iSenha2" type="password" onkeyup="validarSenha()"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,8}"
+                        title="Deve conter ao menos um número, uma letra maiúscula, uma letra minúscula, um caracter especial, e ter de 6 a 8 caracteres" 
+                        required>         
+                                               
+                        <input type="checkbox" class="w3-btn w3-theme"  onclick="mostrarOcultarSenhaCadastro()"> <b>Mostrar senha</b>
+                    </div>
+                </fieldset>
+                <div class="form-group form-button">
+                    <input type="submit" class="form-submit" value="Enviar">
+                </div>
+            </form>
+          
+        </div>
+
+    </main>
+
+    <footer>    
+        <p>Desenvolvido por Marcos Daniel Santana</p>
+    </footer>
+
+    <script src="script/script.js"></script>
+    
+</body>
+
+</html>
+
