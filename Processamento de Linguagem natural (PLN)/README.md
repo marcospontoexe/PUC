@@ -87,4 +87,132 @@ contador.most_common(3) # [('de', 2), ('Um', 1), ('exemplo', 1)]
 ### Segmentação de sentenças
 As regras principais de segmentação de sentenças contam com a divisão a partir de pontuações encontradas no texto ou quebras de linha.
 
-![nltk-segmentacao-sentencas]
+![nltk-segmentacao-sentencas](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/imagens/nltk-segmentacao-sentencas.png)
+
+```python
+from nltk import sent_tokenize
+
+texto = "Definição da sentença 1. Mais uma sentença. Última sentença."
+
+sents = sent_tokenize(texto)    # ['Definição da sentença 1.', 'Mais uma sentença.', 'Última sentença.']
+```
+
+### Stemming
+Reduz as palavras ao seu stem, retirando o sufixo. Faz com que palavras de mesmo significado semântico (ou similar) sejam escritas da mesma maneira (e.g., correr, correndo, correu). Geralmente o stem não é uma palavra válida.
+
+```python
+# Caso não tenha feito o download de todos recursos do NLTK, você pode fazê-lo de maneira individual
+nltk.download('rslp')
+
+# Inicia o Stemmer
+stemmer = nltk.stem.RSLPStemmer()
+
+print(stemmer.stem("ferro"))        # ferr
+print(stemmer.stem("ferreiro"))      # ferr
+
+print(stemmer.stem("correr"))       #corr
+print(stemmer.stem("correu"))        #corr
+```
+
+```python
+# Define uma função que faz Stemming em todo um texto
+def Stemming(texto):
+  stemmer = nltk.stem.RSLPStemmer()
+  novotexto = []
+  for token in texto:
+    novotexto.append(stemmer.stem(token.lower()))
+  return novotexto
+
+texto1 = "Eu gostei de correr"
+texto2 = "Eu gosto de corrida"
+
+# Tokeniza o texto
+tokens1 = tokenize.word_tokenize(texto1, language='portuguese')
+tokens2 = tokenize.word_tokenize(texto2, language='portuguese')
+
+novotexto1 = Stemming(tokens1)
+novotexto2 = Stemming(tokens2)
+
+print(novotexto1)   # ['eu', 'gost', 'de', 'corr']
+print(novotexto2)   # ['eu', 'gost', 'de', 'corr']
+```
+
+### Lematização
+Similar ao processo de Stemming, porém, faz uma análise morfológica completa para identificar e remover os sufixos. Geralmente leva os verbos ao infinitivo e substantivos/adjetivos ao masculino singular. Se diferencia do Stemming pois sempre gera uma palavra válida.
+
+Infelizmente, esta funcionalidade não é suportada pelo NLTK.
+
+Para nossa disciplina iremos utilizar o stemmer, caso queira saber um pouco mais sobre o impacto dessa decisão, você pode ler [este capítulo](https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html) do livro de Information Retrieval da Universidade de Stanford.
+
+### Retirada de Stop-words
+As vezes é necessário remover as palavras de maior ocorrência no conjunto de textos, pois geralmente elas não agregam grande valor semântico aos textos e não ajudam no processo de selecionar as informações relevantes ao sistema de PLN.
+
+Este processo pode ser diferente, de acordo com a tarefa de PLN que você está executando, mas no geral temos duas abordagens: retirar as palavras de maior ocorrência levando em conta a [lei de Zipg](https://terrierteam.dcs.gla.ac.uk/publications/rtlo_DIRpaper.pdf), ou utilizar uma lista de stop-words pronta para seu idioma. Iremos realizar a segunda opção.
+
+```python
+# Caso não tenha feito o download de todos recursos do NLTK, você pode fazê-lo de maneira individual
+nltk.download('stopwords')
+
+# O NLTK fornece uma lista de stop-words para o idioma português
+stopwords = nltk.corpus.stopwords.words('portuguese')   # recebe todas as stop words para o padrão protugues-br
+```
+
+```python
+# Define uma função que remove as stop words de um texto
+def removeStopWords(texto):
+    stopwords = nltk.corpus.stopwords.words('portuguese')
+    novotexto = []
+    for token in texto:
+        if token.lower() not in stopwords:
+            novotexto.append(token)
+    return novotexto
+
+texto = "Quais palavras serão retiradas deste texto? Eu não sei, mas este processo é necessário em alguns momentos."
+
+# Tokeniza o texto
+tokens = tokenize.word_tokenize(texto, language='portuguese')
+
+novotexto = removeStopWords(tokens)
+
+print(novotexto)    # ['Quais', 'palavras', 'retiradas', 'deste', 'texto', '?', 'sei', ',', 'processo', 'necessário', 'alguns', 'momentos', '.']
+```
+
+**IMPORTANTE**: Em alguns casos retirar as palavras referentes a negação (i.e., não) pode retirar um significado semântico muito importante do texto. Por exemplo, no texto: "O paciente não apresenta sintomas da doença". Neste caso a negação muda completamente o sentido da frase. Existem alguns outros casos (principalmente quando utilizamos Deep Learning) em que a retirada das stop-words pode ser prejudicial ao algoritmo, portanto, sempre teste seus algoritmos com e sem esta opção!
+
+### Normalização
+Além do Stemming, é possível realizar processos mais específicos de normalização do texto, de acordo com a tarefa.
+
+* Exemplo 1: Para um algoritmo de Geração de fala, o texto bruto pode estar escrito como "Com os preços de R$ 100,00 para a primeira versão, e R$ 10,00 para a segunda". Para o meu algoritmo é mais interessante que o texto seja normalizado para: "Com os preços de cem reais para a primeira versão e dez reais para a segunda"
+
+* Exemplo 2: Todas as datas serem normalizadas para um padrão único. As formas "18/mai", "dezoito de maio", "18-05" serem normalizadas para "18/05".
+
+Pergunta rápida: Nos casos acima qual recurso nos ajudaria a fazer a normalização?
+
+Uma maneira simples de normalizar o texto é transformar todas as letras em minúsculas, assim ocorrências escritas de maneira diferente são normalizadas para uma única. "Brasil", "BraSil" e "BRAsil" seriam normalizadas para "brasil".
+
+```python
+texto = "Se escreve LOL, LoL ou Lol?"
+
+# Efetua lowercase
+texto = texto.lower()
+
+# Tokeniza o texto
+tokenize.word_tokenize(texto, language='portuguese')        # ['se', 'escreve', 'lol', ',', 'lol', 'ou', 'lol', '?']
+```
+
+### Part-of-speech Tagging (POS-Tagging)
+Esta também pode ser considerada uma das operações básicas de PLN, e tem por objetivo definir o valor morfológico de cada palavra no texto (e.g., substantivo, adjetivo, verbo, artigo, advérbio).
+
+O objetivo da morfologia é estudar a estrutura interna e a variabilidade das palavras em uma língua, como conjugações verbais, plurais, nominalização, etc.
+
+Ao contrário dos processos mostrados até agora, este depende do treinamento de um algoritmo supervisionado de *Machine Learning*, treinado a partir de **corpus anotado com as informações morfológicas de cada palavra**.
+> **DEFINIÇÃO**: Um corpus anotado, é uma coleção de documentos etiquetada por humanos para identificar determinado valor morfológico, sintático ou semântico do texto.
+
+No caso a seguir, estaremos trabalhando com um corpus anotado com informações morfológicas de palavras.
+
+#### Principais dificuldades
+As principais dificuldades na realização deste processo são:
+
+* Ambiguidade: uma mesma palavra pode ter papéis diferentes de acordo com o contexto (e.g., "Ele deu um parecer" - "O verbo parecer")
+* Palavras fora do vocabulário: quando nosso corpus não contém alguma palavra, fica difícil para o POS-Tagger "adivinhar" o valor morfológico da palavra. Isso é especialmente comum quando utilizar um POS-Tagger treinado em um domínio em textos de algum domínio específico, por exemplo, utilizar um POS-Tagger treinado em textos jornalísticos para marcação de um texto de prontuários de pacientes.
+
