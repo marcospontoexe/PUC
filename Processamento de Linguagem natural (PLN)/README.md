@@ -216,3 +216,33 @@ As principais dificuldades na realização deste processo são:
 * Ambiguidade: uma mesma palavra pode ter papéis diferentes de acordo com o contexto (e.g., "Ele deu um parecer" - "O verbo parecer")
 * Palavras fora do vocabulário: quando nosso corpus não contém alguma palavra, fica difícil para o POS-Tagger "adivinhar" o valor morfológico da palavra. Isso é especialmente comum quando utilizar um POS-Tagger treinado em um domínio em textos de algum domínio específico, por exemplo, utilizar um POS-Tagger treinado em textos jornalísticos para marcação de um texto de prontuários de pacientes.
 
+
+## Similaridade Léxica
+O conceito de similaridade textual é muito importante para diversas tarefas de PLN e existem diversos métodos de cálculo de similaridade. 
+
+Existe uma série de diferentes cálculos/medidas que indicam a similaridade léxica entre palavras, as chamamos de string-based.
+
+![similarity-measures](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/imagens/similarity-measures.png)
+
+### Levenshtein (edit) distance
+A distância de Levenshtein entre duas palavras é o número mínimo de edições de um caractere (inserções, exclusões ou substituições) necessárias para alterar uma palavra pela outra. Usaremos para comparar PALAVRAS/TOKENS.
+
+```python
+import nltk
+
+# Define 4 palavras diferentes
+p1 = "padeiro"
+p2 = "pandeiro"
+p3 = "bombeiro"
+p4 = "padaria"
+
+nltk.edit_distance(p1, p2)  # 1
+nltk.edit_distance(p1, p3)  # 4
+nltk.edit_distance(p1, p4)  # 4
+nltk.edit_distance(p3, p4)  # 7
+```
+
+
+### Como a similaridade semântica difere da léxica?
+Além dos diversos métodos de cálculo de similaridade léxica, devemos estar atentos ao conceito de similaridade semântica, que está mais associado ao significado das palavras do que à sua forma. 
+
