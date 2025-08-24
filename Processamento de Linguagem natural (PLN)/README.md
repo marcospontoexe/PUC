@@ -224,6 +224,9 @@ Existe uma série de diferentes cálculos/medidas que indicam a similaridade lé
 
 ![similarity-measures](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/imagens/similarity-measures.png)
 
+### Como a similaridade semântica difere da léxica?
+Além dos diversos métodos de cálculo de similaridade léxica, devemos estar atentos ao conceito de similaridade semântica, que está mais associado ao significado das palavras do que à sua forma. 
+
 ### Levenshtein (edit) distance
 A distância de Levenshtein entre duas palavras é o número mínimo de edições de um caractere (inserções, exclusões ou substituições) necessárias para alterar uma palavra pela outra. Usaremos para comparar PALAVRAS/TOKENS.
 
@@ -242,7 +245,94 @@ nltk.edit_distance(p1, p4)  # 4
 nltk.edit_distance(p3, p4)  # 7
 ```
 
+### N-grams
+O N-grams são basicamente um conjunto de caracteres/palavras co-ocorrentes em uma determinada janela de abertura. Usaremos tanto para comparar CARACTERES quanto PALAVRAS.
 
-### Como a similaridade semântica difere da léxica?
-Além dos diversos métodos de cálculo de similaridade léxica, devemos estar atentos ao conceito de similaridade semântica, que está mais associado ao significado das palavras do que à sua forma. 
+```python
+import nltk
+from nltk.util import ngrams
 
+# Necessário pois utilizaremos o tokenizador
+nltk.download('punkt_tab')
+
+# Função para gerar n-grams de palavras a partir de uma sentença.
+def extrair_ngrams_palavras(sent, n):
+    n_grams = ngrams(nltk.word_tokenize(sent, language='portuguese'), n)
+    return [ ' '.join(grams) for grams in n_grams]
+
+texto = 'Esta é uma sentença para testarmos n-grams de palavras.'
+
+print("1-gram: ", extrair_ngrams_palavras(texto, 1))  # 1-gram:  ['Esta', 'é', 'uma', 'sentença', 'para', 'testarmos', 'n-grams', 'de', 'palavras', '.']
+print("2-gram: ", extrair_ngrams_palavras(texto, 2))   # 2-gram:  ['Esta é', 'é uma', 'uma sentença', 'sentença para', 'para testarmos', 'testarmos n-grams', 'n-grams de', 'de palavras', 'palavras .']
+print("3-gram: ", extrair_ngrams_palavras(texto, 3))  # 3-gram:  ['Esta é uma', 'é uma sentença', 'uma sentença para', 'sentença para testarmos', 'para testarmos n-grams', 'testarmos n-grams de', 'n-grams de palavras', 'de palavras .']
+print("4-gram: ", extrair_ngrams_palavras(texto, 4))  # 4-gram:  ['Esta é uma sentença', 'é uma sentença para', 'uma sentença para testarmos', 'sentença para testarmos n-grams', 'para testarmos n-grams de', 'testarmos n-grams de palavras', 'n-grams de palavras .']
+```
+
+**IMPORTANTE**: Mas quais seriam algumas das aplicações dos n-grams?
+
+#### 1) Reconhecimento de entidades / Chunking
+Imagine que você tenha um corpus (conjunto de documentos) e visualize os seguintes n-grams:
+
+1.   São Paulo (2-gram)
+2.   processamento de linguagem natural (4-gram)
+3.   o presidente alega que é inocente (6-gram)
+
+Ao fazermos um levantamento de frequência, possivelmente os exemplos 1 e 2 ocorram com mais frequência no corpus. Agora se aplicarmos um modelo de probabilidade podemos **encontrar entidades** compostas por múltiplas palavras no texto.
+
+#### 2) Predição de palavras
+Seguindo a mesma linha anterior, é possível também utilizar os n-grams para fazer **predições de palavras**. Por exemplo, se houver a sentença parcial "*Meu beatle favorito é*", a probabilidade da próxima palavra ser "*John*", "*Paul*", "*George*" ou "*Ringo*" é bem maior que o restante das palavras do vocabulário.
+
+#### 3) Correção ortográfica
+A sentença "*beba vino*" poderia ser corrigida para "*beba vinho*" se você soubesse que a palavra "*vinho*" tem uma alta probabilidade de ocorrência após a palavra "*beba*". Além disso, a sobreposição de letras entre "*vino*" e "*vinho*" é alta (i.e., baixa distância de edição).
+
+#### 4) Similaridade léxica
+Vamos extrair 2-grams de caracteres das duas palavras a seguir.
+
+```python
+p1 = "parar"
+p2 = "parado"
+
+# 4 bi-grams - 2 únicos
+print("2-grams: ", extrair_ngrams_char(p1,2)) # 2-grams:  ['p a', 'a r', 'r a', 'a r']
+# 5 bi-grams - 5 únicos
+print("2-grams: ", extrair_ngrams_char(p2,2)) # 2-grams:  ['p a', 'a r', 'r a', 'a d', 'd o']
+```
+
+Para cálculo de similaridade utilizando n-grams usamos a fórmula: `S = 2C / A + B`
+
+Onde:
+* A é o número de n-grams únicos na primeira palavra
+* B é o número de n-grams únicos na segunda palavra
+* C é o número de n-grams únicos compartilhados
+Portanto, neste exemplo o cálculo ficaria: S = 2 * 2 / 2 + 5 = 0.57
+
+### Jaccard distance
+A distância de Jaccard é definida como o tamanho da interseção dividida pelo tamanho da união de dois conjuntos. Usaremos tanto para comparar CARACTERES quanto PALAVRAS.
+
+* Sentença 1: Eu gosto de fazer programas usando processamento de linguagem natural
+* Sentença 2: Eu sei programar técnicas de processamento de linguagem natural
+
+![jaccard-similarity](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/imagens/jaccard-similarity.png)
+
+```python
+w1 = set('tráfico')
+w2 = set('tráfego')
+
+nltk.jaccard_distance(w1, w2) # 0.4444444444444444
+```
+
+**IMPORTANTE**: Esta medida calcula a distância entre os dois termos, portanto quanto maior o valor, mais distantes (diferentes) são os termos!
+
+**ATENÇÃO**: a função jaccard_distance() não aceita strings, você deve transformar sua entrada em set
+
+```python
+#Jaccard em PALAVRAS
+s1 = 'Eu gosto de fazer programas usando processamento de linguagem natural'
+s2 = 'Eu sei programar técnicas de processamento de linguagem natural'
+
+# Tokeniza e transforma lista de tokens em set
+s1_set = set(nltk.word_tokenize(s1, language='portuguese'))
+s2_set = set(nltk.word_tokenize(s2, language='portuguese'))
+
+nltk.jaccard_distance(s1_set, s2_set)   # 0.5833333333333334
+```
