@@ -370,3 +370,15 @@ wordnet.synsets("cão", lang="por")
 # Busca lemmas em português
 wordnet.lemmas("cão", lang="por")
 ```
+
+### Polissemias
+A polissemia é a quantidade de sentidos/significados de uma palavra.
+
+### Path Similarity (path)
+Retorna uma pontuação indicando o quão semelhantes os sentidos de duas palavras são, com base no caminho mais curto que conecta os sentidos na taxonomia is-a (é-um) (Hiperonímia / Hiponímia). A pontuação está no intervalo de 0 a 1.
+
+### Leacock-Chodorow Similarity (lch)
+Similar ao anterior, porém utiliza também a profundidade máxima da taxonomia em que os sentidos ocorrem no cálculo.
+
+### Leacock-Chodorow Similarity (lch)
+Similar ao anterior, porém utiliza também a profundidade máxima da taxonomia em que os sentidos ocorrem no cálculo.
