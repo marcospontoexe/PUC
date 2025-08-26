@@ -336,3 +336,37 @@ s2_set = set(nltk.word_tokenize(s2, language='portuguese'))
 
 nltk.jaccard_distance(s1_set, s2_set)   # 0.5833333333333334
 ```
+
+## Similaridade semântica
+A Similaridade semântica é medida através da semelhança de significado ou conteúdo semântico entre palavras/sentenças/documentos.
+
+**WordNet** é a rede semântica mais popular na área de medir a similaridade knowledge-based; O WordNet é um grande banco de dados léxico, disponível em diversos idiomas. Substantivos, verbos, adjetivos e advérbios são agrupados em conjuntos de sinônimos cognitivos (synsets), cada um expressando um conceito distinto. 
+
+O que é um **synset**? É um conjunto de sinônimos que compartilham um mesmo significado.
+Os synsets são interligados por meio de relações conceitual-semânticas e léxicas.
+
+Cada synset possui um ou mais **lemmas**, que representam um significado particular de uma palavra específica.
+
+### Acessando o WordNet utilizando o NLTK
+Infelizmente o NLTK ainda não dá suporte ao acesso direto a busca em algum grande WordNet em português (e.g., openWordnet-PT, WordNet.PT). Trabalharemos nossos exemplos em inglês e utilizando a versão em português contida no Open Multilingual Wordnet que o NLTK dá suporte.
+
+```python
+import nltk
+from nltk.corpus import wordnet
+
+# Obtém o(s) synset(s) para a palavra "pain" (dor)
+syn = wordnet.synsets("pain")
+# Imprime a definição
+print(syn[0].definition())  # a symptom of some physical hurt or disorder
+# Imprime exemplos de aplicação em uma frase
+print(syn[0].examples())  # ['the patient developed severe pain and distension']
+```
+
+### Utilizando synsets e lemmas em português através do Open Multilingual Wordnet
+```python
+# Busca synsets em português
+wordnet.synsets("cão", lang="por")
+
+# Busca lemmas em português
+wordnet.lemmas("cão", lang="por")
+```
