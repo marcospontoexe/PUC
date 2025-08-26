@@ -481,3 +481,18 @@ print(X.toarray())
 
 **DICA**: Vale a pena olhar a [**documentação**](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) do CountVectorizer, pois existem diversos parâmetros úteis que podemos utilizar.
 
+### Limitações do BoW
+Apesar das ideias de que documentos semelhantes terão contagens de palavras semelhantes entre si (ao aprender Classificação de Textos você poderá ver isso mais detalhadamente) e que uma palavra com alta frequência em um documento é considerada importante funcionarem em vários casos, o modelo BoW tem algumas limitações, entre elas:
+
+* **Peso igual a todas palavras**: o BoW dá um peso igual a todas palavras. Em nosso exemplo palavras como "com" e "do", tem o mesmo peso de "cão" e "menino". Isso não é bom pois palavras mais comuns (artigos, preposições, etc) deveriam ter peso menor, pois são menos discriminantes.
+* **Significado semântico**: a abordagem básica do BOW não considera o significado da palavra no documento. Ignora completamente o contexto em que é usado. A mesma palavra pode ser usada em vários locais com base no contexto ou nas palavras próximas (embora o uso de n-grams possa amenizar um pouco o problema do contexto).
+* Tamanho do vetor - **maldição da dimensionalidade**: para um documento grande, o tamanho do vetor pode ser enorme, resultando em muito tempo de processamento e alto consumo de memória. Pode ser necessário ignorar as palavras com base na relevância do seu caso de uso.
+
+### Aplicações do BoW
+Ele é útil em qualquer tarefa em que a posição ou informação contextual do texto não é tão importante. Alguns exemplos são:
+
+* Identificar o autor de um documento (classificação de textos)
+* Agrupar documentos por tópicos (clusterização)
+* Análise de sentimentos - identificar "positividade"/"negatividade" de um documento (regressão)
+
+## TF-IDF
