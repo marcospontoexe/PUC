@@ -496,3 +496,111 @@ Ele é útil em qualquer tarefa em que a posição ou informação contextual do
 * Análise de sentimentos - identificar "positividade"/"negatividade" de um documento (regressão)
 
 ## TF-IDF
+É uma medida estatística utilizada para avaliar a importância de uma palavra em um documento dentro de um corpus. A importância aumenta proporcionalmente ao número de vezes que uma palavra aparece no documento, mas é compensada pela frequência da palavra no corpus.
+
+Mas o que quer dizer a sigla TF-IDF? TF-IDF é uma abreviação do inglês para **term frequency**–**inverse document frequency**, que significa frequência do termo–inverso da frequência nos documentos.
+
+## Como Calcular?
+O TF-IDF é composto por duas métricas. A primeira é calculada pela **frequência normalizada do termo** (TF), ou seja,o número de vezes que uma palavra aparece em um documento, dividido pelo número total de palavras nesse documento. A segunda é a **Frequência inversa de documentos** (IDF), calculada como o logaritmo do número de documentos no corpus dividido pelo número de documentos em que o termo específico aparece.
+
+## TF (Term Frequency)
+Mede a frequência com que um termo ocorre em um documento. Como todo documento tem tamanho diferente, é possível que um termo apareça muito mais vezes em documentos longos do que em documentos mais curtos. Assim, o termo frequência é geralmente dividido pelo tamanho do documento (também conhecido como número total de termos no documento) como forma de normalização.
+
+`TF(t) = (número de ocorrências do termo t no documento) / (número total de termos no documento)`.
+
+## IDF (Inverse Document Frequency)
+Mede a importância de um termo no corpus. Ao calcular o TF, todos os termos são considerados igualmente importantes. No entanto, sabe-se que certos termos, como "é", "de" e "isso", podem aparecer muitas vezes, mas têm pouca importância. Portanto, precisamos diminuir o peso dos termos frequentes e aumentar dos raros.
+
+`IDF(t) = log_e(número total de documentos / número de documentos com o termo t).`
+
+## TF-IDF
+Define a importância de uma palavra para um documento considerando todo corpus.
+
+`TF-IDF(t) = TF(t) * IDF(t)`.
+
+## Exemplo
+Queremos calcular a importância da palavra "**carro**" em um documento contido em um corpus de 1 milhão de documentos.
+
+A palavra aparece 5 vezes em um documento com 100 palavras, portanto seu TF pode ser calculado como:
+
+`TF(carro) = 5 / 100 = 0.05`
+
+Verificou-se que a palavra "carro" aparece em 500 documentos do corpus, portanto, para calcular seu IDF fazemos:
+
+`IDF(carro) log_e(1000000 / 500) = 3.3`
+
+E enfim, o TF-IDF desta palavra é o produto deste valores:
+
+`TF-IDF(carro) = 0.05 * 3.3 = 0.16`
+
+### **RESUMINDO**
+O peso de um termo:
+
+* aumenta quando t aparece muitas vezes em poucos documentos
+* diminui quando t aparece em muitos documentos
+* diminui quando t aparece poucas vezes no documento
+
+### Intuição por trás do TF-IDF ( vs. Bag of words )
+Uma das limitações do BoW é justamente o peso igual para todas palavras. Ao normalizar a frequência de um termo no documento e calcular a importância do termo para todo o corpus, resolvemos este grande problema da abordagem BoW.
+
+## Utilizando o scikit-learn para calcular o TF-IDF
+
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# A seguir um corpus composto por resumos dos primeiros 12 capítulos do livro "Senhor dos Anéis"
+# Traduzidos por Luciano Soares e Reinaldo Imrahil - disponível em: https://www.valinor.com.br/82
+corpus = [
+          "Capítulo 1: Uma festa muito esperada\nSessenta anos passaram desde que Bilbo Bolseiro, o herói de O Hobbit, tinha voltado de sua jornada. Ele é conhecido por muitos, tanto pela sua riqueza legendária como pelo fato de que a idade não parece afetá-lo. Ele anuncia uma grande celebração em honra do 111o aniversário dele e o 33o aniversário do seu sobrinho Frodo, que ele tinha adotado como herdeiro alguns anos atrás e trouxera para viver no Bolsão. A festa estava esplêndida, e um grande número de hobbits foi convidado. Mas Bilbo sentia-se estranho ultimamente, e decidiu que precisava de umas férias e deixaria o Condado; assim, depois de fazer um discurso depois do jantar, na frente dos 144 amigos mais íntimos dele e de Frodo, e também de seus parentes, ele coloca o anel mágico e desaparece, causando grande surpresa. Ele fala mais uma vez com Gandalf antes de partir, e quase muda a sua intenção original de deixar o anel com Frodo; mas o mago o convence a manter a idéia, e Bilbo parte, muito aliviado e mais feliz do que nunca. Gandalf adverte Frodo para não usar o anel. No dia seguinte Frodo está ocupado, pois Bilbo tinha deixado presentes de despedida para muitos hobbits, e agora uma multidão de pessoas se encontra no Bolsão, muitos deles cavando ao redor e procurando os tesouros imaginários de Bilbo. Gandalf parte, e não volta por muito tempo.",
+          "Capítulo 2: A Sombra do Passado\nGandalf visita Frodo só algumas vezes pelos anos que seguem. Frodo se acostuma a ser o mestre do Bolsão, e faz amizade com alguns dos hobbits mais jovem [por exemplo com Peregrin Tûk e Merry Brandebuque] enquanto a maioria o considera esquisito, como Bilbo. Rumores de eventos estranhos fora do Condado surgem, como o da ascensão do Poder Escuro na Terra de Mordor, embora a maioria dos hobbits não acreditasse nisso. No qüinquagésimo ano da vida de Frodo, Gandalf o visita novamente e eles têm uma conversa longa sobre o anel que Frodo tinha herdado de Bilbo. Gandalf explica a Frodo a natureza e a história do anel, que é de fato o maior dos Anéis de Poder e foi feito há muito tempo por Sauron, o Senhor do Escuro de Mordor. Sauron o está procurando agora avidamente. Achando o anel o seu poder cresceria imensamente. O anel deveria ser destruído para que Sauron perdesse seu poder, mas só poderia ser destruído em Orodruin, a Montanha da Perdição em Mordor. Parece que Sauron já tinha ouvido falar de Bilbo e do Condado através de Gollum; assim, o Condado provavelmente não é mais um lugar seguro para Frodo. Ele decide partir, acompanhado por Sam Gamgi, o seu jovem jardineiro, que [ao contrário da maioria dos hobbits] acredita nas antigas histórias e adoraria ver os Elfos",
+          "Capítulo 3: Três não é demais\nFrodo vende o Bolsão aos Sacola-Bolseiros e compra uma casa na Terra dos Buques, a leste do Condado, onde ele tinha passado sua infância. No seu qüinquagésimo aniversário, ele deixa o Bolsão e parte com seu amigo Pippin [Peregrin Tûk] e Sam Gamgi; Gandalf o deixou por algum tempo para procurar notícias do que acontecia na Terra-média, e ainda não voltou, o que preocupa muito Frodo. No dia seguinte, os três hobbits notam que estão sendo seguidos pelos misteriosos Cavaleiros Negros. Não sabem exatamente quem eles são, e Frodo, cuidadoso, decide não deixar que os Cavaleiros os vejam. Eles conhecem, durante a noite, um grupo vagante de Altos-elfos conduzido por Gildor Inglorion; Frodo fala por muito tempo com Gildor, e o elfo o aconselha a tentar alcançar Valfenda apesar da ausência de Gandalf, e conta-lhe que os Cavaleiros Negros são os perigosos Servos do Inimigo.",
+          "Capítulo 4: Um atalho para cogumelos\nNo dia seguinte, Frodo decide pegar um atalho para o rio Brandevin, onde Merry deveria encontrá-los naquele dia; queriam chegar lá mais cedo, e evitar serem vistos novamente pelos Cavaleiros Negros. De fato, eles percebem que um dos Cavaleiros está na estrada e decidem sair dela. Depois de uma passagem longa e desagradável pelos bosques, eles alcançam a propriedade de Fazendeiro Magote, que é conhecido por soltar seus cachorros em qualquer invasor que venha a colher os seus cogumelos [como o próprio Frodo tinha experimentado na sua mocidade]. Contudo, ele é bastante amigável, especialmente por conhecer bastante Pippin; ele conta a Frodo e seus amigos que pouco tempo antes um cavaleiro negro estranho e amedrontador perguntara-lhe por um Bolseiro . Para ajudar Frodo a alcançar a balsa do Brandevin da maneira mais segura e rápida possível, Magote leva os três hobbits com sua carroça , e eles acham Merry esperando-os ansiosamente.",
+          "Capítulo 5: Conspiração Desmascarada\nConforme eles cruzam o Rio, notam uma figura negra parada, e cada vez mais próxima. Eles vão para a casa nova de Frodo em Cricôncavo, e falam sobre as suas aventuras na viagem. Frodo pretende falar finalmente para os amigos que vai partir o mais cedo possível quando, para o seu assombro, eles dizem que já sabem sobre o Anel, e sobre o propósito de sua viagem, e que pretendem acompanhá-lo e ajudá-lo. Depois do choque inicial, Frodo aceita a ajuda deles alegremente, e eles decidem partir no dia seguinte, bem cedo, pela Floresta Velha, um lugar conhecido como esquisito e perigoso, para evitar as estradas que provavelmente serão vigiadas pelos Cavaleiros.",
+          "Capítulo 6: A Floresta Velha\nOs hobbits entram na Floresta Velha e logo começam a sentir sua estranheza, como se as árvores estivessem vigiando-os e os odiassem. Eles chegam à Clareira onde os hobbits queimaram uma grande quantidade de árvores há muito tempo atrás. De lá, eles seguem um caminho que os conduz a uma colina que sobe fora da Floresta, e de lá, como eles eventualmente notam, para o Rio Withywindle, a parte central e mais estranha da floresta. Eles querem evitar isso e deixar o caminho, mas acham o terreno sempre mais difícil na direção em que gostariam de ir. Eles caem em um barranco que é muito íngreme para ser escalado novamente e, seguindo-o, chegam ao Withywindle e acham um caminho que corre ao longo dele. Este caminho os traz a um velho salgueiro, perto do qual começam a sentir-se sonolentos de repente. Frodo, Merry e Pippin dormem, e a árvore lança Frodo na água e captura Merry e Pippin debaixo de suas raízes. Sam e Frodo não podem salvá-los, e correm ao longo do caminho, enquanto pedem por ajuda, desesperados. Eles encontram Tom Bombadil, um homem estranho que canta canções absurdas. Tom canta a melodia certa, e o salgueiro liberta Merry e Pippin; então Tom convida os hobbits para irem à casa dele, onde vive com Fruta DOuro.",
+          "Capítulo 7: Na Casa de Tom Bombadil\nEles comem um jantar magnífico e então vão dormir, e cada um deles tem sonhos diferentes e estranhos. No dia os hobbits falam com Tom Bombadil durante o dia inteiro. Tom lhes fala muito sobre a Floresta, os tipos de árvores e animais, o Velho Homem-Salgueiro, e a história antiga da Terra-média, embora de maneira enigmática. Para a surpresa deles, descobrem que o Anel não tem nenhum poder sobre Bombadil. Ele lhes dá conselhos no dia seguinte, e lhes ensina uma rima parra chamá-lo se eles precisarem da ajuda dele.",
+          "Capítulo 8: Névoa nas Colinas dos Túmulos\nNo dia seguinte, os hobbits deixam a casa de Tom, pretendendo cruzar os Túmulos. Eles fazem um progresso bom pela manhã, e ao redor de meio-dia param para descansar. Estranhamente há um grande pedra fria que se levanta no topo plano de uma colina. Eles adormecem e são despertados por um pôr-do-sol cercado pela névoa. Eles imediatamente se encaminham na direção que eles acreditam ser a mais direta para a Estrada; algum tempo depois Frodo, que estava na frente, passa entre duas pedras paradas e nota que os outros se foram. Ele começa a gritar por ajuda, e é capturado por uma Criatura Tumular. Ele desperta novamente dentro de um túmulo, nota que os outros estão inconscientes perto dele e que uma mão está rastejando na direção deles. Frodo canta a rima que Tom Bombadil tinha lhes ensinado um dia antes, e realmente Tom vem muito rápido, e a luz do dia destrói a Criatura Tumular. Tom desperta os outros três hobbits, e dá a cada um deles uma espada, tirada dos tesouros que estavam dentro do túmulo. Ele também traz os pôneis deles que fugiram à noite, e os acompanha durante algum tempo, até as fronteiras das terras dele. Os hobbits partem, e chegam à aldeia de Bri pela noite.",
+          "Capítulo 9: No Pônei Saltitante\nO hobbits entram no Pônei Saltitante, uma hospedaria grande em Bri. Um grupo diversificado de hóspedes já esta reunido lá: hobbits locais e homens, anões em viagem, homens estranhos do Sul, e um Guardião misterioso conhecido como Passolargo. Depois da ceia, Frodo, Sam e Pippin decidem unir-se aos hóspedes; Pippin chama a atenção contando uma história sobre o Prefeito do Condado e, empolgado, começa a contar sobre a festa de despedida de Bilbo. Frodo não quer mencionar o desaparecimento de Bilbo, e para interromper Pippin salta sobre uma mesa e começa a cantar e dançar. Ele salta e cai da mesa, e enquanto cai o Anel desliza para o dedo dele, e ele desaparece. Isto causa muita ansiedade, e apesar das explicações posteriores a maioria dos hóspedes deixa o aposento. Passolargo parece saber o real nome de Frodo, e a verdadeira causa do seu desaparecimento, e lhe pede que tenham uma conversa depois. Carrapicho, o estalajadeiro, também se lembra de algo e pede para ter uma conversa particular com Frodo.",
+          "Capítulo 10: Passolargo\nPassolargo vai falar com Frodo, Sam e Pippin. Ele se oferece para ser o guia deles, e parece já saber muito de Frodo; porém, por causa da sua aparência, os hobbits não confiam nele. Então Carrapicho chega e explica que Gandalf tinha deixado uma carta para um certo Frodo Bolseiro, que Carrapicho esquecera de enviar ao Condado há vários meses atrás. Frodo e seus companheiros batem com a descrição que Gandalf dera a Carrapicho, e este dá a carta a Frodo. Entre outras coisas, essa carta contém um conselho de Gandalf para aceitar a ajuda de um amigo seu, um homem chamado Passolargo [com o verdadeiro nome Aragorn], se eles chegassem a conhecê-lo. Assim, Frodo decide aceitar a ajuda dele como um guia para Valfenda. Merry, que saiu para pegar um ar fresco antes, agora volta e conta que viu os Cavaleiros Negros, e parece que eles têm espiões em Bri. Eles decidem não ir para os quartos designados a eles, e dormem no quarto de hóspedes, depois de trancarem as janelas e a porta.",
+          "Capítulo 11: Uma Faca no Escuro\nNaquela mesma noite, os Cavaleiros Negros arrombam a casa de Frodo em Cricôncavo, descobrem que Frodo não esta lá, e cavalgam para Bri com grande pressa. Eles arrombam a hospedaria, ou mais especificamente o quarto onde os hóspedes hobbits normalmente dormem. Os hobbits não são descobertos, mas todos os cavalos e pôneis da hospedaria fugiram com medo. No dia seguinte eles compram um pônei e mantimentos [muito mais do que eles poderiam carregar em suas costas]; eles vão em direção a Valfenda, e Passolargo os conduz pela floresta para uma colina chamada Topo do Vento, que oferece uma visão de cima de uma área circunvizinha bem grande. Parece que Gandalf tinha estado lá três dias antes deles. Naquela noite eles são atacados por cinco dos Cavaleiros em uma depressão debaixo do Topo do Vento; Frodo não consegue resistir ao desejo de colocar o Anel, e imediatamente depois de fazer isso percebe que ele pode ver os Cavaleiros muito claramente apesar da escuridão. O capitão dos Cavaleiros ataca Frodo, que o golpeia nos pés mas acaba ferido e perde a consciência .",
+          "Capítulo 12: Fuga para o Vau\nPassolargo faz o melhor possível para curar Frodo, mas este só poderia receber o tratamento em Valfenda, que eles deveriam alcançar o mais cedo possível. Eles cruzam o Rio Fontegris e, evitando a estrada, caminham pelos ermos e acabam alcançando a região dos trolls onde Bilbo tivera a sua primeira aventura tantos anos atrás. Eles têm que cruzar uma linha de colinas para se pôr mais perto novamente da Estrada, já que a única esperança deles de alcançar Valfenda a tempo é seguir a Estrada que cruza o rio Ruidoságua, ou Bruinen, no vau de Bruinen. Na Estrada eles conhecem Glorfindel, um Senhor Élfico que foi enviado de Valfenda para achá-los e ajudá-los. Eles se aproximam do Vau de Bruinen e são emboscados pelos Cavaleiros Negros. Frodo consegue escapar e cruzar o rio no cavalo de Glorfindel. Então uma grande inundação vem rio abaixo e leva os Cavaleiros."
+]
+
+# Cria instância
+vect = TfidfVectorizer()
+
+X = vect.fit_transform(corpus)  # <Compressed Sparse Row sparse matrix of dtype 'float64'	with 1312 stored elements and shape (12, 716)>
+
+print(vect.get_feature_names_out())
+
+print(X.toarray())
+```
+
+### Analisando pesos de cada documento
+```python
+import pandas as pd
+
+# Pega o vetor do primeiro documento
+primeiroDocVec = X[0]
+
+# Mostra os valores em um Dataframe do pandas
+pd.set_option('display.max_rows', None)
+df = pd.DataFrame(primeiroDocVec.T.todense(), index=vect.get_feature_names_out(), columns=["tfidf"])
+df.sort_values(by=["tfidf"],ascending=False)
+```
+
+DICA: Vale a pena olhar a [documentação do TfidfVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html), pois existem diversos parâmetros úteis que podemos utilizar.
+
+## **Limitações do TF-IDF**
+Apesar do bom funcionamento em diversos cenários e tarefas de PLN, o TF-IDF tem algumas limitações de uso, entre elas:
+
+* Baseia-se exclusivamente em evidências de frequência como evidência de similaridade/importância, portanto, **não captura semântica ou posição de palavras**
+* Pode ter queda de performance de execução em grandes vocabulários (**maldição da dimensionalidade**)
+
+## **Aplicações do TF-IDF**
+A seguir alguns exemplos em que podemos usar o TF-IDF:
+
+* **Recuperação de Informação**: sua principal funcionalidade é voltada para mecanismos de busca, pois consegue encontrar os resultado mais relevantes. e.g., imagine que você busque pela palavra "programação", basta você obter os documentos onde esta palavra tem uma pontuação TF-IDF mais alta.
+* **Extração de palavras-chave**: você pode utilizar as palavras com maior pontuação TF-IDF de um documento como palavras-chave (*keywords*) que representam aquele documento.
+* **Sumarização de textos**: podemos extrair sentenças que possuam palavras com as maiores pontuações TF-IDF seguindo a intuição de que ela representam melhor os temas centrais do texto, portanto podem ser utilizadas na construção de um sumário (resumo) do texto.
+
+
