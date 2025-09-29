@@ -734,7 +734,152 @@ from sklearn.feature_extraction.text import CountVectorizer
 # E o "M" é o tamanho do vocabulário
 bow = CountVectorizer()
 X_train_bow = bow.fit_transform(corpus_treinamento.data)
-X_train_bow.shape
+X_train_bow.shape # (11314, 130107)
+
+# Vamos visualizar algumas colunas da matriz termo-documento (vocabulário)
+bow.get_feature_names_out()[0:10]
+
+bow.get_feature_names_out()[100000:100010]
+
+bow.get_feature_names_out()[50000:50010]
 ```
 
+OBSERVAÇÃO: Podemos verificar que além de termos um vocabulário grande, temos muitas palavras que não talvez não agreguem valor semântico ao texto - vamos cuidar disso mais tarde...
 
+#### TF-IDF
+```py
+# Visto que já temos o BoW, não precisamos do TfidfVectorizer, podemos utilizar o TfidfTransformer
+from sklearn.feature_extraction.text import TfidfTransformer
+
+# Transforma nosso BoW (matriz termo-documento) em um vetor contendo os pesos calculados para cada palavras (NxM)
+# Onde "N" é o número de documentos na base de treinamento
+# E o "M" é o tamanho do vocabulário
+tfidf = TfidfTransformer()
+X_train_tfidf = tfidf.fit_transform(X_train_bow)
+X_train_tfidf.shape   # (11314, 130107)
+
+# Temos uma matriz de mesmo tamanho, porém agora com valores decimais referentes aos pesos calculados e não apenas valores INTEIROS de frequência
+```
+
+**PRÓXIMO PASSO**: Já temos o texto transformado em atributos numéricos, e também sabemos a qual categoria (classe) cada documento pertence. Agora podemos treinar os classificadores de Machine Learning.
+
+### Classificador 1: Naive Bayes
+TREINAMENTO: 
+
+```py
+# Perceba que a biblioteca sklearn dispõe de vários classificadores
+from sklearn.naive_bayes import MultinomialNB
+
+# Treina o classificador de Naive Bayes
+# Passamos por parâmetro:
+#    1) matriz NxM contendo os pesos de cada palavra para cada documento
+#    2) vetor Nx1 contendo a classe/categoria de cada documento
+clf = MultinomialNB().fit(X_train_tfidf, corpus_treinamento.target)
+```
+
+**OBSERVAÇÃO**: É possível com menos linhas de código fazer toda etapa de extração de atributos e treinamento, basta usar o método [Pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) do sklearn. Outra vantagem deste método é que você não precisa explicitamente vetorizar a base de teste depois.
+
+```py
+from sklearn.pipeline import Pipeline
+
+text_clf = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB())])
+
+text_clf = text_clf.fit(corpus_treinamento.data, corpus_treinamento.target)
+```
+
+**Avaliação de Performance**:
+
+```py
+# Obtém trecho de teste do corpus
+corpus_teste = fetch_20newsgroups(subset='test', shuffle=True, random_state=1)
+
+# Tamanho do corpus de teste
+len(corpus_teste.data)  # 7532
+
+# Pede para o classificador tentar predizer toda base de teste
+# Como usamos pipeline, ele irá primeiro aplicar o BoW, depois o TF-IDF e somente depois tentará predizer
+predicted = text_clf.predict(corpus_teste.data)
+
+from sklearn.metrics import accuracy_score
+
+# Podemos imprimir de maneira bem simples a acurácia, ao comparar o vetor de valores preditos e o vetor com os valores rotulados da base de dados
+print("Acurácia: ",accuracy_score(predicted, corpus_teste.target))    # Acurácia:  0.7738980350504514
+
+from sklearn.metrics import classification_report
+
+# Podemos também imprimir um relatório completo de várias métricas, não apenas a acurácia
+print(classification_report(corpus_teste.target, predicted, target_names=corpus_teste.target_names))
+
+from sklearn.metrics import confusion_matrix
+
+# Podemos imprimir a matriz de confusão para tentar entender melhor os resultados
+mat = confusion_matrix(corpus_teste.target, predicted)
+
+print(mat)
+
+```
+
+A visualização não ficou muito boa, vamos utilizar a biblioteca seaborn para plotar de maneira mais agradável, em forma de heatmap e com o nome das categorias
+
+```py
+%matplotlib inline
+import matplotlib.pyplot as plt
+import seaborn as sns; sns.set()
+
+fig, ax = plt.subplots(figsize=(10,10)) 
+sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False, xticklabels=corpus_treinamento.target_names, yticklabels=corpus_treinamento.target_names )
+plt.xlabel('Categoria verdadeira')
+plt.ylabel('Categoria predita');
+```
+
+Aparentemente os tópicos que envolvem religião e política foram os que tiveram mais erros durante a classificação.
+
+### Classificador 2: SVM
+Treinamento:
+```py
+from sklearn.linear_model import SGDClassifier
+
+text_clf_svm = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()),
+                         ('clf-svm', SGDClassifier(loss='hinge', penalty='l2',alpha=1e-3, max_iter=5, random_state=42))])
+
+text_clf_svm = text_clf_svm.fit(corpus_treinamento.data, corpus_treinamento.target)
+predicted_svm = text_clf_svm.predict(corpus_teste.data)
+```
+
+Avaliação de Performance:
+
+```py
+print(classification_report(corpus_teste.target, predicted_svm, target_names=corpus_teste.target_names))
+```
+
+VEJA: O classificador SVM melhorou os resultados!
+
+### Predizendo categorias de textos fora do corpus
+O mais legal de um algoritmo de Machine Learning é que uma vez o modelo treinado, você pode utilizá-lo para predizer a categoria de qualquer novo texto que você queira.
+
+Vamos construir uma função para isso!
+
+```py
+def predizer_categoria(texto):
+    """Predicts the category of a given text using the trained SVM classifier."""
+    predicted = text_clf_svm.predict([texto])
+    return corpus_teste.target_names[predicted[0]]
+    
+predizer_categoria('NASA sent a payload to the ISS') # sci.space
+predizer_categoria('The best screen resolution for image editing is 1920x1080') # comp.graphics
+predizer_categoria('The president must make a statement about the incident')  # predizer_categoria('The president must make a statement about the incident')
+```
+
+### Considerações finais
+Os resultados obtidos acima são preliminares, visto que não fizemos nenhuma intervenção visando a melhoria dos mesmos. A maior parte dos erros ficaram em categorias que já são naturalmente confusas como cristianismo vs religião.
+
+Poderiamos explorar técnicas de Pré-processamento (e.g., stop-words, stemming) e analisar os resultados, visando obter melhorias.
+
+Como dito no início, existem diversos classificadores de Machine Learning, e cada um contém uma série de parâmetros configuráveis. Então como podemos ter certeza de qual classificador e quais parâmetros tem os melhores resultados para minha base de dados?
+
+Para facilitar este processo, a biblioteca sklearn implementa um método chamado GridSearch, que automaticamente treina e testa diversas possibilidades de classificadores e parâmetros, visando encontrar a melhor combinação.
+
+Por fim, utilizamos apenas dois tipos de Representação vetorial de palavras (Bow e TF-IDF). Poderíamos:
+
+Explorar os parâmetros do CountVectorizer para retirar palavras com certa frequência, gerar n-grams, etc.
+Gerar vetores numéricos provindos de modelos pré-treinados de Word Embeddings, e utilizá-los como atributos de treinamento (e.g., Tutorial 1, Tutorial 2).
