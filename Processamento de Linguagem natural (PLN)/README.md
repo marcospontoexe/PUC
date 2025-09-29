@@ -602,5 +602,139 @@ A seguir alguns exemplos em que podemos usar o TF-IDF:
 * **Recuperação de Informação**: sua principal funcionalidade é voltada para mecanismos de busca, pois consegue encontrar os resultado mais relevantes. e.g., imagine que você busque pela palavra "programação", basta você obter os documentos onde esta palavra tem uma pontuação TF-IDF mais alta.
 * **Extração de palavras-chave**: você pode utilizar as palavras com maior pontuação TF-IDF de um documento como palavras-chave (*keywords*) que representam aquele documento.
 * **Sumarização de textos**: podemos extrair sentenças que possuam palavras com as maiores pontuações TF-IDF seguindo a intuição de que ela representam melhor os temas centrais do texto, portanto podem ser utilizadas na construção de um sumário (resumo) do texto.
+---
+# Classificação de textos
+## Processamento de Linguagem Natural
+Nesta aula trabalharemos com Classificação de textos. Neste momento teremos nosso primeiro contato com técnicas de Machine Learning ou Aprendizagem de Máquina, que são algoritmos responsáveis por "ensinar" a máquina a realizar tarefas, sem que o programador tenha que explicitamente explicar as regras de funcionamento.
+
+O objetivo é que ao final desta aula você:
+
+1. Entenda o que é a Machine Learning
+2. Saiba utilizar um algoritmo de classificação simples baseado em aprendizado supervisionado
+3. Compreenda e aplique um pipeline simples de coleta/organização dos dados, treinamento, predição e avaliação para textos
+
+NÃO está no escopo desta aula:
+
+1. Explicar especificidades e o porquê da escolha dos classificadores utilizados
+2. Detalhar diferenças entre algoritmos de Machine Learning
+3. Utilizar classificadores para dados que não sejam textuais
+4. Trabalhar com aprendizado não-supervisionado
+5. Apresentar técnicas de Redes Neurais e Deep Learning
+
+## O que é Machine Learning?
+É uma área da Inteligência Artificial que provê a sistemas a habilidade de automaticamente aprender tarefas sem que seja explicitamente programada para tal.
+
+**Mas, quando usar?**
+Qualquer tarefa computacional em que não seja factível explicitamente definir regras de funcionamento ou que esta programação demande muito tempo, o Machine Learning (ML) pode ser aplicado.
+
+Por exemplo, eu gostaria que meu sistema receba uma imagem e diga o nome dos objetos encontrados. Seria humanamente impossível criar regras de reconhecimento de padrões para todos objetos existentes. O ML seria capaz de tentar compreender estas imagens e automaticamente generalizar estes padrões.
+
+## Aprendizado Supervisionado vs. Não Supervisionado
+Existem duas maneiras principais de se trabalhar com ML.
+
+A primeira delas é o **Aprendizado Supervisionado**, onde um humano gera uma base de dados rotulada para ensinar o algoritmo como executar a tarefa. Estes dados são inputados ao classificador que "aprende" a fazer a mesma rotulação, e é capaz de predizer os valores para novos dados. Por exemplo, eu gostaria que meu sistema recebesse um texto e diga qual o sentimento associado a este texto (alegria, tristeza, neutro). Neste caso um humano prepara uma base de dados com vários textos, associando os sentimentos a cada um deles. Assim, esta base de dados pode ser utilizada para treinar do algoritmo de ML para realizar a mesma tarefa quuando receber novos textos.
+
+Uma outra maneira é o Aprendizado **Não-supervisionado** (ou clusterização), onde o algoritmo não precisa de dados para descobrir padrões ou encontrar clusters de informações de dados. Por exemplo, ao receber uma coleção de textos o algoritmo é capaz de categorizá-los (e.g., esportes, política, entretenimento).
+
+Nós iremos aqui abordar apenas alguns algoritmos de classificação associados ao aprendizado supervisionado.
+
+![ml-supervised-unsupervised](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/imagens/ml-supervised-unsupervised.png)
+
+## Etapas de desenvolvimento
+Assim como todas tarefas de PLN, aqui também se faz necessária a etapa de obtenção e organização (**pré-processamento**) dos dados.
+
+Para o aprendizado supervisionado é preciso criar uma **base de dados rotulada** com uma série de **features** (atributos) que possam ajudar o algoritmo a encontrar padrões.
+
+Então esta base é inputada ao classificador, que aprende a generalizar a tarefa, e **predizer valores para novos dados**.
+
+Ao final, temos a etapa de **avaliação de nosso classificador**.
+
+![ml-workflow](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/imagens/ml-workflow.png)
+
+### Exemplos de aplicação de ML para textos
+O ML é capaz de lidar com todos tipos de dados, numéricos ou textuais, contínuos ou categóricos. Para a disciplina de PLN é óbvio que focaremos apenas em **dados textuais**.
+
+Diversos são os exemplos de aplicação de ML para classificação de textos, entre eles:
+
+1. Análise de Sentimentos em redes sociais
+2. Detecção de SPAM
+3. Categorização de mensagens de consumidores
+4. Topificação de artigos de notícias
+6. Codificação de doenças em prontuários do paciente
+
+## Classificação de documentos
+Iremos aqui classificar uma série de documentos provindos de notícias escritas em inglês. A ideia é que o algoritmo receba uma notícia e saiba dizer a qual categoria ela pertence.
+
+Para tal iremos treinar o algoritmo utilizando uma base de dados rotulada (corpus anotado), que contém o texto da notícia e sua categoria.
+
+Vamos também utilizar alguns classificadores de Machine Learning condizentes com a tarefa.
+
+### Dados
+A aquisição de dados geralmente é a pedra no sapato de todo cientista de dados, principalmente se tratando de aprendizado supervisionado, onde os dados "crus" não servem, precisamos que eles sejam rotulados.
+
+Muitas vezes este processo é manual e toma muito tempo, portanto é de suma importância sempre tentarmos averiguar se já não existe algum corpus anotado disponível para a tarefa que queremos realizar. 
+
+Para este exemplo iremos trabalhar com a base de dados ["20 Newsgroup"](http://qwone.com/~jason/20Newsgroups/), disponível na biblioteca sklearn, e já utilizada em nosso exemplo de Modelagem de tópicos. Este corpus tem aproximadamente 20,000 documentos, separados em 20 categorias.
+
+```py
+# O sklearn inclusive já disponibiliza uma sub-divisão pré-definida desse corpus. 
+# Assim você utiliza uma parte dele para TREINAR seu classificador e outra para TESTAR
+from sklearn.datasets import fetch_20newsgroups
+
+# Obtém base de treinamento, embaralhada e utilizamos random_state para resultado sempre ser o mesmo
+corpus_treinamento = fetch_20newsgroups(subset='train', shuffle=True, random_state=1)
+
+# Vamos visualizar as categorias do corpus
+print(corpus_treinamento.target_names) 
+'''
+['alt.atheism',
+ 'comp.graphics',
+ 'comp.os.ms-windows.misc',
+ 'comp.sys.ibm.pc.hardware',
+ 'comp.sys.mac.hardware',
+ 'comp.windows.x',
+ 'misc.forsale',
+ 'rec.autos',
+ 'rec.motorcycles',
+ 'rec.sport.baseball',
+ 'rec.sport.hockey',
+ 'sci.crypt',
+ 'sci.electronics',
+ 'sci.med',
+ 'sci.space',
+ 'soc.religion.christian',
+ 'talk.politics.guns',
+ 'talk.politics.mideast',
+ 'talk.politics.misc',
+ 'talk.religion.misc']
+'''
+
+# Tamanho da base de treinamento - quantidade de documentos (instâncias)
+len(corpus_treinamento.data) # 11314
+
+# Mostra uma das instâncias do corpus
+corpus_treinamento.data[600]
+
+# Podemos visualizar melhor sem as quebras de linha
+corpus_treinamento.data[600].split("\n")
+
+```
+
+**PERGUNTA**: OK, mas o classificador de Machine Learning não "entende" texto, então como podemos transformar o dado textual em números?
+
+### Extração de atributos (feature extraction)
+Neste caso, podemos extrair atributos do texto, usando as técnicas de Representação Vetorial de textos que vimos am aulas anteriores.
+
+#### Bag of Words (BoW)
+```py
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Transforma o texto em um vetor (NxM) - matriz termo-documento
+# Onde "N" é o número de documentos na base de treinamento
+# E o "M" é o tamanho do vocabulário
+bow = CountVectorizer()
+X_train_bow = bow.fit_transform(corpus_treinamento.data)
+X_train_bow.shape
+```
 
 
