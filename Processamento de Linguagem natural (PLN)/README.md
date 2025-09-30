@@ -907,4 +907,131 @@ O pipeline de execução é muito similar aos exemplos de classificação realiz
 **Dados**
 Para este exemplo iremos trabalhar com uma [base de dados de notícias](https://aclanthology.org/W15-5616.pdf), rotulada com as emoções básicas de [Ekman](https://www.tandfonline.com/doi/abs/10.1080/02699939208411068): alegria, tristeza, raiva, medo, repugnância e surpresa. Em caso de ausência de emoção, a categoria neutro foi aplicada.
 
-**IMPORTANTE**: Faça o upload da base de dados para seu ambiente Google Colab ou Jupyter Notebook! [Segue o link] para acesso.
+**IMPORTANTE**: Faça o upload da base de dados para seu ambiente Google Colab ou Jupyter Notebook! [Segue o link](https://github.com/marcospontoexe/PUC/blob/main/Processamento%20de%20Linguagem%20natural%20(PLN)/analise-sentimentos-2000-noticias.txt) para acesso.
+
+## Fluxo de execução
+Vamos seguir o seguinte fluxo de processamento dos dados:
+
+1. Abrir o corpus
+2. Remover as stop-words
+3. Aplicar stemmer
+4. Gerar o Bag of Words
+5. Treinar o modelo SVM
+6. Predizer/Avaliar o modelo
+
+```py
+# Abre corpus
+f = open("analise-sentimentos-2000-noticias.txt", "r", encoding="utf-8-sig")
+linhas = f.readlines()
+
+corpus_textos = []
+corpus_rotulos = []
+
+# Percorre as 2000 linhas
+for linha in linhas:
+
+  # Separa texto e rótulo/categoria/emoção
+  item = linha.split(";;")
+
+  corpus_rotulos.append(item[0])
+  corpus_textos.append(item[1])
+
+# 5 primeiros textos
+corpus_textos[0:5]
+
+# 5 primeiros rótulos
+corpus_rotulos[0:5]   # ['alegria', 'tristeza', 'surpresa', 'tristeza', 'neutro']
+```
+
+Em nossos exemplos de classificação anteriores, separamos parte do banco de dados para TREINAMENTO e outra parte para TESTE, nesse tipo de avaliação que chamamos de hold-out.
+
+Existem outras formas de realizar a avaliação, inclusive mais indicadas de acordo com a situação, mas isto não está no escopo de nossa disciplina, caso queira saber mais métodos de avaliação como o cross-validation, [leia este post](https://medium.com/@jaz1/holdout-vs-cross-validation-in-machine-learning-7637112d3f8f).
+
+```python
+from sklearn.model_selection import train_test_split
+
+# O próprio sklearn tem um método para dividir a base de dados em treinamento e teste
+# Neste caso estamos deixando 90% para treinamento e 10% para testes
+corpus_treinamento, corpus_teste, rotulos_treinamento, rotulos_teste = train_test_split(corpus_textos, corpus_rotulos, test_size=0.10, random_state=42)
+
+len(corpus_treinamento)   # 1800
+len(corpus_teste) # 200
+len(rotulos_treinamento)  # 1800
+len(rotulos_teste)  # 200
+```
+
+Vamos deixar preparada uma função para pré-processar os textos, utilizando uma lista de stop-words com novos itens, o stemming e normalização dos textos.
+
+```PY
+import nltk
+from nltk import tokenize
+nltk.download('stopwords')
+nltk.download('rslp')
+nltk.download('punkt')
+
+stopwords = nltk.corpus.stopwords.words('portuguese') #carrega stopwords da lingua portuguesa disponíveis no NLTK
+stopwords += (',','.','(',')','"',"'",'´','`','!','$','%','&','...','-',':',';','?','``','\'\'') #acrescenta simbolos
+stopwords += ('a','e','i','o','u','A','E','I','O','U') #acrescenta também vogais
+
+stemmer = nltk.stem.RSLPStemmer()
+
+def my_preprocessor(text):
+
+    # Normaliza para minúsculas
+    text=text.lower()
+
+    # Tokeniza
+    words = tokenize.word_tokenize(text, language='portuguese')
+    # Remove stop-words
+    words_no_stopwords = [word for word in words if not word in stopwords]
+    # Aplica stemming
+    stemmed_words=[stemmer.stem(word=word) for word in words_no_stopwords]
+    return ' '.join(stemmed_words)
+```
+
+Agora vamos extrair os atributos do texto (gerar a representação vetorial - bag of words) e criar nosso **pipeline** de classificação usando o classificador SVM.
+
+```py
+from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Primeiro aplica o BoW, depois envia dados ao classificador SVM
+# (SEM retirada de stop-words e stemming)
+sent_clf = Pipeline([('vect', CountVectorizer()),('clf', SVC(kernel='linear', C=1))])
+
+# Depois de executar uma vez, verifique os resultados e compare-os depois de descomentar a linha abaixo, onde retiramos as stop-words e aplicamos stemming
+# (COM retirada de stop-words e stemming)
+#sent_clf = Pipeline([('vect', CountVectorizer(preprocessor = my_preprocessor)),('clf', SVC(kernel='linear', C=1))])
+
+# Inicia treinamento
+sent_clf = sent_clf.fit(corpus_treinamento, rotulos_treinamento) 
+```
+
+Já temos nosso modelo treinado! Agora vamos predizer a base de teste e avaliar os resultados.
+
+```py
+# Prediz base de teste
+rotulos_preditos = sent_clf.predict(corpus_teste)
+
+from sklearn.metrics import classification_report
+
+# Mostra relatório completo de avaliação
+print(classification_report(rotulos_teste, rotulos_preditos))
+
+from sklearn.metrics import confusion_matrix
+
+# Podemos imprimir a matriz de confusão para tentar entender melhor os resultados
+mat = confusion_matrix(rotulos_teste, rotulos_preditos)
+
+%matplotlib inline
+import matplotlib.pyplot as plt
+import seaborn as sns; sns.set()
+
+rotulos_nomes = ['alegria', 'desgosto', 'medo', 'neutro', 'raiva', 'surpresa', 'tristeza']
+
+fig, ax = plt.subplots(figsize=(10,10))
+sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False, xticklabels=rotulos_nomes, yticklabels=rotulos_nomes )
+plt.xlabel('Categoria verdadeira')
+plt.ylabel('Categoria predita');
+```
