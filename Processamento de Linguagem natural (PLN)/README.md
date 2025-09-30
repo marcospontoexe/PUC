@@ -877,9 +877,34 @@ Poderiamos explorar técnicas de Pré-processamento (e.g., stop-words, stemming)
 
 Como dito no início, existem diversos classificadores de Machine Learning, e cada um contém uma série de parâmetros configuráveis. Então como podemos ter certeza de qual classificador e quais parâmetros tem os melhores resultados para minha base de dados?
 
-Para facilitar este processo, a biblioteca sklearn implementa um método chamado GridSearch, que automaticamente treina e testa diversas possibilidades de classificadores e parâmetros, visando encontrar a melhor combinação.
+Para facilitar este processo, a biblioteca sklearn implementa um método chamado [GridSearch(https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)], que automaticamente treina e testa diversas possibilidades de classificadores e parâmetros, visando encontrar a melhor combinação.
 
 Por fim, utilizamos apenas dois tipos de Representação vetorial de palavras (Bow e TF-IDF). Poderíamos:
 
-Explorar os parâmetros do CountVectorizer para retirar palavras com certa frequência, gerar n-grams, etc.
-Gerar vetores numéricos provindos de modelos pré-treinados de Word Embeddings, e utilizá-los como atributos de treinamento (e.g., Tutorial 1, Tutorial 2).
+1. Explorar os [parâmetros do CountVectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) para retirar palavras com certa frequência, gerar n-grams, etc.
+Gerar vetores numéricos provindos de modelos pré-treinados de Word Embeddings, e utilizá-los como atributos de treinamento (e.g., [Tutorial 1](https://nadbordrozd.github.io/blog/2016/05/20/text-classification-with-word2vec/), [Tutorial 2](https://www.kaggle.com/code/nhrade/text-classification-using-word-embeddings)).
+
+# Classificação de textos - Análise de Sentimentos
+Nesta aula continuaremos trabalhando com Classificação de textos, porém agora focaremos em uma tarefa específica, chamada de Análise de Sentimentos.
+
+O objetivo é que ao final desta aula você:
+
+1. Entenda o que é a Análise de Sentimentos
+2. Saiba treinar um classificador supervisionado para realizar análise de sentimentos usando um corpus anotado
+3. Aprenda a utilizar a biblioteca Polyglot do Python que já possui métodos para identificar polaridade de textos em português
+4. Acesse API do Twitter para obter dados em tempo real de redes sociais
+
+## O que é a Análise de Sentimentos?
+É a interpretação e classificação de emoções relativas a um texto, sendo estas emoções explícitas declaradas no texto ou implícitas.
+
+É uma tarefa de PLN/Machine Learning que permite empresas identificarem os sentimentos dos consumidores em relação a produtos, marcas ou serviços, através de opiniões deixadas em redes sociais ou em canais de comunicação da empresa.
+
+## Como treinar um classificador para realizar a Análise de Sentimentos?
+Iremos desenvolver nosso classificador, utilizando uma abordagem supervisionada, ou seja, precisaremos de dados rotulados com suas respectivas emoções.
+
+O pipeline de execução é muito similar aos exemplos de classificação realizados na última semana, o que muda efetivamente são as classes/categorias envolvidas.
+
+**Dados**
+Para este exemplo iremos trabalhar com uma [base de dados de notícias](https://aclanthology.org/W15-5616.pdf), rotulada com as emoções básicas de [Ekman](https://www.tandfonline.com/doi/abs/10.1080/02699939208411068): alegria, tristeza, raiva, medo, repugnância e surpresa. Em caso de ausência de emoção, a categoria neutro foi aplicada.
+
+**IMPORTANTE**: Faça o upload da base de dados para seu ambiente Google Colab ou Jupyter Notebook! [Segue o link] para acesso.
