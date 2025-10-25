@@ -7927,6 +7927,7 @@ memory usage: 889.8+ KB
 <li><strong>Preditores Mais Fortes:</strong> Os atributos mais importantes são <code>Temperature(°C)</code>, <code>Hour</code> e <code>Solar Radiation (MJ/m2)</code>.</li>
 <li><strong>Preditores Relevantes:</strong> <code>Rainfall(mm)</code>, <code>Snowfall (cm)</code> e <code>Humidity(%)</code> também são importantes e devem ser mantidos.</li>
 <li><strong>Não se Engane com Correlação Baixa:</strong> Mantemos <code>Weekday</code> e <code>Hour</code>. Apesar da correlação linear baixa, eles contêm padrões cíclicos (diários e semanais) que são fundamentais para o problema e serão capturados por modelos mais sofisticados.</li>
+<li><strong>Valores não numéricos:</strong>: O algoritmo aprende com números, não podemos passar os atributos da coluna <strong>DateTime</strong>, então devemos excluir essa coluna da nossa base de dados.</li>
 </ol>
 <h2 id="Normaliza%C3%A7%C3%A3o">Normalização<a class="anchor-link" href="#Normaliza%C3%A7%C3%A3o">¶</a></h2><p>Algoritmos que não são sensíveis à escala das features não exigem normalização.
 Por que não é necessário?
