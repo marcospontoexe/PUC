@@ -1,0 +1,113 @@
+# Objetivo
+
+Implemente uma nova base de regras no software que foi disponibilizado no conteudo do material anexado 'TUTORIAL.pdf.
+
+# Exemplos
+
+## 1. Para **encadeamento progressivo**
+
+1.1. O primeiro conjunto de valores iniciais do **software anterior era**:
+
+VALORES INICIAIS ENCADEAMENTO PROGRESSIVO (exemplo):
+
+* distancia = 2
+* deslocamento = None
+* tempo = 10
+* localDoCinema = centro
+* meioDeTransporte = None
+* clima = ruim
+
+1.2. O primeiro conjunto de valores iniciais que você **deve implementar** é:
+
+VALORES INICIAIS ENCADEAMENTO PROGRESSIVO (exemplo):
+
+* veiculo = None
+* tipoDeVeiculo = None
+* tamanho = grande
+* numeroDeRodas = 4
+* numeroDePortas = 4
+* motor = sim
+
+## 2. Para **encadeamento regressivo**
+
+2.1. O segundo conjunto de valores iniciais do **software anterior era**:
+
+**MEMÓRIA DE TRABALHO**
+
+| VARIÁVEL | STATUS | FOCO |
+| :--- | :--- | :--- |
+| distancia = None | Desconhecido | objetivo |
+| deslocamento = None | Desconhecido | objetivo |
+| tempo = None | Desconhecido | objetivo |
+| localDoCinema = centro | Fato conhecido | objetivo |
+| meioDeTransporte = None | Desconhecido | objetivo |
+| clima = ruim | Fato conhecido | objetivo |
+
+2.2. O segundo conjunto de valores iniciais que **deverá implementar** é:
+
+**MEMÓRIA DE TRABALHO**
+
+| VARIÁVEL | STATUS | FOCO |
+| :--- | :--- | :--- |
+| veiculo = None | Desconhecido | objetivo |
+| tipoDeVeiculo = None | Desconhecido | objetivo |
+| tamanho = None | Desconhecido | objetivo |
+| numeroDeRodas = 4 | Fato conhecido | objetivo |
+| numeroDePortas = None | Desconhecido | objetivo |
+| motor = sim | Fato conhecido | objetivo |
+
+
+# Orientação
+
+1. A nova base de regras define as seguintes categorias de veículos a seguir:
+
+    1.1. Regra 01 (velocípede):
+    * "SE" numero_de_rodas < 4
+    * "ENTÃO" tipo_de_veiculo = **velocipede**
+
+    1.2. Regra 02 (automotivo):
+    * "SE" numero_de_rodas = 4 "E" motor = sim
+    * "ENTÃO" tipo_de_veiculo = **automotivo**
+
+    1.3. Regra 03 (bicicleta):
+    * "SE" tipo_de_veiculo = velocipede "E" numero_de_rodas = 2 "E" motor = nao
+    * "ENTÃO" veiculo = **bicicleta**
+
+    1.4. Regra 04 (triciclo):
+    * "SE" tipo_de_veiculo = velocipede "E" numero_de_rodas = 3 "E" motor = nao
+    * "ENTÃO" veiculo = **triciclo**
+
+    1.5. Regra 05 (motocicleta):
+    * "SE" tipo_de_veiculo = velocipede "E" numero_de_rodas = 2 "E" motor = sim
+    * "ENTÃO" veiculo = **motocicleta**
+
+    1.6. Regra 06 (sportsCar):
+    * "SE" tipo_de_veiculo = automotivo "E" tamanho = medio "E" numeroDePortas = 2
+    * "ENTÃO" veiculo = **carroEsporte**
+
+    1.7. Regra 07 (Sedan):
+    * "SE" tipo_de_veiculo = automotivo "E" tamanho = medio "E" numeroDePortas = 4
+    * "ENTÃO" veiculo = **sedan**
+
+    1.8. Regra 08 (minivan):
+    * "SE" tipo_de_veiculo = automotivo "E" tamanho = medio "E" numeroDePortas = 3
+    * "ENTÃO" veiculo = minivan
+
+    1.9. Regra 09 (SUV):
+    * "SE" tipo_de_veiculo = automotivo "E" tamanho = grande "E" numeroDePortas = 4
+    * "ENTÃO" veiculo = **veiculoEsporteUtilitario**
+
+2. Você deverá modificar o arquivo “RuleBaseCinema.py”, podendo renomear para “RuleBaseVehicle.py”, realizando as devidas alterações nas regras. O arquivo “Main.py”também deverá ser modificado para ler a base de dados nova (novo arquivo).
+3. Você deverá modificar os dois conjuntos de valores iniciais definidos para execução de encadeamento **progressivo** e **regressivo**.
+4. você também deve desenvolver seis consultas diferentes para o usuário para os casos apresentados, em que diversos fatos estão desconhecidos.
+5. Seguem as perguntas que devem ser realizadas e as possíveis respostas aceitas pelo sistema:
+
+    * Consulta 01: “Que tipo de veículo é esse {bicicleta triciclo motocicleta carroEsporte sedan minivan} ?”
+    * Consulta 02: “Que tipo de veículo é esse {velocipede  automotivo} ?”
+    * Consulta 03: “Qual o tamanho do veículo {pequeno medio grande} ?"
+    * Consulta 04: “O veículo tem um motor {sim nao} ?”
+    * Consulta 05: "Quantas rodas o veículo possui {2 3 4} ?"
+    * Consulta 06: "Quantas portas o veículo tem {2 3 4} ?"
+
+6. Você poderá usar como base o próprio arquivo “RuleBaseCinema.py” para desenvolver o seu arquivo “RuleBaseVehicle.py”.
+7. Este novo arquivo deve ser usado juntamente com “Main.py”
