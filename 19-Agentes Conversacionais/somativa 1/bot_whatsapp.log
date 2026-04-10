@@ -1,0 +1,20 @@
+2026-04-10 16:59:47,216 - INFO - WhatsApp Web carregado com sucesso.
+2026-04-10 16:59:47,216 - INFO - Bot iniciado.
+2026-04-10 17:03:30,966 - INFO - Bot encerrado pelo usuário.
+2026-04-10 17:03:30,966 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /session/85717162a9c4cf067da658dccd5cc616
+2026-04-10 17:03:30,967 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=54139): Failed to establish a new connection: [Errno 111] Connection refused")': /session/85717162a9c4cf067da658dccd5cc616
+2026-04-10 17:03:30,967 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=54139): Failed to establish a new connection: [Errno 111] Connection refused")': /session/85717162a9c4cf067da658dccd5cc616
+2026-04-10 17:03:39,140 - INFO - WhatsApp Web carregado com sucesso.
+2026-04-10 17:03:39,141 - INFO - Bot iniciado.
+2026-04-10 17:15:45,256 - INFO - Bot encerrado pelo usuário.
+2026-04-10 17:15:45,257 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(104, 'Connection reset by peer')': /session/941ad598eb43b59c12a8f615d1f4067b
+2026-04-10 17:15:45,257 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52763): Failed to establish a new connection: [Errno 111] Connection refused")': /session/941ad598eb43b59c12a8f615d1f4067b
+2026-04-10 17:15:45,257 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52763): Failed to establish a new connection: [Errno 111] Connection refused")': /session/941ad598eb43b59c12a8f615d1f4067b
+2026-04-10 17:15:52,328 - INFO - WhatsApp Web carregado com sucesso.
+2026-04-10 17:15:52,328 - INFO - Bot iniciado.
+2026-04-10 17:52:12,297 - INFO - WhatsApp Web carregado com sucesso.
+2026-04-10 17:52:12,297 - INFO - Bot iniciado.
+2026-04-10 17:53:36,592 - INFO - Bot encerrado pelo usuário.
+2026-04-10 17:53:36,592 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=53861): Failed to establish a new connection: [Errno 111] Connection refused")': /session/6cea42b47f6f8b253a266393eb7f4038
+2026-04-10 17:53:36,593 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=53861): Failed to establish a new connection: [Errno 111] Connection refused")': /session/6cea42b47f6f8b253a266393eb7f4038
+2026-04-10 17:53:36,593 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=53861): Failed to establish a new connection: [Errno 111] Connection refused")': /session/6cea42b47f6f8b253a266393eb7f4038
