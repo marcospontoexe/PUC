@@ -26,9 +26,8 @@ POLL_INTERVAL_SECONDS = 3
 # Números autorizados com DDI + DDD + número, apenas dígitos
 # Exemplo: 5541999999999
 CONTATOS_AUTORIZADOS = {
-    "5541999999999",
     "5541997069783",
-    "554199496865",
+    "5541999496865",
 }
 
 LOG_ARQUIVO = "bot_whatsapp.log"
@@ -325,10 +324,15 @@ class WhatsAppFAQBot:
                 row_text = (row.text or "").strip()
                 phone_from_row = extract_phone_from_text(row_text)
 
+                logging.info("Linha encontrada: %s", row_text)
+                logging.info("Telefone extraído da linha: %s", phone_from_row)
+
                 if not phone_from_row:
+                    logging.info("Nenhum telefone visível nesta linha. Pulando conversa.")
                     continue
 
                 if not self.is_authorized_phone(phone_from_row):
+                    logging.info("Nenhum telefone não autorizado. Pulando conversa.")
                     continue
 
                 if not self.open_conversation_by_row(row):
