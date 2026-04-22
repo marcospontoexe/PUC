@@ -1,3 +1,6 @@
-2026/04/15-13:58:25.124 4 Reusing MANIFEST /home/robot/Documentos/GitHub/PUC/19-Agentes Conversacionais/somativa 1/chrome_profile/Default/Local Storage/leveldb/MANIFEST-000001
-2026/04/15-13:58:25.126 4 Recovering log #21
-2026/04/15-13:58:25.127 4 Reusing old log /home/robot/Documentos/GitHub/PUC/19-Agentes Conversacionais/somativa 1/chrome_profile/Default/Local Storage/leveldb/000021.log 
+2026/04/20-23:48:59.120 4 Reusing MANIFEST /home/robot/Documentos/GitHub/PUC/19-Agentes Conversacionais/somativa 1/chrome_profile/Default/Local Storage/leveldb/MANIFEST-000001
+2026/04/20-23:48:59.132 4 Recovering log #3
+2026/04/20-23:48:59.133 4 Reusing old log /home/robot/Documentos/GitHub/PUC/19-Agentes Conversacionais/somativa 1/chrome_profile/Default/Local Storage/leveldb/000003.log 
+2026/04/20-23:51:00.380 5 Level-0 table #5: started
+2026/04/20-23:51:00.390 5 Level-0 table #5: 18595 bytes OK
+2026/04/20-23:51:00.396 5 Delete type=0 #3

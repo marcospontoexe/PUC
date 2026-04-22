@@ -24,8 +24,8 @@ POLL_INTERVAL_SECONDS = 3
 
 # Use exatamente o nome do contato como aparece no WhatsApp Web
 CONTATOS_AUTORIZADOS = {
-    "5541997069783",
-    "5541999496865",
+    "+5541997069783",
+    "+5541999496865",
 }
 
 # Se quiser usar o número salvo no contato, coloque o nome/número visível no WhatsApp

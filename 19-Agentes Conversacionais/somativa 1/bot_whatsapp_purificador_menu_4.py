@@ -1,15 +1,12 @@
-# bot_whatsapp_purificador_menu.py
+# bot_whatsapp_purificador_menu_5.py
 # -*- coding: utf-8 -*-
 
-import re
 import time
 import logging
-import unicodedata
 from pathlib import Path
-from dataclasses import dataclass
-from typing import Dict, List, Tuple, Optional
 
 from selenium import webdriver
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
@@ -17,129 +14,40 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# =========================================================
-# CONFIGURAÇÃO
-# =========================================================
+# =========================
+# CONFIG
+# =========================
 
-WHATSAPP_WEB_URL = "https://web.whatsapp.com/"
-POLL_INTERVAL_SECONDS = 3
+URL = "https://web.whatsapp.com/"
+LOG = "bot.log"
 
-CONTATOS_AUTORIZADOS_NUMEROS = {
-    "5541997069783",
-    "5541999496865",
-}
+# CONTATOS = ["5541999496865"]  # pode colocar nome OU número aqui
+CONTATOS = ["Lovezona"]  # pode colocar nome OU número aqui
+# CONTATOS = ["5541997069783"]  # pode colocar nome OU número aqui
 
-CONTATOS_AUTORIZADOS_NOMES = {
-    "Lovezona",
-    "Cliente Teste",
-}
 
-LOG_ARQUIVO = "bot_whatsapp.log"
+# =========================
+# LOG
+# =========================
 
-MENU_INICIAL = (
-    "Olá! Sou o assistente da loja de purificadores.\n"
-    "Digite uma opção:\n"
-    "1 - Horário\n2 - Endereço\n3 - Modelos\n4 - Preço\n"
-    "5 - Instalação\n6 - Manutenção\n7 - Refil\n"
-    "8 - Garantia\n9 - Pagamento\n10 - Entrega\n11 - Atendente"
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler(LOG), logging.StreamHandler()]
 )
 
-RESPOSTA_PADRAO = "Não entendi. Digite uma opção do menu."
-ENCERRAMENTO = "Obrigado pelo contato."
 
-RESPOSTAS = {
-    "1": "Atendemos de seg a sex, 8h30–18h, sábado até 12h.",
-    "2": "Rua X, número Y.",
-    "3": "Temos modelos de parede e bancada.",
-    "4": "Valores variam conforme modelo.",
-    "5": "Sim, fazemos instalação.",
-    "6": "Fazemos manutenção completa.",
-    "7": "Troca do refil a cada 6 meses.",
-    "8": "Produtos com garantia.",
-    "9": "Aceitamos PIX e cartão.",
-    "10": "Realizamos entrega.",
-    "11": "Encaminhando para atendente.",
-}
-
-
-# =========================================================
-# LOG
-# =========================================================
-
-def configurar_logging():
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.FileHandler(LOG_ARQUIVO, encoding="utf-8"),
-            logging.StreamHandler()
-        ]
-    )
-
-
-# =========================================================
-# UTIL
-# =========================================================
-
-def normalize_text(text):
-    text = text.lower().strip()
-    text = unicodedata.normalize("NFKD", text)
-    return "".join(c for c in text if not unicodedata.combining(c))
-
-
-def normalize_phone(phone):
-    return re.sub(r"\D", "", phone or "")
-
-
-def extract_phone_from_text(text):
-    if not text:
-        return None
-
-    digits = normalize_phone(text)
-    if 10 <= len(digits) <= 13:
-        return digits
-
-    return None
-
-
-def find_authorized_name(text):
-    text_norm = normalize_text(text)
-    for nome in CONTATOS_AUTORIZADOS_NOMES:
-        if normalize_text(nome) in text_norm:
-            return nome
-    return None
-
-
-def contato_autorizado(phone, name):
-    if phone and normalize_phone(phone) in CONTATOS_AUTORIZADOS_NUMEROS:
-        return True
-    if name and name in CONTATOS_AUTORIZADOS_NOMES:
-        return True
-    return False
-
-
-# =========================================================
-# ESTADO
-# =========================================================
-
-@dataclass
-class ContactState:
-    last_message: str = ""
-    first: bool = True
-
-
-# =========================================================
+# =========================
 # BOT
-# =========================================================
+# =========================
 
 class Bot:
 
     def __init__(self):
         self.driver = None
         self.wait = None
-        self.states = {}
 
-    def start_browser(self):
+    def start(self):
         profile = Path.home() / "selenium_whatsapp"
         profile.mkdir(exist_ok=True)
 
@@ -148,123 +56,144 @@ class Bot:
         options.add_argument("--start-maximized")
 
         self.driver = webdriver.Chrome(options=options)
-        self.wait = WebDriverWait(self.driver, 120)
+        self.wait = WebDriverWait(self.driver, 60)
 
-        self.driver.get(WHATSAPP_WEB_URL)
+        self.driver.get(URL)
 
         print("Faça login no WhatsApp...")
-        self.wait_for_ready()
+        self.wait_ready()
 
-    def wait_for_ready(self):
-        for _ in range(120):
-            if self.driver.find_elements(By.XPATH, "//div[@role='grid']"):
+    def wait_ready(self):
+        """
+        Espera o WhatsApp carregar
+        """
+        while True:
+            try:
+                self.driver.find_element(By.ID, "app")
                 print("WhatsApp pronto")
                 return
-            time.sleep(1)
-
-        raise Exception("WhatsApp não carregou")
-
-    def get_rows(self):
-        grids = self.driver.find_elements(By.XPATH, "//div[@role='grid']")
-        if not grids:
-            self.debug()
-            raise Exception("Lista não encontrada")
-
-        return grids[0].find_elements(By.XPATH, ".//div[@role='row']")
+            except:
+                time.sleep(1)
 
     def debug(self):
-        Path("debug.html").write_text(self.driver.page_source)
-        self.driver.save_screenshot("debug.png")
+        """
+        Salva debug (muito útil)
+        """
+        self.driver.save_screenshot("erro.png")
+        with open("erro.html", "w", encoding="utf-8") as f:
+            f.write(self.driver.page_source)
 
-    def open_chat(self, row):
-        row.click()
-        time.sleep(1)
+    def get_search_box(self):
+        """
+        🔥 Função robusta para encontrar a busca
+        """
 
-    def get_title(self):
+        seletores = [
+            "//div[@contenteditable='true'][@role='textbox']",
+            "//div[@contenteditable='true']",
+            "//div[contains(@aria-label,'Pesquisar')]",
+            "//div[contains(@aria-label,'Search')]",
+            "//div[@data-tab='3']",
+            "//div[@data-tab='10']",
+        ]
+
+        for sel in seletores:
+            try:
+                elems = self.driver.find_elements(By.XPATH, sel)
+                for e in elems:
+                    if e.is_displayed():
+                        return e
+            except:
+                continue
+
+        self.debug()
+        raise Exception("Caixa de busca não encontrada")
+
+    def abrir_chat(self, nome):
         try:
-            el = self.driver.find_element(By.XPATH, "//header//span[@title]")
-            return el.get_attribute("title")
-        except:
-            return ""
+            box = self.get_search_box()
 
-    def get_last_message(self):
-        msgs = self.driver.find_elements(By.CSS_SELECTOR, "div.message-in span.selectable-text")
-        if msgs:
-            return msgs[-1].text
+            box.click()
+            time.sleep(0.5)
+
+            box.send_keys(Keys.CONTROL, "a")
+            box.send_keys(Keys.BACKSPACE)
+
+            box.send_keys(nome)
+            time.sleep(1.5)
+
+            box.send_keys(Keys.ENTER)
+            time.sleep(1.5)
+
+            return True
+
+        except Exception as e:
+            logging.info(f"Falha ao abrir chat por busca ({nome}): {e}")
+            return False
+
+    def ultima_msg(self):
+        try:
+            msgs = self.driver.find_elements(
+                By.CSS_SELECTOR,
+                "div.message-in span.selectable-text"
+            )
+            if msgs:
+                return msgs[-1].text
+        except:
+            pass
         return ""
 
-    def send(self, msg):
-        box = self.wait.until(EC.presence_of_element_located(
-            (By.XPATH, "//footer//div[@contenteditable='true']")
-        ))
+    def enviar(self, msg):
+        box = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//footer//div[@contenteditable='true']")
+            )
+        )
         box.click()
         box.send_keys(msg)
         box.send_keys(Keys.ENTER)
 
-    def process(self):
-        rows = self.get_rows()
-
-        for row in rows:
-            txt = row.text
-
-            phone = extract_phone_from_text(txt)
-            name = find_authorized_name(txt)
-
-            logging.info(f"Row: {txt}")
-
-            if not contato_autorizado(phone, name):
-                continue
-
-            self.open_chat(row)
-
-            title = self.get_title()
-            phone = extract_phone_from_text(title)
-            name = find_authorized_name(title)
-
-            key = phone or name or title
-
-            msg = self.get_last_message()
-
-            if not msg:
-                continue
-
-            state = self.states.setdefault(key, ContactState())
-
-            if msg == state.last_message:
-                continue
-
-            state.last_message = msg
-
-            if state.first:
-                state.first = False
-                self.send(MENU_INICIAL)
-                continue
-
-            if msg.strip() in RESPOSTAS:
-                self.send(RESPOSTAS[msg.strip()])
-            else:
-                self.send(RESPOSTA_PADRAO)
-
     def run(self):
-        try:
-            self.start_browser()
-            while True:
-                self.process()
-                time.sleep(POLL_INTERVAL_SECONDS)
+        self.start()
 
-        except Exception as e:
-            print("Erro:", e)
-            input("ENTER para fechar...")
+        ultima = ""
 
-        finally:
-            if self.driver:
-                self.driver.quit()
+        while True:
+            for contato in CONTATOS:
+
+                if not self.abrir_chat(contato):
+                    continue
+
+                try:
+                    msg = self.ultima_msg()
+
+                    if not msg:
+                        continue
+
+                    if msg == ultima:
+                        continue
+
+                    ultima = msg
+
+                    logging.info(f"Mensagem recebida: {msg}")
+
+                    # resposta simples teste
+                    resposta = "Recebi sua mensagem!"
+
+                    self.enviar(resposta)
+
+                except StaleElementReferenceException:
+                    logging.info("Elemento stale, ignorando...")
+                    continue
+                except Exception as e:
+                    logging.exception(f"Erro: {e}")
+
+            time.sleep(3)
 
 
-# =========================================================
+# =========================
 # MAIN
-# =========================================================
+# =========================
 
 if __name__ == "__main__":
-    configurar_logging()
     Bot().run()

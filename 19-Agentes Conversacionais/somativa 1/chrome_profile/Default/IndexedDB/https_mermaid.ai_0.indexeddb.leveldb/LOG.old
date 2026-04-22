@@ -1,6 +1,0 @@
-2026/04/10-17:48:09.917 3103d Creating DB /home/robot/Documentos/GitHub/PUC/19-Agentes Conversacionais/somativa 1/chrome_profile/Default/IndexedDB/https_mermaid.ai_0.indexeddb.leveldb since it was missing.
-2026/04/10-17:48:09.933 3103d Reusing MANIFEST /home/robot/Documentos/GitHub/PUC/19-Agentes Conversacionais/somativa 1/chrome_profile/Default/IndexedDB/https_mermaid.ai_0.indexeddb.leveldb/MANIFEST-000001
-2026/04/10-17:48:13.055 3103d Level-0 table #5: started
-2026/04/10-17:48:13.060 3103d Level-0 table #5: 1258 bytes OK
-2026/04/10-17:48:13.065 3103d Delete type=0 #3
-2026/04/10-17:48:13.065 3103d Manual compaction at level-0 from (begin) .. (end); will stop at (end)

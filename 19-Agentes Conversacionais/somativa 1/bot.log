@@ -1,0 +1,561 @@
+2026-04-20 23:41:14,575 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:17,736 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:21,729 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:24,872 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:28,015 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:31,147 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:34,344 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:37,543 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:40,715 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:43,925 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:47,068 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:50,283 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:53,495 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:56,665 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:41:59,965 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:42:03,119 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:42:06,396 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:42:10,471 - INFO - Falha ao abrir chat por busca (Lovezona): Caixa de busca não encontrada
+2026-04-20 23:42:22,237 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (365, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:42:26,375 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (365, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:42:56,519 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:00,628 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:04,735 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:08,829 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:13,096 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:17,253 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:21,422 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:25,525 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:29,632 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:33,771 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:38,009 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:42,147 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:46,302 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:50,377 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:43:54,514 - INFO - Falha ao abrir chat por busca (Lovezona): Message: element click intercepted: Element <div tabindex="-1" data-tab="3">...</div> is not clickable at point (458, 132). Other element would receive the click: <div class="x9f619 x78zum5 xdt5ytf x6s0dn4 xl56j7k xh8yej3 xpb48g7 x1jn0hjm x1us19tq" role="dialog" aria-modal="true">...</div>
+  (Session info: chrome=134.0.6998.88); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb07970 <unknown>
+#2 0x58a5cfb601ec <unknown>
+#3 0x58a5cfb5e055 <unknown>
+#4 0x58a5cfb5b6f2 <unknown>
+#5 0x58a5cfb5a8ca <unknown>
+#6 0x58a5cfb4d4cd <unknown>
+#7 0x58a5cfb7f292 <unknown>
+#8 0x58a5cfb4ce4a <unknown>
+#9 0x58a5cfb7f45e <unknown>
+#10 0x58a5cfba570c <unknown>
+#11 0x58a5cfb7f063 <unknown>
+#12 0x58a5cfb4b328 <unknown>
+#13 0x58a5cfb4c491 <unknown>
+#14 0x58a5d001042b <unknown>
+#15 0x58a5d00142ec <unknown>
+#16 0x58a5cfff7a22 <unknown>
+#17 0x58a5d0014e64 <unknown>
+#18 0x58a5cffdbbef <unknown>
+#19 0x58a5d0037558 <unknown>
+#20 0x58a5d0037736 <unknown>
+#21 0x58a5d0047e76 <unknown>
+#22 0x7de9ffa94ac3 <unknown>
+
+2026-04-20 23:44:04,688 - INFO - Falha ao abrir chat por busca (Lovezona): Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb077c3 <unknown>
+#2 0x58a5cfb4a5df <unknown>
+#3 0x58a5cfb7f196 <unknown>
+#4 0x58a5cfb79813 <unknown>
+#5 0x58a5cfb78ae5 <unknown>
+#6 0x58a5cfad0528 <unknown>
+#7 0x58a5d001042b <unknown>
+#8 0x58a5d00142ec <unknown>
+#9 0x58a5cfff7a22 <unknown>
+#10 0x58a5d0014e64 <unknown>
+#11 0x58a5cffdbbef <unknown>
+#12 0x58a5cfacef5b <unknown>
+#13 0x7de9ffa29d90 <unknown>
+
+2026-04-20 23:44:07,707 - INFO - Falha ao abrir chat por busca (Lovezona): Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb077c3 <unknown>
+#2 0x58a5cfb4a5df <unknown>
+#3 0x58a5cfb7f196 <unknown>
+#4 0x58a5cfb79813 <unknown>
+#5 0x58a5cfb78ae5 <unknown>
+#6 0x58a5cfad0528 <unknown>
+#7 0x58a5d001042b <unknown>
+#8 0x58a5d00142ec <unknown>
+#9 0x58a5cfff7a22 <unknown>
+#10 0x58a5d0014e64 <unknown>
+#11 0x58a5cffdbbef <unknown>
+#12 0x58a5cfacef5b <unknown>
+#13 0x7de9ffa29d90 <unknown>
+
+2026-04-20 23:44:10,736 - INFO - Falha ao abrir chat por busca (Lovezona): Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb077c3 <unknown>
+#2 0x58a5cfb4a5df <unknown>
+#3 0x58a5cfb7f196 <unknown>
+#4 0x58a5cfb79813 <unknown>
+#5 0x58a5cfb78ae5 <unknown>
+#6 0x58a5cfad0528 <unknown>
+#7 0x58a5d001042b <unknown>
+#8 0x58a5d00142ec <unknown>
+#9 0x58a5cfff7a22 <unknown>
+#10 0x58a5d0014e64 <unknown>
+#11 0x58a5cffdbbef <unknown>
+#12 0x58a5cfacef5b <unknown>
+#13 0x7de9ffa29d90 <unknown>
+
+2026-04-20 23:44:13,767 - INFO - Falha ao abrir chat por busca (Lovezona): Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+#0 0x58a5d0048ffa <unknown>
+#1 0x58a5cfb077c3 <unknown>
+#2 0x58a5cfb4a5df <unknown>
+#3 0x58a5cfb7f196 <unknown>
+#4 0x58a5cfb79813 <unknown>
+#5 0x58a5cfb78ae5 <unknown>
+#6 0x58a5cfad0528 <unknown>
+#7 0x58a5d001042b <unknown>
+#8 0x58a5d00142ec <unknown>
+#9 0x58a5cfff7a22 <unknown>
+#10 0x58a5d0014e64 <unknown>
+#11 0x58a5cffdbbef <unknown>
+#12 0x58a5cfacef5b <unknown>
+#13 0x7de9ffa29d90 <unknown>
+
+2026-04-20 23:44:16,777 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,777 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,778 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,779 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,780 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,780 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,781 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,782 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,782 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,783 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,783 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,783 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/elements
+2026-04-20 23:44:16,784 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/screenshot
+2026-04-20 23:44:16,784 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/screenshot
+2026-04-20 23:44:16,784 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused")': /session/ab3a23e36a2771934795329f13c102de/screenshot
+2026-04-20 23:44:16,784 - INFO - Falha ao abrir chat por busca (Lovezona): HTTPConnectionPool(host='localhost', port=52555): Max retries exceeded with url: /session/ab3a23e36a2771934795329f13c102de/screenshot (Caused by NewConnectionError("HTTPConnection(host='localhost', port=52555): Failed to establish a new connection: [Errno 111] Connection refused"))
