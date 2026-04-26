@@ -1,0 +1,46 @@
+# Objetivo
+
+construir um projeto de desenvolvimento de agente conversacional para solução de algum problema delineado em um cenário hipotético (ou real, caso já tenha um use case).
+
+# Orientação
+
+Deverá optar, preferencialmente, por um cenário de aplicação de agente conversacional em um ambiente empresarial/comercial:
+
+* Assistentes digitais de dispositivos (e.g., Assistente Google, Siri, Alexa, Cortana).
+* Interfaces conversacionais de veículos.
+* Robôs para agendamento de voos e restaurantes.
+* Agentes de saúde (recolhimento de sintomas de pacientes, tira-dúvidas, encaminhamento médico, acompanhamento psicológico).Agentes de Ensino A Distância (EAD).
+* Agentes de FAQ (perguntas frequentes).
+* Agentes de SAC (serviço de atendimento ao cliente).
+* Agentes de e-commerce e navegação de websites (auxílio ao cliente durante a compra e navegação).
+* Agentes de onboarding (auxílio a usuários em seu primeiro acesso a aplicativos ou sites).
+* Agentes de suporte técnico (auxílio a usuários com problemas de Informática).
+* Agentes de entretenimento (realiza conversa com usuários).
+
+O projeto inclui a produção dos seguintes artefatos:
+    1. Descrição do cenário
+        a. Qual é o objetivo do seu agente?
+        b. Qual é o contexto da organização para o qual o agente está sendo desenvolvido?
+        c. Qual é a motivação para a construção do agente nesse cenário? Quais problemas ele busca resolver?
+
+    2. Definição do fluxo conversacional do agente
+        a. Apresentar no fluxograma os principais caminhos/intenções/ações do seu agente.
+
+    3. Descrição das tecnologias adotadas
+        a. Qual abordagem de desenvolvimento será escolhida?
+        b. Quais técnicas de PLN e ML serão utilizadas?
+        c. Quais bibliotecas/pacotes/frameworks serão utilizados?
+        d. Qual plataforma conversacional será escolhida?
+        e. Justificar o uso de todas as tecnologias adotadas.
+
+    4. Agente conversacional funcional
+        a. O fluxo conversacional deve ser condizente com o fluxograma entregue.
+        b. O agente deve acessar algum tipo de recurso externo, como API, script ou banco de dados – este recurso pode ser simulado. Por exemplo, você pode simular o acesso a um banco de dados e, no lugar, colocar um código que gere randomicamente as respostas esperadas.
+        c. O agente deve manipular entidades, além das intents.
+        d. O agente deve seguir o conjunto de boas práticas apresentado na disciplina.
+        e. O agente deve ter um dimensionamento adequado para a atividade, caso tenha dúvida sobre esta questão, pergunte ao seu professor tutor antes de iniciar a atividade.
+
+    5. Plano de avaliação
+        a. Estabelecer tipos e metodologias de avaliação a ser realizados.
+        b. Elencar características a ser avaliadas.
+        c. A avaliação não precisa ser executada; deve-se apenas fazer uma proposta de processo de avaliação, condizente com o agente e o cenário.
