@@ -1,0 +1,347 @@
+{
+  "intents": [
+    {
+      "tag": "saudacao",
+      "patterns": [
+        "oi",
+        "olá",
+        "ola",
+        "bom dia",
+        "boa tarde",
+        "boa noite",
+        "e aí",
+        "e ai",
+        "opa",
+        "hey",
+        "alô",
+        "alo",
+        "oie",
+        "oi tudo bem",
+        "olá tudo bem",
+        "oi boa tarde",
+        "oi bom dia",
+        "oi boa noite",
+        "fala aí",
+        "fala ai",
+        "eae",
+        "salve"
+      ],
+      "responses": [
+        "Olá! Bem-vindo à TeleConecta Brasil! Sou o AtendeBot, seu assistente virtual. Para começar, por favor me informe seu CPF.",
+        "Oi! Que bom ter você aqui! Sou o AtendeBot da TeleConecta Brasil. Para que eu possa te ajudar, preciso do seu CPF.",
+        "Olá! Eu sou o AtendeBot, assistente da TeleConecta Brasil. Me diga seu CPF para eu localizar seu cadastro."
+      ]
+    },
+    {
+      "tag": "consultar_plano",
+      "patterns": [
+        "qual é o meu plano",
+        "qual meu plano",
+        "quero ver meu plano",
+        "quero saber meu plano",
+        "informações do meu plano",
+        "detalhes do plano",
+        "me fala sobre meu plano",
+        "que plano eu tenho",
+        "qual plano contratei",
+        "plano atual",
+        "meu plano atual",
+        "ver meu plano",
+        "consultar plano",
+        "consultar meu plano",
+        "quero saber sobre meu plano",
+        "como é meu plano",
+        "me diz meu plano",
+        "qual o nome do meu plano",
+        "características do meu plano",
+        "o que inclui meu plano"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "consultar_fatura",
+      "patterns": [
+        "qual o valor da minha fatura",
+        "quanto é minha conta",
+        "quero ver minha fatura",
+        "consultar fatura",
+        "minha fatura",
+        "valor da conta",
+        "quanto devo",
+        "quanto tá minha conta",
+        "quanto ta minha conta",
+        "quanto que é a fatura",
+        "minha conta está atrasada",
+        "minha conta esta atrasada",
+        "quando vence minha fatura",
+        "data de vencimento",
+        "vencimento da conta",
+        "pagar minha conta",
+        "quero pagar a fatura",
+        "como pago minha fatura",
+        "boleto",
+        "ver boleto",
+        "status da fatura",
+        "fatura do mês",
+        "fatura do mes",
+        "conta de telefone",
+        "conta da internet"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "segunda_via",
+      "patterns": [
+        "segunda via",
+        "segunda via do boleto",
+        "segunda via da fatura",
+        "reimprimir boleto",
+        "preciso de outra via",
+        "perdi o boleto",
+        "não recebi o boleto",
+        "nao recebi o boleto",
+        "quero outra via da conta",
+        "me manda o boleto de novo",
+        "gerar novo boleto",
+        "novo boleto",
+        "reemitir fatura",
+        "emitir segunda via",
+        "código de barras",
+        "codigo de barras",
+        "preciso do boleto",
+        "enviar boleto",
+        "mandar boleto por email"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "problema_tecnico",
+      "patterns": [
+        "minha internet caiu",
+        "internet não funciona",
+        "internet nao funciona",
+        "sem internet",
+        "internet lenta",
+        "internet está lenta",
+        "internet esta lenta",
+        "queda de conexão",
+        "sem sinal",
+        "sem sinal no celular",
+        "celular sem sinal",
+        "sinal fraco",
+        "ligação caindo",
+        "ligacao caindo",
+        "não consigo ligar",
+        "nao consigo ligar",
+        "tv sem sinal",
+        "tv não funciona",
+        "tv nao funciona",
+        "canais fora do ar",
+        "problema na internet",
+        "problema no celular",
+        "problema na tv",
+        "defeito",
+        "não está funcionando",
+        "nao esta funcionando",
+        "parou de funcionar",
+        "tá com problema",
+        "ta com problema",
+        "wifi não funciona",
+        "wifi nao funciona",
+        "roteador com problema",
+        "modem não liga",
+        "modem nao liga",
+        "velocidade baixa",
+        "conexão instável",
+        "conexao instavel"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "upgrade_plano",
+      "patterns": [
+        "quero mudar de plano",
+        "trocar de plano",
+        "upgrade de plano",
+        "melhorar meu plano",
+        "quero um plano melhor",
+        "planos disponíveis",
+        "planos disponiveis",
+        "quais planos vocês tem",
+        "quais planos voces tem",
+        "quero mais internet",
+        "quero mais velocidade",
+        "aumentar meu plano",
+        "plano mais caro",
+        "plano superior",
+        "opções de plano",
+        "opcoes de plano",
+        "quero fazer upgrade",
+        "mudar para um plano maior",
+        "como faço upgrade",
+        "como faco upgrade",
+        "migrar de plano",
+        "alterar plano"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "falar_atendente",
+      "patterns": [
+        "quero falar com atendente",
+        "falar com uma pessoa",
+        "atendente humano",
+        "me transfere",
+        "transferir para atendente",
+        "quero falar com alguém",
+        "quero falar com alguem",
+        "não quero falar com robô",
+        "nao quero falar com robo",
+        "pessoa real",
+        "atendimento humano",
+        "falar com operador",
+        "me passa para um atendente",
+        "preciso de um humano",
+        "quero ser atendido por uma pessoa",
+        "me conecta com alguém",
+        "me conecta com alguem",
+        "chat com atendente"
+      ],
+      "responses": [
+        "Entendo! Vou transferir você para um de nossos atendentes humanos. Aguarde um momento, por favor. 🔄",
+        "Claro! Vou te encaminhar para um atendente. O tempo médio de espera é de aproximadamente 3 minutos.",
+        "Sem problemas! Estou transferindo você para o atendimento humano. Obrigado pela paciência!"
+      ]
+    },
+    {
+      "tag": "faq_cobertura",
+      "patterns": [
+        "qual a área de cobertura",
+        "onde vocês tem cobertura",
+        "onde voces tem cobertura",
+        "cobertura na minha região",
+        "cobertura na minha regiao",
+        "tem cobertura aqui",
+        "disponibilidade na minha cidade",
+        "vocês atendem minha cidade",
+        "voces atendem minha cidade",
+        "tem sinal aqui",
+        "abrangência do serviço",
+        "abrangencia do servico"
+      ],
+      "responses": [
+        "A TeleConecta Brasil tem cobertura em todos os estados do país! Para verificar a disponibilidade exata na sua região, acesse nosso site em www.teleconecta.com.br/cobertura e insira seu CEP. Para cidades com fibra óptica, temos presença em mais de 500 municípios."
+      ]
+    },
+    {
+      "tag": "faq_cancelamento",
+      "patterns": [
+        "quero cancelar",
+        "cancelar meu plano",
+        "como cancelo",
+        "cancelamento",
+        "quero rescindir",
+        "encerrar meu contrato",
+        "não quero mais o serviço",
+        "nao quero mais o servico",
+        "desistir do plano",
+        "cancelar contrato"
+      ],
+      "responses": [
+        "Lamento saber que deseja cancelar. O cancelamento pode ser feito diretamente comigo ou por um atendente. Antes, posso verificar se há alguma oferta especial para que você permaneça conosco. Gostaria de ver as opções disponíveis ou prefere prosseguir com o cancelamento?"
+      ]
+    },
+    {
+      "tag": "faq_horario",
+      "patterns": [
+        "qual o horário de atendimento",
+        "qual o horario de atendimento",
+        "horário de funcionamento",
+        "horario de funcionamento",
+        "que horas funciona",
+        "até que horas atende",
+        "ate que horas atende",
+        "vocês atendem de madrugada",
+        "voces atendem de madrugada",
+        "atende fim de semana",
+        "atende no domingo"
+      ],
+      "responses": [
+        "Eu, o AtendeBot, estou disponível 24 horas por dia, 7 dias por semana! 🕐 Já o atendimento humano funciona de segunda a sábado, das 8h às 22h. Aos domingos e feriados, o atendimento humano funciona das 9h às 18h."
+      ]
+    },
+    {
+      "tag": "agradecimento",
+      "patterns": [
+        "obrigado",
+        "obrigada",
+        "valeu",
+        "agradeço",
+        "agradeco",
+        "muito obrigado",
+        "muito obrigada",
+        "thanks",
+        "brigadão",
+        "brigadao",
+        "vlw",
+        "grato",
+        "grata"
+      ],
+      "responses": [
+        "De nada! Fico feliz em ajudar. Precisa de mais alguma coisa?",
+        "Por nada! Estou aqui para isso. Tem mais alguma dúvida?",
+        "Disponha! Se precisar de mais alguma coisa, é só dizer."
+      ]
+    },
+    {
+      "tag": "despedida",
+      "patterns": [
+        "tchau",
+        "até mais",
+        "ate mais",
+        "até logo",
+        "ate logo",
+        "bye",
+        "adeus",
+        "falou",
+        "flw",
+        "é só isso",
+        "e so isso",
+        "era isso",
+        "era só isso",
+        "era so isso",
+        "pode encerrar",
+        "encerrar atendimento",
+        "finalizar",
+        "nada mais"
+      ],
+      "responses": [
+        "Obrigado por entrar em contato com a TeleConecta Brasil! Foi um prazer atendê-lo(a). Tenha um ótimo dia! 👋",
+        "Até mais! Se precisar, estarei por aqui. Tenha um excelente dia! 😊",
+        "Tchau! Obrigado pela preferência TeleConecta Brasil. Volte sempre que precisar!"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "Como funciona o plano família?",
+      "answer": "O Plano Família da TeleConecta permite adicionar até 4 linhas dependentes com desconto progressivo: a segunda linha tem 30% de desconto, a terceira 40% e a quarta 50%. Cada linha mantém sua própria franquia de dados."
+    },
+    {
+      "question": "Posso usar meu celular no exterior?",
+      "answer": "Sim! Oferecemos o serviço de roaming internacional. Você pode ativá-lo pelo app TeleConecta ou ligando para *456. O custo varia conforme o país de destino. Temos pacotes de dados internacionais a partir de R$ 49,90/semana."
+    },
+    {
+      "question": "Como funciona a portabilidade?",
+      "answer": "A portabilidade permite trazer seu número de outra operadora para a TeleConecta. O processo leva até 3 dias úteis e é totalmente gratuito. Basta escolher um plano e informar que deseja portar o número durante a contratação."
+    },
+    {
+      "question": "Qual a velocidade mínima garantida da internet?",
+      "answer": "Conforme regulamentação da Anatel, garantimos no mínimo 40% da velocidade contratada em média e 80% em medições instantâneas. Se identificar velocidade abaixo disso, entre em contato para abrirmos um chamado técnico."
+    },
+    {
+      "question": "Como instalar o roteador Wi-Fi?",
+      "answer": "O roteador da TeleConecta vem pré-configurado. Basta conectar o cabo de fibra na porta WAN, ligar na tomada e aguardar as luzes estabilizarem (cerca de 2 minutos). A rede Wi-Fi e senha estão na etiqueta na parte inferior do equipamento. Se precisar de ajuda, nossos técnicos podem fazer a instalação sem custo."
+    }
+  ]
+}
