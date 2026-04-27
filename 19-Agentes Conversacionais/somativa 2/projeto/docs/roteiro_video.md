@@ -10,7 +10,7 @@
 
 **[Tela: slide de título ou câmera do apresentador]**
 
-> "Olá! Meu nome é [SEU NOME] e neste vídeo vou apresentar o **AtendeBot**, um agente conversacional de Serviço de Atendimento ao Cliente desenvolvido para a empresa fictícia TeleConecta Brasil, uma operadora de telecomunicações. Vou percorrer o cenário, o fluxo conversacional, as tecnologias utilizadas, uma demonstração ao vivo do agente funcionando e, por fim, o plano de avaliação proposto."
+> "Olá! Meu nome é [SEU NOME] e neste vídeo vou apresentar o agente conversacional de Serviço de Atendimento ao Cliente, desenvolvido como atividade da disciplina de agentes conversasionais, do curso de tecnologo de inteligencia artificial aplicado da puc. Foi dado um nome fictícia de TeleConecta Brasil, uma operadora de telecomunicações. Vou percorrer o cenário, o fluxo conversacional, as tecnologias utilizadas, uma demonstração ao vivo do agente funcionando e, por fim, o plano de avaliação proposto."
 
 ---
 
@@ -20,7 +20,7 @@
 
 > "O AtendeBot foi projetado para a **TeleConecta Brasil**, uma operadora de médio porte com cerca de **5 milhões de clientes**, que oferece telefonia móvel, internet banda larga e TV por assinatura."
 
-> "A central de atendimento recebe em média **15 mil chamados por dia**, e **60% deles são consultas simples e repetitivas** — como segunda via de boleto, consulta de plano ou dúvidas de cobertura. O tempo médio de espera é de **12 minutos**, o que gera insatisfação e uma taxa de abandono de 25%."
+> "O problema proposto foi de que: A central de atendimento recebe em média **15 mil chamados por dia**, e **60% deles são consultas simples e repetitivas** — como segunda via de boleto, consulta de plano ou dúvidas de cobertura. O tempo médio de espera é de **12 minutos**, o que gera insatisfação e uma taxa de abandono de 25%."
 
 > "O objetivo do agente é **automatizar esse atendimento de primeiro nível**: consultar planos, verificar faturas, gerar segunda via de boleto, registrar chamados técnicos, oferecer upgrades de plano e responder perguntas frequentes — tudo disponível **24 horas por dia, 7 dias por semana**."
 
