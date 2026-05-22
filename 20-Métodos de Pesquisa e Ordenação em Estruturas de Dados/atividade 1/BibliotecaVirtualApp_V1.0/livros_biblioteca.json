@@ -1,0 +1,122 @@
+[
+  {
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "genero": "Romance",
+    "anoPublicacao": 1899
+  },
+  {
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "genero": "Ficção Científica",
+    "anoPublicacao": 1949
+  },
+  {
+    "titulo": "O Senhor dos Anéis",
+    "autor": "J. R. R. Tolkien",
+    "genero": "Fantasia",
+    "anoPublicacao": 1954
+  },
+  {
+    "titulo": "Harry Potter e a Pedra Filosofal",
+    "autor": "J. K. Rowling",
+    "genero": "Fantasia",
+    "anoPublicacao": 1997
+  },
+  {
+    "titulo": "Clean Code",
+    "autor": "Robert C. Martin",
+    "genero": "Tecnologia",
+    "anoPublicacao": 2008
+  },
+  {
+    "titulo": "A Arte da Guerra",
+    "autor": "Sun Tzu",
+    "genero": "Estratégia",
+    "anoPublicacao": -500
+  },
+  {
+    "titulo": "Orgulho e Preconceito",
+    "autor": "Jane Austen",
+    "genero": "Romance",
+    "anoPublicacao": 1813
+  },
+  {
+    "titulo": "O Hobbit",
+    "autor": "J. R. R. Tolkien",
+    "genero": "Fantasia",
+    "anoPublicacao": 1937
+  },
+  {
+    "titulo": "Percy Jackson e o Ladrão de Raios",
+    "autor": "Rick Riordan",
+    "genero": "Aventura",
+    "anoPublicacao": 2005
+  },
+  {
+    "titulo": "Neuromancer",
+    "autor": "William Gibson",
+    "genero": "Cyberpunk",
+    "anoPublicacao": 1984
+  },
+  {
+    "titulo": "Duna",
+    "autor": "Frank Herbert",
+    "genero": "Ficção Científica",
+    "anoPublicacao": 1965
+  },
+  {
+    "titulo": "Drácula",
+    "autor": "Bram Stoker",
+    "genero": "Terror",
+    "anoPublicacao": 1897
+  },
+  {
+    "titulo": "It: A Coisa",
+    "autor": "Stephen King",
+    "genero": "Terror",
+    "anoPublicacao": 1986
+  },
+  {
+    "titulo": "O Código Da Vinci",
+    "autor": "Dan Brown",
+    "genero": "Suspense",
+    "anoPublicacao": 2003
+  },
+  {
+    "titulo": "Sherlock Holmes: Um Estudo em Vermelho",
+    "autor": "Arthur Conan Doyle",
+    "genero": "Mistério",
+    "anoPublicacao": 1887
+  },
+  {
+    "titulo": "A Revolução dos Bichos",
+    "autor": "George Orwell",
+    "genero": "Satírico",
+    "anoPublicacao": 1945
+  },
+  {
+    "titulo": "Sapiens",
+    "autor": "Yuval Noah Harari",
+    "genero": "História",
+    "anoPublicacao": 2011
+  },
+  {
+    "titulo": "O Pequeno Príncipe",
+    "autor": "Antoine de Saint-Exupéry",
+    "genero": "Infantil",
+    "anoPublicacao": 1943
+  },
+  {
+    "titulo": "Jogos Vorazes",
+    "autor": "Suzanne Collins",
+    "genero": "Distopia",
+    "anoPublicacao": 2008
+  },
+  {
+    "titulo": "Fundação",
+    "autor": "Isaac Asimov",
+    "genero": "Ficção Científica",
+    "anoPublicacao": 1951
+  }
+]
