@@ -3,11 +3,12 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +17,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BibliotecaVirtualApp {
+
+    enum TipoRelacao {
+        SEMELHANCA,
+        MESMO_GENERO,
+        MESMO_AUTOR,
+        RECOMENDADO
+    }
 
     static class Livro {
         String titulo;
@@ -36,7 +44,9 @@ public class BibliotecaVirtualApp {
         public boolean equals(Object obj) {
             if (this == obj) return true;
             if (!(obj instanceof Livro)) return false;
+
             Livro outro = (Livro) obj;
+
             return titulo.equalsIgnoreCase(outro.titulo);
         }
 
@@ -47,26 +57,34 @@ public class BibliotecaVirtualApp {
     }
 
     static class Biblioteca {
+
         private LinkedList<Livro> livros = new LinkedList<>();
+
         private Map<String, Queue<String>> filasEspera = new HashMap<>();
+
         private Stack<Livro> historicoNavegacao = new Stack<>();
-        private HashMap<Livro, Set<Livro>> grafoRecomendacoes = new HashMap<>();
+
+        private HashMap<Livro, HashMap<TipoRelacao, Set<Livro>>> grafoRelacoes = new HashMap<>();
 
         private String normalizar(String texto) {
             return texto == null ? "" : texto.trim().toLowerCase();
         }
 
         private Livro encontrarLivro(String titulo) {
+
             for (Livro livro : livros) {
+
                 if (livro.titulo.equalsIgnoreCase(titulo)) {
                     return livro;
                 }
             }
+
             return null;
         }
 
         private Queue<String> obterFila(String titulo) {
             String chave = normalizar(titulo);
+
             return filasEspera.computeIfAbsent(chave, k -> new LinkedList<>());
         }
 
@@ -74,33 +92,78 @@ public class BibliotecaVirtualApp {
             historicoNavegacao.push(livro);
         }
 
-        private void reconstruirGrafoRecomendacoes() {
-            grafoRecomendacoes.clear();
+        private void adicionarRelacao(Livro origem, Livro destino, TipoRelacao tipo) {
+
+            grafoRelacoes.putIfAbsent(origem, new HashMap<>());
+
+            grafoRelacoes.get(origem).putIfAbsent(tipo, new LinkedHashSet<>());
+
+            grafoRelacoes.get(origem).get(tipo).add(destino);
+        }
+
+        private int calcularSimilaridade(Livro a, Livro b) {
+
+            int score = 0;
+
+            if (a.genero.equalsIgnoreCase(b.genero)) {
+                score += 3;
+            }
+
+            if (a.autor.equalsIgnoreCase(b.autor)) {
+                score += 2;
+            }
+
+            int diferencaAno = Math.abs(a.anoPublicacao - b.anoPublicacao);
+
+            if (diferencaAno <= 5) {
+                score += 2;
+            } else if (diferencaAno <= 15) {
+                score += 1;
+            }
+
+            return score;
+        }
+
+        private void reconstruirGrafoRelacoes() {
+
+            grafoRelacoes.clear();
 
             for (Livro livro : livros) {
-                Set<Livro> recomendacoes = new LinkedHashSet<>();
+
+                List<Livro> candidatos = new ArrayList<>();
 
                 for (Livro outro : livros) {
-                    if (!outro.equals(livro) && outro.genero.equalsIgnoreCase(livro.genero)) {
-                        recomendacoes.add(outro);
-                    }
-                    if (recomendacoes.size() >= 2) {
-                        break;
+
+                    if (!livro.equals(outro)) {
+
+                        candidatos.add(outro);
+
+                        if (livro.genero.equalsIgnoreCase(outro.genero)) {
+                            adicionarRelacao(livro, outro, TipoRelacao.MESMO_GENERO);
+                        }
+
+                        if (livro.autor.equalsIgnoreCase(outro.autor)) {
+                            adicionarRelacao(livro, outro, TipoRelacao.MESMO_AUTOR);
+                        }
+
+                        if (calcularSimilaridade(livro, outro) >= 3) {
+                            adicionarRelacao(livro, outro, TipoRelacao.SEMELHANCA);
+                        }
                     }
                 }
 
-                if (recomendacoes.size() < 2) {
-                    for (Livro outro : livros) {
-                        if (!outro.equals(livro)) {
-                            recomendacoes.add(outro);
-                        }
-                        if (recomendacoes.size() >= 2) {
-                            break;
-                        }
-                    }
-                }
+                candidatos.sort((a, b) -> {
+                    int scoreB = calcularSimilaridade(livro, b);
+                    int scoreA = calcularSimilaridade(livro, a);
 
-                grafoRecomendacoes.put(livro, recomendacoes);
+                    return Integer.compare(scoreB, scoreA);
+                });
+
+                int limite = Math.min(3, candidatos.size());
+
+                for (int i = 0; i < limite; i++) {
+                    adicionarRelacao(livro, candidatos.get(i), TipoRelacao.RECOMENDADO);
+                }
             }
         }
 
@@ -108,85 +171,125 @@ public class BibliotecaVirtualApp {
             return encontrarLivro(titulo) != null;
         }
 
-        public boolean adicionarLivro(String titulo, String autor, String genero, int anoPublicacao, String caminhoArquivo) {
+        public boolean adicionarLivro(
+                String titulo,
+                String autor,
+                String genero,
+                int anoPublicacao,
+                String caminhoArquivo
+        ) {
+
             if (existeLivroComTitulo(titulo)) {
-                System.out.println("Já existe um livro com esse título. Cadastro não realizado.");
+
+                System.out.println("Já existe um livro com esse título.");
+
                 return false;
             }
 
             livros.add(new Livro(titulo, autor, genero, anoPublicacao));
-            reconstruirGrafoRecomendacoes();
+
+            reconstruirGrafoRelacoes();
+
             salvarEmJson(caminhoArquivo);
-            System.out.println("Livro cadastrado e salvo com sucesso!");
+
+            System.out.println("Livro cadastrado com sucesso!");
+
             return true;
         }
 
         public void listarLivros() {
+
             if (livros.isEmpty()) {
+
                 System.out.println("A biblioteca está vazia.");
+
                 return;
             }
 
             System.out.println("\n===== LISTA DE LIVROS =====");
+
             for (Livro livro : livros) {
+
                 System.out.println("Título: " + livro.titulo);
                 System.out.println("Autor: " + livro.autor);
                 System.out.println("Gênero: " + livro.genero);
                 System.out.println("Ano: " + livro.anoPublicacao);
-                System.out.println("Status: " + (livro.emprestado ? "Emprestado" : "Disponível"));
+                System.out.println("Status: " +
+                        (livro.emprestado ? "Emprestado" : "Disponível"));
+
                 System.out.println("--------------------------");
             }
         }
 
         public void listarLivrosPorGenero(String generoBusca) {
+
             boolean encontrou = false;
 
             System.out.println("\n===== LIVROS DO GÊNERO: " + generoBusca + " =====");
 
             for (Livro livro : livros) {
+
                 if (livro.genero.equalsIgnoreCase(generoBusca)) {
+
                     System.out.println("Título: " + livro.titulo);
                     System.out.println("Autor: " + livro.autor);
                     System.out.println("Ano: " + livro.anoPublicacao);
-                    System.out.println("Status: " + (livro.emprestado ? "Emprestado" : "Disponível"));
+
                     System.out.println("--------------------------");
+
                     encontrou = true;
                 }
             }
 
             if (!encontrou) {
-                System.out.println("Nenhum livro encontrado para este gênero.");
+                System.out.println("Nenhum livro encontrado.");
             }
         }
 
         public void buscarLivro(String titulo) {
+
             Livro livro = encontrarLivro(titulo);
 
-            if (livro != null) {
-                registrarVisualizacao(livro);
+            if (livro == null) {
 
-                System.out.println("\nLivro encontrado!");
-                System.out.println("Título: " + livro.titulo);
-                System.out.println("Autor: " + livro.autor);
-                System.out.println("Gênero: " + livro.genero);
-                System.out.println("Ano: " + livro.anoPublicacao);
-                System.out.println("Status: " + (livro.emprestado ? "Emprestado" : "Disponível"));
-            } else {
                 System.out.println("Livro não encontrado.");
+
+                return;
             }
+
+            registrarVisualizacao(livro);
+
+            System.out.println("\n===== LIVRO ENCONTRADO =====");
+
+            System.out.println("Título: " + livro.titulo);
+            System.out.println("Autor: " + livro.autor);
+            System.out.println("Gênero: " + livro.genero);
+            System.out.println("Ano: " + livro.anoPublicacao);
+
+            System.out.println("Status: " +
+                    (livro.emprestado ? "Emprestado" : "Disponível"));
         }
 
         public void removerLivro(String titulo, String caminhoArquivo) {
+
             Iterator<Livro> iterator = livros.iterator();
 
             while (iterator.hasNext()) {
+
                 Livro livro = iterator.next();
+
                 if (livro.titulo.equalsIgnoreCase(titulo)) {
+
                     iterator.remove();
+
                     filasEspera.remove(normalizar(titulo));
-                    reconstruirGrafoRecomendacoes();
+
+                    reconstruirGrafoRelacoes();
+
                     salvarEmJson(caminhoArquivo);
-                    System.out.println("Livro removido e alterações salvas com sucesso!");
+
+                    System.out.println("Livro removido.");
+
                     return;
                 }
             }
@@ -195,151 +298,267 @@ public class BibliotecaVirtualApp {
         }
 
         public void emprestarLivro(String titulo, String caminhoArquivo) {
+
             Livro livro = encontrarLivro(titulo);
 
             if (livro == null) {
+
                 System.out.println("Livro não encontrado.");
+
                 return;
             }
 
             if (livro.emprestado) {
-                System.out.println("Livro já está emprestado.");
+
+                System.out.println("Livro já emprestado.");
+
                 return;
             }
 
             livro.emprestado = true;
+
             salvarEmJson(caminhoArquivo);
-            System.out.println("Livro emprestado com sucesso!");
+
+            System.out.println("Livro emprestado.");
         }
 
         public void devolverLivro(String titulo, String caminhoArquivo) {
+
             Livro livro = encontrarLivro(titulo);
 
             if (livro == null) {
-                System.out.println("Livro não encontrado.");
-                return;
-            }
 
-            if (!livro.emprestado) {
-                System.out.println("Este livro já está disponível.");
+                System.out.println("Livro não encontrado.");
+
                 return;
             }
 
             Queue<String> fila = obterFila(titulo);
 
             if (!fila.isEmpty()) {
-                String proximoUsuario = fila.poll();
-                System.out.println("Livro devolvido e automaticamente reservado para o próximo da fila: " + proximoUsuario);
+
+                String usuario = fila.poll();
+
+                System.out.println(
+                        "Livro reservado automaticamente para: " + usuario
+                );
+
                 livro.emprestado = true;
+
             } else {
+
                 livro.emprestado = false;
-                System.out.println("Livro devolvido com sucesso! Agora ele está disponível.");
+
+                System.out.println("Livro devolvido.");
             }
 
             salvarEmJson(caminhoArquivo);
         }
 
-        public void entrarNaFilaDeEspera(String titulo, String nomeUsuario) {
+        public void entrarNaFilaDeEspera(
+                String titulo,
+                String usuario
+        ) {
+
             Livro livro = encontrarLivro(titulo);
 
             if (livro == null) {
+
                 System.out.println("Livro não encontrado.");
+
                 return;
             }
 
             if (!livro.emprestado) {
-                System.out.println("Este livro está disponível. Não há necessidade de entrar na fila.");
+
+                System.out.println("Livro disponível. Não é necessário fila.");
+
                 return;
             }
 
             Queue<String> fila = obterFila(titulo);
 
-            if (fila.contains(nomeUsuario)) {
-                System.out.println("Este usuário já está na fila de espera para este livro.");
-                return;
-            }
+            fila.offer(usuario);
 
-            fila.offer(nomeUsuario);
-            System.out.println("Usuário adicionado à fila de espera com sucesso.");
+            System.out.println("Usuário adicionado na fila.");
         }
 
         public void mostrarFilaDeEspera(String titulo) {
+
             Queue<String> fila = filasEspera.get(normalizar(titulo));
 
             if (fila == null || fila.isEmpty()) {
-                System.out.println("Não há fila de espera para este livro.");
+
+                System.out.println("Fila vazia.");
+
                 return;
             }
 
-            System.out.println("\n===== FILA DE ESPERA DE: " + titulo + " =====");
+            System.out.println("\n===== FILA DE ESPERA =====");
+
             int posicao = 1;
 
             for (String usuario : fila) {
+
                 System.out.println(posicao + " - " + usuario);
+
                 posicao++;
             }
         }
 
         public void mostrarHistoricoNavegacao() {
+
             if (historicoNavegacao.isEmpty()) {
+
                 System.out.println("Histórico vazio.");
+
                 return;
             }
 
-            System.out.println("\n===== HISTÓRICO DE NAVEGAÇÃO =====");
+            System.out.println("\n===== HISTÓRICO =====");
+
             for (int i = historicoNavegacao.size() - 1; i >= 0; i--) {
+
                 Livro livro = historicoNavegacao.get(i);
+
                 System.out.println(
-                        (historicoNavegacao.size() - i) + " - " +
-                                livro.titulo + " | " + livro.autor + " | " + livro.genero + " | " + livro.anoPublicacao
+                        livro.titulo + " | " +
+                                livro.autor + " | " +
+                                livro.genero
                 );
             }
         }
 
-        public void recomendarLivrosPorTitulo(String titulo) {
+        public void mostrarRelacoesDoLivro(String titulo) {
+
             Livro livro = encontrarLivro(titulo);
 
             if (livro == null) {
+
                 System.out.println("Livro não encontrado.");
+
                 return;
             }
 
-            Set<Livro> recomendacoes = grafoRecomendacoes.get(livro);
+            Map<TipoRelacao, Set<Livro>> relacoes = grafoRelacoes.get(livro);
 
-            if (recomendacoes == null || recomendacoes.isEmpty()) {
-                System.out.println("Não há recomendações disponíveis para este livro.");
+            if (relacoes == null || relacoes.isEmpty()) {
+
+                System.out.println("Sem relações cadastradas.");
+
                 return;
             }
 
-            System.out.println("\n===== RECOMENDAÇÕES PARA: " + livro.titulo + " =====");
-            for (Livro rec : recomendacoes) {
-                System.out.println("- " + rec.titulo + " | " + rec.autor + " | " + rec.genero + " | " + rec.anoPublicacao);
+            System.out.println(
+                    "\n===== RELAÇÕES DE: " + livro.titulo + " ====="
+            );
+
+            for (TipoRelacao tipo : relacoes.keySet()) {
+
+                System.out.println("\n" + tipo + ":");
+
+                for (Livro relacionado : relacoes.get(tipo)) {
+
+                    System.out.println(
+                            "- " +
+                                    relacionado.titulo +
+                                    " | " +
+                                    relacionado.autor +
+                                    " | " +
+                                    relacionado.genero
+                    );
+                }
+            }
+        }
+
+        public void recomendarLivrosPorTitulo(String titulo) {
+
+            Livro livro = encontrarLivro(titulo);
+
+            if (livro == null) {
+
+                System.out.println("Livro não encontrado.");
+
+                return;
+            }
+
+            Map<TipoRelacao, Set<Livro>> relacoes =
+                    grafoRelacoes.get(livro);
+
+            if (relacoes == null ||
+                    !relacoes.containsKey(TipoRelacao.RECOMENDADO)) {
+
+                System.out.println("Sem recomendações.");
+
+                return;
+            }
+
+            System.out.println(
+                    "\n===== RECOMENDAÇÕES PARA: " + livro.titulo + " ====="
+            );
+
+            for (Livro recomendado :
+                    relacoes.get(TipoRelacao.RECOMENDADO)) {
+
+                System.out.println(
+                        "- " +
+                                recomendado.titulo +
+                                " | " +
+                                recomendado.autor +
+                                " | " +
+                                recomendado.genero +
+                                " | " +
+                                recomendado.anoPublicacao
+                );
             }
         }
 
         public void recomendarLivrosBaseadoNoUltimoVisualizado() {
+
             if (historicoNavegacao.isEmpty()) {
-                System.out.println("Ainda não há histórico de navegação.");
+
+                System.out.println("Histórico vazio.");
+
                 return;
             }
 
             Livro ultimo = historicoNavegacao.peek();
+
             recomendarLivrosPorTitulo(ultimo.titulo);
         }
 
         public void salvarEmJson(String caminhoArquivo) {
+
             StringBuilder json = new StringBuilder();
+
             json.append("[\n");
 
             for (int i = 0; i < livros.size(); i++) {
+
                 Livro livro = livros.get(i);
 
                 json.append("  {\n");
-                json.append("    \"titulo\": \"").append(escapeJson(livro.titulo)).append("\",\n");
-                json.append("    \"autor\": \"").append(escapeJson(livro.autor)).append("\",\n");
-                json.append("    \"genero\": \"").append(escapeJson(livro.genero)).append("\",\n");
-                json.append("    \"anoPublicacao\": ").append(livro.anoPublicacao).append(",\n");
-                json.append("    \"emprestado\": ").append(livro.emprestado).append("\n");
+
+                json.append("    \"titulo\": \"")
+                        .append(escapeJson(livro.titulo))
+                        .append("\",\n");
+
+                json.append("    \"autor\": \"")
+                        .append(escapeJson(livro.autor))
+                        .append("\",\n");
+
+                json.append("    \"genero\": \"")
+                        .append(escapeJson(livro.genero))
+                        .append("\",\n");
+
+                json.append("    \"anoPublicacao\": ")
+                        .append(livro.anoPublicacao)
+                        .append(",\n");
+
+                json.append("    \"emprestado\": ")
+                        .append(livro.emprestado)
+                        .append("\n");
+
                 json.append("  }");
 
                 if (i < livros.size() - 1) {
@@ -352,22 +571,38 @@ public class BibliotecaVirtualApp {
             json.append("]");
 
             try {
-                Files.writeString(Path.of(caminhoArquivo), json.toString(), StandardCharsets.UTF_8);
+
+                Files.writeString(
+                        Path.of(caminhoArquivo),
+                        json.toString(),
+                        StandardCharsets.UTF_8
+                );
+
             } catch (IOException e) {
-                System.out.println("Erro ao salvar JSON: " + e.getMessage());
+
+                System.out.println(
+                        "Erro ao salvar JSON: " + e.getMessage()
+                );
             }
         }
 
         public void carregarDeJson(String caminhoArquivo) {
+
             try {
+
                 Path path = Path.of(caminhoArquivo);
 
                 if (!Files.exists(path)) {
-                    System.out.println("Arquivo JSON não encontrado. Biblioteca iniciada vazia.");
+
+                    System.out.println(
+                            "Arquivo JSON não encontrado."
+                    );
+
                     return;
                 }
 
                 String conteudo = Files.readString(path);
+
                 livros.clear();
 
                 Pattern pattern = Pattern.compile(
@@ -378,47 +613,72 @@ public class BibliotecaVirtualApp {
                 Matcher matcher = pattern.matcher(conteudo);
 
                 while (matcher.find()) {
+
                     String titulo = unescapeJson(matcher.group(1));
+
                     String autor = unescapeJson(matcher.group(2));
+
                     String genero = unescapeJson(matcher.group(3));
+
                     int ano = Integer.parseInt(matcher.group(4));
 
                     boolean emprestado = false;
+
                     if (matcher.group(5) != null) {
-                        emprestado = Boolean.parseBoolean(matcher.group(5));
+                        emprestado = Boolean.parseBoolean(
+                                matcher.group(5)
+                        );
                     }
 
-                    Livro livro = new Livro(titulo, autor, genero, ano);
+                    Livro livro =
+                            new Livro(titulo, autor, genero, ano);
+
                     livro.emprestado = emprestado;
+
                     livros.add(livro);
                 }
 
-                reconstruirGrafoRecomendacoes();
-                System.out.println("Livros carregados do JSON com sucesso!");
+                reconstruirGrafoRelacoes();
+
+                System.out.println("Livros carregados!");
 
             } catch (IOException e) {
-                System.out.println("Erro ao carregar JSON: " + e.getMessage());
+
+                System.out.println(
+                        "Erro ao carregar JSON: " + e.getMessage()
+                );
             }
         }
 
         private String escapeJson(String texto) {
+
             if (texto == null) {
                 return "";
             }
-            return texto.replace("\\", "\\\\").replace("\"", "\\\"");
+
+            return texto
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"");
         }
 
         private String unescapeJson(String texto) {
+
             if (texto == null) {
                 return "";
             }
-            return texto.replace("\\\"", "\"").replace("\\\\", "\\");
+
+            return texto
+                    .replace("\\\"", "\"")
+                    .replace("\\\\", "\\");
         }
     }
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
+
         Biblioteca biblioteca = new Biblioteca();
+
         String arquivoJson = "livros_biblioteca.json";
 
         biblioteca.carregarDeJson(arquivoJson);
@@ -426,7 +686,9 @@ public class BibliotecaVirtualApp {
         int opcao;
 
         do {
+
             System.out.println("\n===== BIBLIOTECA VIRTUAL =====");
+
             System.out.println("1 - Cadastrar livro");
             System.out.println("2 - Listar livros");
             System.out.println("3 - Buscar livro");
@@ -435,114 +697,187 @@ public class BibliotecaVirtualApp {
             System.out.println("6 - Emprestar livro");
             System.out.println("7 - Devolver livro");
             System.out.println("8 - Entrar na fila de espera");
-            System.out.println("9 - Ver fila de espera de um livro");
-            System.out.println("10 - Ver histórico de navegação");
-            System.out.println("11 - Recomendar livros por título");
-            System.out.println("12 - Recomendar livros pelo último visualizado");
+            System.out.println("9 - Ver fila de espera");
+            System.out.println("10 - Ver histórico");
+            System.out.println("11 - Ver relações do livro");
+            System.out.println("12 - Recomendar livros");
+            System.out.println("13 - Recomendar pelo último visualizado");
             System.out.println("0 - Sair");
+
             System.out.print("Escolha uma opção: ");
 
             while (!scanner.hasNextInt()) {
+
                 System.out.print("Digite um número válido: ");
+
                 scanner.next();
             }
 
             opcao = scanner.nextInt();
+
             scanner.nextLine();
 
             switch (opcao) {
+
                 case 1:
-                    System.out.print("Digite o título: ");
+
+                    System.out.print("Título: ");
                     String titulo = scanner.nextLine();
 
-                    System.out.print("Digite o autor: ");
+                    System.out.print("Autor: ");
                     String autor = scanner.nextLine();
 
-                    System.out.print("Digite o gênero: ");
+                    System.out.print("Gênero: ");
                     String genero = scanner.nextLine();
 
-                    System.out.print("Digite o ano de publicação: ");
+                    System.out.print("Ano: ");
+
                     while (!scanner.hasNextInt()) {
+
                         System.out.print("Digite um ano válido: ");
+
                         scanner.next();
                     }
+
                     int ano = scanner.nextInt();
+
                     scanner.nextLine();
 
-                    biblioteca.adicionarLivro(titulo, autor, genero, ano, arquivoJson);
+                    biblioteca.adicionarLivro(
+                            titulo,
+                            autor,
+                            genero,
+                            ano,
+                            arquivoJson
+                    );
+
                     break;
 
                 case 2:
+
                     biblioteca.listarLivros();
+
                     break;
 
                 case 3:
-                    System.out.print("Digite o título do livro: ");
-                    String tituloBusca = scanner.nextLine();
-                    biblioteca.buscarLivro(tituloBusca);
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.buscarLivro(scanner.nextLine());
+
                     break;
 
                 case 4:
-                    System.out.print("Digite o título do livro para remover: ");
-                    String tituloRemover = scanner.nextLine();
-                    biblioteca.removerLivro(tituloRemover, arquivoJson);
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.removerLivro(
+                            scanner.nextLine(),
+                            arquivoJson
+                    );
+
                     break;
 
                 case 5:
-                    System.out.print("Digite o gênero: ");
-                    String generoBusca = scanner.nextLine();
-                    biblioteca.listarLivrosPorGenero(generoBusca);
+
+                    System.out.print("Gênero: ");
+
+                    biblioteca.listarLivrosPorGenero(
+                            scanner.nextLine()
+                    );
+
                     break;
 
                 case 6:
-                    System.out.print("Digite o título do livro para emprestar: ");
-                    String tituloEmprestimo = scanner.nextLine();
-                    biblioteca.emprestarLivro(tituloEmprestimo, arquivoJson);
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.emprestarLivro(
+                            scanner.nextLine(),
+                            arquivoJson
+                    );
+
                     break;
 
                 case 7:
-                    System.out.print("Digite o título do livro para devolver: ");
-                    String tituloDevolucao = scanner.nextLine();
-                    biblioteca.devolverLivro(tituloDevolucao, arquivoJson);
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.devolverLivro(
+                            scanner.nextLine(),
+                            arquivoJson
+                    );
+
                     break;
 
                 case 8:
-                    System.out.print("Digite o título do livro: ");
+
+                    System.out.print("Título do livro: ");
                     String tituloFila = scanner.nextLine();
 
-                    System.out.print("Digite o nome do usuário: ");
-                    String nomeUsuario = scanner.nextLine();
+                    System.out.print("Usuário: ");
+                    String usuario = scanner.nextLine();
 
-                    biblioteca.entrarNaFilaDeEspera(tituloFila, nomeUsuario);
+                    biblioteca.entrarNaFilaDeEspera(
+                            tituloFila,
+                            usuario
+                    );
+
                     break;
 
                 case 9:
-                    System.out.print("Digite o título do livro: ");
-                    String tituloFilaConsulta = scanner.nextLine();
-                    biblioteca.mostrarFilaDeEspera(tituloFilaConsulta);
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.mostrarFilaDeEspera(
+                            scanner.nextLine()
+                    );
+
                     break;
 
                 case 10:
+
                     biblioteca.mostrarHistoricoNavegacao();
+
                     break;
 
                 case 11:
-                    System.out.print("Digite o título do livro para recomendar: ");
-                    String tituloRecomendacao = scanner.nextLine();
-                    biblioteca.recomendarLivrosPorTitulo(tituloRecomendacao);
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.mostrarRelacoesDoLivro(
+                            scanner.nextLine()
+                    );
+
                     break;
 
                 case 12:
+
+                    System.out.print("Título do livro: ");
+
+                    biblioteca.recomendarLivrosPorTitulo(
+                            scanner.nextLine()
+                    );
+
+                    break;
+
+                case 13:
+
                     biblioteca.recomendarLivrosBaseadoNoUltimoVisualizado();
+
                     break;
 
                 case 0:
+
                     biblioteca.salvarEmJson(arquivoJson);
-                    System.out.println("Encerrando o sistema...");
+
+                    System.out.println("Encerrando sistema...");
+
                     break;
 
                 default:
-                    System.out.println("Opção inválida!");
+
+                    System.out.println("Opção inválida.");
             }
 
         } while (opcao != 0);
