@@ -175,7 +175,6 @@ Seaborn · JupyterLab
 │   ├── regression.html           # versão exportada, para leitura sem Jupyter
 │   ├── relatorio.html            # relatório de profiling do dataset
 │   └── seoul_bike_data.xlsx      # dataset
-└── ConteudoSemanas/              # material de estudo da disciplina, por semana
 ```
 
 > **Quer só ler o resultado?** Os arquivos `.html` abrem direto no navegador, com todas as saídas
