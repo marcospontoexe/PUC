@@ -137,4 +137,4 @@ Os notebooks rodam do início ao fim sem dependências externas. Sementes fixas 
 
 ## Material da disciplina
 
-A pasta contém também os slides das oito unidades e dois notebooks-tutorial do professor, sobre XAI e sobre PLN aplicado a textos clínicos em português. O contexto técnico detalhado está em [DOCS/](DOCS/).
+A pasta contém também os slides das oito unidades e dois notebooks-tutorial do professor, sobre XAI e sobre PLN aplicado a textos clínicos em português.
