@@ -101,6 +101,39 @@ preenchendo o relatório final em Word com os resultados obtidos.
   3 tabelas novas (parâmetros das transformações, comparativo sem/com augmentation, e
   previsões detalhadas dígito a dígito) e 5 parágrafos de análise.
 
+### Frente C — Notebook de portfólio (LinkedIn)
+- Criado `atividade_1/mlp_vs_cnn_eficiencia.ipynb`, **já executado com as saídas
+  embutidas** (tabelas, gráficos e figuras aparecem sem precisar rodar).
+- Objetivo declarado pelo utilizador: comparar a eficiência de MLP e CNN para imagens sob
+  a ótica de quantidade de parâmetros e taxa de acerto, com e sem data augmentation, num
+  texto que atraia recrutadores de machine learning.
+- Restrições de escrita pedidas pelo utilizador (respeitadas e verificadas por script):
+  **nunca usar o caractere travessão** (U+2014), e não afirmar coisas sobre a origem
+  demográfica da escrita do MNIST sem referência (o 7 cortado passou a ser descrito como
+  "um jeito de escrever usado em vários países", com a inferência sobre sua raridade na
+  base explicitamente apresentada como suspeita a partir do comportamento dos modelos).
+- Setup do notebook difere dos scripts da atividade: usa MNIST completo (60k treino /
+  10k teste oficial) e caminho **relativo** `RN/RN` em vez do `C:\RN` absoluto, para ser
+  portátil em qualquer máquina. Por isso os números NÃO batem com os do relatório .docx.
+- Resultados do notebook (semente 42, MNIST completo):
+
+  | Modelo | Params | Épocas | Tempo | Acurácia MNIST | Conj.1 | Conj.2 |
+  |---|---|---|---|---|---|---|
+  | MLP | 235.146 | 15 | 26s | 97,67% | 10/10 | 4/10 |
+  | MLP + aug | 235.146 | 45 | 271s | 98,30% | 10/10 | 8/10 |
+  | CNN | 225.034 | 5 | 50s | 98,69% | 10/10 | 8/10 |
+  | CNN + aug | 225.034 | 15 | 213s | 99,17% | 10/10 | 8/10 |
+
+- Achado central do notebook: a CNN **sem** augmentation empata com a MLP **com**
+  augmentation no conjunto difícil (8/10), gastando 50s de treino contra 271s, e ainda
+  com menos parâmetros. Das convoluções da CNN saem só 18.816 pesos (8% do modelo).
+- Dígito 6 erra nos quatro modelos (sempre vira 5). O 7 cortado só a MLP sem augmentation
+  erra. Os erros de MLP+aug (o 8) e CNN (o 9) não se sobrepõem.
+- Correções aplicadas ao notebook antes de finalizar: trocado `input_shape=` por camada
+  `Input()` explícita (eliminou UserWarning do Keras 3 nas saídas), corrigido o número do
+  hook (era 3/10, o medido foi 4/10) e fechado o gancho da fração de tinta, que era
+  prometido no meio do texto e não era retomado na conclusão.
+
 ## 3. Em andamento 🔧
 Nenhuma tarefa em andamento no momento deste checkpoint. Ambas as frentes estão em ponto de
 entrega/revisão.
@@ -152,7 +185,8 @@ Nenhum passo obrigatório pendente. Possibilidades, caso o utilizador queira con
     `S4_MLP_aug.py`, `S4_CNN_aug.py`.
   - Modificados em `atividade_1/Python/`: `S4_MLP.py`, `S4_CNN.py` (parâmetros ajustados,
     bugs de ativação/perda corrigidos, seed fixa, prints de previsão adicionados).
-  - Novo em `atividade_1/`: `Atividade_Somativa_1_Respondida.docx` (relatório final).
+  - Novos em `atividade_1/`: `Atividade_Somativa_1_Respondida.docx` (relatório final) e
+    `mlp_vs_cnn_eficiencia.ipynb` (notebook de portfólio, já executado).
 - Fora do repositório git (mudanças no sistema, feitas seguindo a própria orientação da
   atividade): pasta `C:\RN\` criada/populada com as 20 imagens PNG (e uma subpasta
   duplicada `C:\RN\RN\` que já existia antes, resquício da extração do .rar).
