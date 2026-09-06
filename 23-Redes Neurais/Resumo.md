@@ -1142,8 +1142,107 @@ Dense(10) + Softmax         10             = nº de classes            128·10 +
    5×5×64. Perde-se resolução espacial e ganha-se **riqueza de características**.
 3. **Comparação direta com a MLP da unidade 02** (784 → 397 → 10 ≈ **315.625** parâmetros): a CNN
    usa **menos parâmetros** e ainda assim tem desempenho superior no MNIST — porque respeita a
-   estrutura espacial. 
+   estrutura espacial.
 
+## 3.9.1 A 2ª convolução por dentro: como 64 filtros processam os 32 mapas da 1ª ⭐
+
+Na tabela acima, a saída da 1ª convolução+pooling é `13×13×32` e a 2ª convolução tem **64 filtros**.
+Vale destrinchar exatamente o que acontece nessa transição, porque é onde mora a confusão mais comum:
+os 32 mapas são **empilhados** (não somados) num volume só, e cada um dos 64 novos filtros precisa
+"ver" o volume inteiro de uma vez — não escolhe um mapa para processar.
+
+### Passo 1 — a saída da 1ª camada é 1 volume, não 32 imagens soltas
+
+Depois de `Conv2D(32,...) + MaxPooling`, você não tem "32 imagens separadas" — tem **um único
+volume** de shape `13×13×32`, exatamente como uma imagem RGB é um volume `altura×largura×3` (seção
+3.1.1). Os 32 mapas ficam **empilhados em profundidade**, cada um preservando sua identidade:
+
+```
+VOLUME DE SAÍDA DA 1ª CONVOLUÇÃO + POOLING (13×13×32)
+
+   mapa 1 (detecta bordas verticais)      ┐
+   mapa 2 (detecta bordas horizontais)    │
+   mapa 3 (detecta manchas claras)        │  32 "fatias" 13×13,
+   mapa 4 (detecta textura X)             │  empilhadas em profundidade,
+   ...                                    │  cada uma ainda distinta
+   mapa 32 (detecta padrão Y)             ┘
+
+   Shape: (13, 13, 32)  ←  mesma estrutura de uma imagem RGB (altura, largura, canais)
+```
+
+Neste ponto, **nada foi somado ainda**. Os 32 mapas continuam sendo 32 informações separadas — só
+compartilham a mesma "grade" espacial 13×13.
+
+### Passo 2 — cada um dos 64 novos filtros "vê" os 32 mapas AO MESMO TEMPO
+
+Cada um dos 64 filtros da 2ª convolução **não escolhe um dos 32 mapas** para processar — ele precisa
+ter profundidade 32 para enxergar o volume inteiro de uma vez. Ou seja: cada filtro da 2ª camada é,
+na prática, um volume `3×3×32` — **32 kernels (um por mapa de entrada) + 1 viés**, exatamente o
+mecanismo da seção 3.2.1 (peça 2), só que escalado de 2 canais para 32.
+
+```
+1 FILTRO da 2ª convolução (produz 1 dos 64 mapas de saída)
+
+  kernel p/ mapa 1     kernel p/ mapa 2     kernel p/ mapa 3            kernel p/ mapa 32
+  ┌─────────┐          ┌─────────┐          ┌─────────┐        ...     ┌─────────┐
+  │  3×3    │          │  3×3    │          │  3×3    │                │  3×3    │
+  └─────────┘          └─────────┘          └─────────┘                └─────────┘
+       │                    │                    │                          │
+       ▼                    ▼                    ▼                          ▼
+  convolui com          convolui com         convolui com               convolui com
+  o mapa 1              o mapa 2             o mapa 3                   o mapa 32
+       │                    │                    │                          │
+       └────────────────────┴─────────┬──────────┴──────────────────────────┘
+                                       ▼
+                        SOMA os 32 resultados + viés
+                                       │
+                                       ▼
+                    1 valor de saída → 1 pixel do NOVO mapa de características
+```
+
+Isso se repete para **cada posição (p, q)** do volume (deslizando pelas 13×13 posições), gerando
+**um** mapa de saída completo (11×11) para esse filtro. A fórmula é a da seção 3.2.1, só trocando
+"2 canais" por "32 canais":
+
+```
+mapa_k[p][q]  =  ativação(  viés_k  +  Σ(c=1 até 32) Σi Σj  peso_k[c][i][j] × entrada[c][p+i][q+j]  )
+```
+
+### Passo 3 — os 64 filtros rodam em paralelo, cada um com seu próprio conjunto de 32 kernels
+
+Cada um dos 64 filtros tem **seu próprio** conjunto de 32 kernels + viés — totalmente independente
+dos outros 63. O Filtro 1 pode aprender a combinar "bordas verticais + bordas horizontais" (2 dos 32
+mapas) para detectar **cantos**; o Filtro 2 pode combinar outra combinação de mapas para detectar
+**curvas**; e assim por diante — é exatamente a hierarquia de características da seção 3.10 a seguir.
+
+```
+VOLUME DE ENTRADA (13×13×32)
+        │
+        ├── Filtro 1 (32 kernels + viés, todos próprios) → combina os 32 mapas → MAPA 1 (11×11)
+        ├── Filtro 2 (32 kernels + viés, todos próprios) → combina os 32 mapas → MAPA 2 (11×11)
+        ├── Filtro 3 (32 kernels + viés, todos próprios) → combina os 32 mapas → MAPA 3 (11×11)
+        │              ...
+        └── Filtro 64(32 kernels + viés, todos próprios) → combina os 32 mapas → MAPA 64(11×11)
+
+                              empilhados  →  SAÍDA (11×11×64)
+```
+
+### Conferindo com a tabela da seção 3.9
+
+```
+Nº de parâmetros de 1 filtro = (3 × 3 × 32 canais_entrada + 1 viés) = 289
+Nº de parâmetros da camada   = 289 × 64 filtros = 18.496   ✓ bate exatamente com a tabela acima
+```
+
+Esse número (18.496) só faz sentido porque cada um dos 64 filtros carrega **32 kernels internos** —
+se cada filtro "visse" só 1 mapa de entrada, seriam apenas `(9+1)×64 = 640` parâmetros, dez vezes menos.
+
+### Resumindo
+
+| Pergunta | Resposta |
+|---|---|
+| Os 32 mapas são sobrepostos? | **Empilhados**, sim — formam 1 volume 13×13×32, mas continuam **separados** (não somados) até aqui |
+| Como os 64 filtros convolucionam sobre eles? | Cada filtro tem **32 kernels próprios** (1 por mapa de entrada); em cada posição, pega um pedaço 3×3 de **cada um dos 32 mapas**, multiplica pelo kernel correspondente, e **soma tudo** (32×9 produtos + viés) num único valor de saída |
 
 ## 3.10 Hierarquia de características — o que cada camada aprende
 
