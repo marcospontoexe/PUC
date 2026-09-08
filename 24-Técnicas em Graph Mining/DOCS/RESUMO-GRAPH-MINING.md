@@ -46,12 +46,127 @@ Pontos importantes:
 | Multigrafo dirigido | Dirigidas | Não | Sim |
 | Pseudografo | Não dirigidas | Sim | Sim |
 
+**Figuras — um exemplo de cada tipo da tabela:**
+
+**Grafo simples** — arestas sem direção, sem laços e sem arestas paralelas:
+```mermaid
+graph LR
+    A---B
+    B---C
+    C---A
+    C---D
+```
+
+**Grafo completo** — existe aresta entre todos os pares de vértices (exemplo com 4 vértices, K4):
+```mermaid
+graph LR
+    A---B
+    A---C
+    A---D
+    B---C
+    B---D
+    C---D
+```
+
+**Digrafo (dirigido)** — todas as arestas têm direção (setas):
+```mermaid
+graph LR
+    A-->B
+    B-->C
+    C-->D
+    D-->A
+    A-->C
+```
+
+**Grafo não dirigido** — categoria geral de grafos com arestas sem direção, sem laços e sem arestas paralelas (engloba o grafo simples e o grafo completo):
+```mermaid
+graph LR
+    A---B
+    B---C
+    C---D
+    D---E
+    E---A
+    B---D
+```
+
+**Grafo misto** — combina arestas dirigidas e não dirigidas na mesma rede:
+```mermaid
+graph LR
+    A---B
+    B-->C
+    C---D
+    D-->A
+```
+
+**Multigrafo** — mais de uma aresta entre o mesmo par de vértices (e1 e e2 ligam A e B):
+```mermaid
+graph LR
+    A ---|e1| B
+    A ---|e2| B
+    B---C
+    C---A
+```
+
+**Multigrafo dirigido** — arestas paralelas e dirigidas entre o mesmo par de vértices:
+```mermaid
+graph LR
+    A -->|e1| B
+    A -->|e2| B
+    B-->C
+    C-->A
+```
+
+**Pseudografo** — possui laço (aresta que liga um vértice a ele mesmo) e arestas paralelas:
+```mermaid
+graph LR
+    A --- A
+    A ---|e1| B
+    A ---|e2| B
+    B---C
+```
+
 Outras classificações importantes:
 - **Grafo orientado/dirigido (digrafo):** usa setas — a direção importa.
 - **Grafo completo:** existe aresta entre **todos** os pares possíveis de vértices.
 - **Grafo conexo:** existe pelo menos um caminho entre cada par de vértices. Caso contrário, é **desconexo**.
 - **Árvore:** grafo conexo **sem ciclos**.
 - **Ciclo:** caminho que visita ao menos três vértices e pode retornar ao vértice inicial.
+
+**Figuras — grafo conexo, desconexo, árvore e ciclo:**
+
+**Grafo conexo** — existe caminho entre todo par de vértices:
+```mermaid
+graph LR
+    A---B
+    B---C
+    C---D
+```
+
+**Grafo desconexo** — pelo menos um par de vértices não possui caminho entre si (aqui, duas componentes isoladas):
+```mermaid
+graph LR
+    A---B
+    C---D
+```
+
+**Árvore** — grafo conexo e sem ciclos:
+```mermaid
+graph TD
+    A---B
+    A---C
+    B---D
+    B---E
+    C---F
+```
+
+**Ciclo** — caminho que visita vários vértices e retorna ao vértice inicial:
+```mermaid
+graph LR
+    A---B
+    B---C
+    C---D
+    D---A
+```
 
 ### 1.4 Ordem e Tamanho
 
