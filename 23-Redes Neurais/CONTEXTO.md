@@ -115,24 +115,79 @@ preenchendo o relatório final em Word com os resultados obtidos.
 - Setup do notebook difere dos scripts da atividade: usa MNIST completo (60k treino /
   10k teste oficial) e caminho **relativo** `RN/RN` em vez do `C:\RN` absoluto, para ser
   portátil em qualquer máquina. Por isso os números NÃO batem com os do relatório .docx.
-- Resultados do notebook (semente 42, MNIST completo):
+- **Ordem final das seções** (reestruturada a pedido do utilizador): conceito MLP x CNN →
+  arquiteturas em código → contagem de parâmetros → treino dos DOIS modelos base →
+  resultados/previsões/eficiência → data augmentation **por último**, como melhoria →
+  conclusão. Antes os quatro modelos treinavam numa célula só, o que impedia essa ordem.
+- **Bug de reprodutibilidade encontrado e corrigido** (importante, não repetir): as
+  camadas `RandomRotation/RandomTranslation/RandomZoom` eram criadas na avaliação do
+  argumento, portanto **antes** do `set_random_seed()` que roda dentro de
+  `roda_experimento`. Elas herdavam a semente do estado deixado pelo treino anterior e os
+  resultados mudavam a cada execução (chegaram a variar de 8/10 para 7/10 e 9/10 entre
+  rodadas). Correção: passar a **função** `camadas_de_augmentation` (sem parênteses) e
+  construir as camadas dentro de `roda_experimento`, depois do reset, além de `seed=`
+  explícito em cada camada. Determinismo verificado rodando a mesma config duas vezes e
+  comparando previsões e soma dos pesos da primeira convolução (idênticos).
+- Resultados finais do notebook (semente 42, MNIST completo, já reproduzíveis):
 
-  | Modelo | Params | Épocas | Tempo | Acurácia MNIST | Conj.1 | Conj.2 |
+  | Modelo | Params | Épocas | Tempo | Perda | Acurácia MNIST | Conj.1 | Conj.2 |
+  |---|---|---|---|---|---|---|---|
+  | MLP | 235.146 | 15 | 29s | 0,0861 | 97,67% | 10/10 | 4/10 |
+  | CNN | 225.034 | 5 | 69s | 0,0389 | 98,69% | 10/10 | 8/10 |
+  | MLP + aug | 235.146 | 45 | 315s | 0,0588 | 98,20% | 10/10 | 9/10 |
+  | CNN + aug | 225.034 | 15 | 258s | 0,0608 | 98,02% | 10/10 | 9/10 |
+
+- Achados centrais: a CNN base (8/10, 69s) fica a um dígito da MLP com augmentation
+  (9/10, 315s), com menos parâmetros. Das convoluções da CNN saem só 18.816 pesos (8% do
+  modelo). O augmentation **piorou** a acurácia MNIST da CNN (98,69% → 98,02%) enquanto
+  melhorou o conjunto difícil, uma troca de ajuste na distribuição de treino por robustez
+  (e provável falta de épocas, já que a tarefa ficou mais difícil).
+- O 7 cortado só a MLP base erra. Os dois modelos com augmentation (protocolo de época
+  fixa) terminam com previsões idênticas, errando só o 6.
+- **Seção "O número esquisito da CNN"**: o utilizador questionou o "provavelmente é falta
+  de treino" que eu tinha escrito sem testar. Medido: treino de 45 épocas registrando a
+  acurácia a cada época. A época 15 caiu num vale (98,02%), com a 13 em 98,60%, a 14 em
+  98,40% e a 16 já em 98,86%. O melhor ponto foi 99,25% na época 32, acima do baseline
+  sem augmentation (98,69%). Conclusão: o augmentation não piorou a CNN, eu medi no pior
+  ponto da vizinhança.
+- **Seção "O jeito honesto: early stopping"**: implementa a verificação que o texto
+  propunha. Validação de 6 mil imagens separada do treino (sobram 54 mil), `EarlyStopping`
+  com `monitor="val_accuracy"`, `patience=10`, `restore_best_weights=True`, teste intocado
+  até o fim. Resultados:
+
+  | Modelo | Época (chute) | Acurácia (chute) | Conj.2 | Época (early stop) | Acurácia | Conj.2 |
   |---|---|---|---|---|---|---|
-  | MLP | 235.146 | 15 | 26s | 97,67% | 10/10 | 4/10 |
-  | MLP + aug | 235.146 | 45 | 271s | 98,30% | 10/10 | 8/10 |
-  | CNN | 225.034 | 5 | 50s | 98,69% | 10/10 | 8/10 |
-  | CNN + aug | 225.034 | 15 | 213s | 99,17% | 10/10 | 8/10 |
+  | MLP + aug | 45 | 98,20% | 9/10 | 23 | 98,08% | **10/10** |
+  | CNN + aug | 15 | 98,02% | 9/10 | **32** | **99,31%** | **10/10** |
 
-- Achado central do notebook: a CNN **sem** augmentation empata com a MLP **com**
-  augmentation no conjunto difícil (8/10), gastando 50s de treino contra 271s, e ainda
-  com menos parâmetros. Das convoluções da CNN saem só 18.816 pesos (8% do modelo).
-- Dígito 6 erra nos quatro modelos (sempre vira 5). O 7 cortado só a MLP sem augmentation
-  erra. Os erros de MLP+aug (o 8) e CNN (o 9) não se sobrepõem.
-- Correções aplicadas ao notebook antes de finalizar: trocado `input_shape=` por camada
-  `Input()` explícita (eliminou UserWarning do Keras 3 nas saídas), corrigido o número do
-  hook (era 3/10, o medido foi 4/10) e fechado o gancho da fração de tinta, que era
-  prometido no meio do texto e não era retomado na conclusão.
+- Achado que fecha o notebook: o early stopping escolheu a **época 32** para a CNN, a mesma
+  que a curva anterior tinha identificado como melhor **espiando o conjunto de teste**. A
+  validação chegou na mesma resposta sem ver o teste.
+- **Correção importante na conclusão**: a versão anterior afirmava que o dígito 6 era
+  impossível para todos os modelos e que só coletando dados novos daria pra resolver. Os
+  dois modelos com early stopping acertaram o 6 (10/10). A conclusão foi reescrita para
+  registrar o erro: não era limite do dado, era modelo parado no lugar errado.
+
+### Frente D — Post para o LinkedIn
+- Criados `atividade_1/post_linkedin.md` (texto em duas versões, longa e curta) e
+  `atividade_1/post_linkedin_mlp_cnn.png` (1096x1315, retrato, ~211 KB).
+- A imagem combina a tabela dos 6 modelos (parâmetros, acurácia MNIST, acertos na
+  caligrafia) com a curva de acurácia por época, destacando em vermelho a época 15 (o
+  vale onde eu tinha medido) e em verde a época 32 (o melhor ponto, e a que o early
+  stopping escolheu sozinho). Script gerador: `imagem_post.py` no scratchpad.
+- **Ajuste de terminologia**: o utilizador pediu para falar do "vale local do gradiente".
+  Corrigido no texto, porque o modelo não ficou preso em mínimo local (ele se recuperou
+  sozinho na época seguinte, sem intervenção). É oscilação da curva de acurácia entre
+  épocas, causada pelo ruído do SGD com augmentation. O post usa "um vale da curva".
+- Cuidado tomado na imagem: a curva atinge 99,25% na época 32 (rodada sem separar
+  validação, 60k de treino) e a tabela mostra 99,31% (rodada com early stopping, 54k de
+  treino). Para não parecer contradição na mesma imagem, a anotação verde não repete o
+  número, só aponta a época.
+- O LinkedIn não renderiza markdown, então o texto foi escrito em texto puro, com títulos
+  de seção em caixa alta em vez de asteriscos.
+- Outras correções aplicadas ao notebook: trocado `input_shape=` por camada `Input()`
+  explícita (eliminou UserWarning do Keras 3), removida célula de código vazia no fim, e
+  reordenada a seção de augmentation que antes aparecia depois do código que já a usava.
 
 ## 3. Em andamento 🔧
 Nenhuma tarefa em andamento no momento deste checkpoint. Ambas as frentes estão em ponto de
