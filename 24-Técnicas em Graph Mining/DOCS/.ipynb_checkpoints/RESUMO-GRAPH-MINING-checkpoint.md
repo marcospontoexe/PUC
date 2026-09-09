@@ -175,22 +175,11 @@ graph LR
 
 ### 1.5 Grafos vs. Redes Complexas
 
-**A ideia central:** um **grafo** é puramente um objeto matemático — qualquer conjunto de vértices e arestas, sem nenhuma exigência sobre como essas conexões se comportam estatisticamente. Uma **rede complexa** é um **subconjunto** dos grafos: são grafos que, além de existirem, exibem **padrões estatísticos que emergem naturalmente em sistemas reais de grande escala** (redes sociais, internet, cérebro, colaboração científica etc.). Segundo Gabardo (2015), duas propriedades centrais caracterizam essa emergência:
+Redes complexas são um tipo específico de grafo que apresenta propriedades particulares (não encontradas em grafos simples), como:
+- Vértices fortemente conectados formando **comunidades**;
+- Distribuição de graus seguindo uma **lei de potência**.
 
-1. **Formação de comunidades** — vértices fortemente conectados entre si, formando grupos (tema da Unidade 6).
-2. **Distribuição de graus seguindo uma lei de potência** — poucos vértices com muitíssimas conexões e a maioria com poucas (detalhado na seção 1.7, abaixo).
-
-Ou seja: **toda rede complexa é um grafo, mas nem todo grafo é uma rede complexa** — é uma relação de inclusão, não de sinonímia (o mesmo tipo de relação entre "quadrado" e "retângulo").
-
-**Por que essa distinção existe na prática:** pense em três grafos diferentes com 1000 vértices:
-
-| Grafo | É uma rede complexa? | Por quê |
-|---|---|---|
-| Grafo regular (todos com grau exatamente 4) | Não | Não tem heterogeneidade de graus nem comunidades — é artificialmente homogêneo |
-| Grafo aleatório de Erdős–Rényi (Unidade 3) | Não, tipicamente | Distribuição de graus é Gaussiana (todos parecidos com a média); não forma comunidades nem hubs |
-| Rede social real (ex.: Twitter) | Sim | Tem hubs (celebridades), comunidades (grupos de amigos/interesses) e distribuição de graus em lei de potência |
-
-Essa distinção não é apenas teórica — ela orienta qual **modelo de formação** (Unidade 3) e quais **métricas** usar na análise de um problema real. Se sabemos de antemão que a rede é uma rede complexa, já podemos esperar encontrar hubs, comunidades e caminhos curtos entre vértices (efeito de "mundo pequeno") — e escolher técnicas de mineração adequadas a isso, em vez de assumir (erradamente) que as conexões são homogêneas.
+Ou seja: toda rede complexa é um grafo, mas nem todo grafo é uma rede complexa.
 
 ### 1.6 Grau de um vértice
 
@@ -202,19 +191,10 @@ O **grau** (*degree*) representa quantas conexões um vértice possui.
 
 ### 1.7 Distribuição de graus
 
-**O que é, exatamente:** a distribuição de graus responde à pergunta *"quantos vértices existem para cada valor possível de grau?"* — não é o grau de um vértice específico (seção 1.6), é uma visão estatística de **todos os graus da rede ao mesmo tempo**, geralmente visualizada por **histogramas** (eixo X = valores de grau; eixo Y = quantidade de vértices com aquele grau).
+Representa quantos vértices possuem cada grau específico — geralmente visualizada por **histogramas**.
 
-*Exemplo:* grafo com 5 vértices e graus [2, 3, 0, 3, 2] → distribuição: grau 0 → 1 vértice; grau 1 → 0 vértices; grau 2 → 2 vértices; grau 3 → 2 vértices.
-
-**As duas "famílias" de distribuição — e por que isso importa tanto:**
-
-1. **Distribuição Gaussiana (normal)** — formato de sino, simétrica em torno de uma média. Aparece em fenômenos aleatórios "comuns" (altura de pessoas, velocidade de carros, notas de estudantes) e, em grafos, nas **redes aleatórias de Erdős-Rényi** e nas **redes de mundo pequeno de Watts-Strogatz** (Unidade 3) — porque nesses modelos as conexões são feitas com a mesma probabilidade para todos os pares de vértices, gerando graus parecidos entre si. Interpretação: a maioria dos vértices tem grau próximo da média; grau muito baixo ou muito alto é igualmente raro.
-
-2. **Lei de potência (*power law*)** — formato de "cauda longa": decai rapidamente, mas nunca zera de fato para valores grandes. É o que se observa na **maioria das redes complexas reais** (internet, web, redes sociais, colaboração científica, conexões neurais). Interpretação: *"a observação de pequenas ocorrências é extremamente comum, enquanto a observação de grandes ocorrências é rara"* — ou seja, a probabilidade de um vértice ter poucas conexões é muito maior que a de ter muitas. *Exemplo do Twitter:* a grande maioria dos usuários tem poucos seguidores; uma pequena parcela (celebridades) tem milhões; e nenhum usuário segue/é seguido por todos os outros.
-
-**Ligação direta com a seção 1.5:** a lei de potência não é um detalhe isolado — é justamente uma das duas propriedades que definem uma rede complexa (seção 1.5). Por isso as duas seções aparecem em sequência no material: primeiro se afirma que *"redes complexas têm distribuição de graus em lei de potência"*, depois se explica o que isso significa de fato. A Figura 5 do PDF reforça essa ideia visualmente, comparando duas redes de 300 vértices — uma com distribuição Gaussiana (gerada por modelo aleatório) e outra com lei de potência (representando um problema real).
-
-**Complemento técnico** (útil para quem quiser ir além do material): formalmente, uma lei de potência tem a forma **P(k) ∝ k⁻ᵞ**, em que P(k) é a probabilidade de um vértice ter grau *k*, e **γ** é tipicamente um valor entre 2 e 3 em redes reais. Uma forma prática de verificar visualmente se uma rede segue lei de potência é plotar o histograma em **escala log-log** (logaritmo da frequência vs. logaritmo do grau): se os pontos formarem aproximadamente uma **linha reta**, é forte evidência de lei de potência — o que não ocorre em uma distribuição Gaussiana. Esse mesmo princípio fundamenta o **modelo de Barabási-Albert** (redes livres de escala, Unidade 3): o mecanismo de "conexão preferencial" (*rich get richer*) é o que **produz**, de forma simulada, a lei de potência observada empiricamente em redes reais.
+- Em dados/fenômenos aleatórios "comuns" (altura, notas), a distribuição costuma seguir uma **curva Gaussiana (normal)**, com formato de sino simétrico em torno de uma média.
+- Em **redes complexas reais**, a distribuição de graus segue tipicamente uma **lei de potência** (cauda longa): a maioria dos vértices tem poucas conexões, e uma minoria concentra um número enorme de conexões (ex.: a maioria dos usuários do Twitter tem poucos seguidores, enquanto celebridades têm milhões).
 
 ### 1.8 Pesos das arestas
 
