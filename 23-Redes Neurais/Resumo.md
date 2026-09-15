@@ -1401,8 +1401,166 @@ Também conhecida como **mapa auto-organizável (SOM)** ou **rede de Kohonen**. 
 | **Auto-organização** | Identifica e mapeia relações nos dados, criando uma representação **compacta e ordenada** |
 | **Vizinhança topológica** | Os neurônios ficam numa **grade** (ex.: bidimensional); vizinhos tendem a ativar juntos |
 | **Ajuste dos pesos sinápticos** | Neurônios vizinhos passam a responder de forma semelhante a padrões semelhantes — **competição cooperativa** |
-| **Mapeamento entradas → neurônios** | Vence o neurônio cujo **vetor de pesos está mais próximo** do padrão de entrada |
+| **Mapeamento entradas → neurônios** | Vence o neurônio cujo **vetor de pesos está mais próximo** do padrão de entrada (detalhado na seção 5.2.1) |
 | **Generalização** | Depois de treinada, reconhece padrões semelhantes aos vistos no treino |
+
+## 5.2.1 Mapeamento de entradas para neurônios, em detalhe ⭐
+
+O PDF resume o princípio em duas frases:
+
+> "Cada neurônio na camada competitiva possui um vetor de pesos sinápticos que define sua
+> sensibilidade a diferentes características do padrão de entrada. Durante a ativação, o neurônio
+> com pesos mais próximos ao padrão de entrada é escolhido."
+
+Parece simples, mas quase tudo o que a RNC faz sai dessas duas frases. Vale destrinchar.
+
+### 1. O vetor de pesos mora no mesmo espaço dos dados
+
+O vetor de pesos de um neurônio competitivo tem **exatamente o mesmo tamanho da entrada**. Se cada
+veículo é descrito por 2 atributos (cilindrada e eficiência, como nas unidades 7 e 8), cada neurônio
+competitivo tem 2 pesos. Esses 2 números podem ser desenhados no mesmo gráfico dos veículos: o
+neurônio **é um ponto** no espaço dos dados. É isso que o PDF quer dizer quando afirma que o vetor de
+pesos "define sua posição no espaço de entrada".
+
+Essa é a maior diferença de leitura em relação à MLP:
+
+| | Peso na MLP | Peso na RNC |
+|---|---|---|
+| O que o número significa | quanto aquela entrada **importa** para o neurônio | a **coordenada** do neurônio naquele atributo |
+| Pode ser comparado com o dado? | não, tem outro significado | sim, está na mesma escala do dado |
+
+Com os neurônios do exemplo da figura da seção 5.3 (atributos normalizados entre 0 e 1):
+
+| Neurônio | Pesos (cilindrada ; eficiência) | Perfil que ele representa |
+|---|---|---|
+| A | (0,2 ; 0,9) | motor pequeno, muito eficiente |
+| B | (0,6 ; 0,5) | motor médio, eficiência média |
+| C | (0,5 ; 0,1) | motor médio, pouco eficiente |
+
+### 2. "Sensibilidade": cada neurônio responde a uma região do espaço
+
+Quando um veículo **x** chega, calcula-se a distância dele até o vetor de pesos de cada neurônio, e
+vence o mais próximo:
+
+```
+d_j = ‖x − w_j‖ = √[(x₁ − w_j1)² + (x₂ − w_j2)²]        vencedor = neurônio com o menor d_j
+```
+
+Mapeando quatro veículos diferentes nos mesmos três neurônios:
+
+| Veículo x | d até A | d até B | d até C | Vence |
+|---|---|---|---|---|
+| (0,80 ; 0,30) | 0,849 | **0,283** | 0,361 | **B** |
+| (0,25 ; 0,85) | **0,071** | 0,495 | 0,791 | **A** |
+| (0,45 ; 0,15) | 0,791 | 0,381 | **0,071** | **C** |
+| (0,55 ; 0,55) | 0,495 | **0,071** | 0,453 | **B** |
+
+Dois pontos importantes nessa tabela:
+
+- **Cada neurônio "cobre" uma região.** Todos os veículos em que A vence formam a região de A, e o
+  mesmo vale para B e C. O espaço inteiro fica dividido em regiões, uma por neurônio, e a fronteira
+  entre duas regiões é a **mediatriz** do segmento que liga os dois vetores de pesos. Essa divisão é
+  conhecida como **diagrama de Voronoi**. "Sensibilidade" é justamente isso: um neurônio é sensível
+  aos padrões que caem dentro da sua região.
+- **Sempre existe um vencedor, mesmo que ninguém esteja perto.** O veículo (0,80 ; 0,30) está a
+  0,283 de B, quatro vezes mais longe que os outros três exemplos estão dos seus vencedores (0,071).
+  Ele é atribuído a B do mesmo jeito. O valor da menor distância, portanto, também é informação:
+  uma distância grande indica um dado atípico para o mapa, o que permite usar a RNC para detectar
+  anomalias.
+
+### 3. Distância euclidiana ou similaridade do cosseno
+
+O PDF cita as duas medidas. Elas respondem perguntas diferentes:
+
+| Medida | O que compara | Quem vence |
+|---|---|---|
+| **Distância euclidiana** | tamanho **e** direção dos vetores (a distância em linha reta) | o **menor** valor |
+| **Similaridade do cosseno** | só a **direção**, ou seja, a proporção entre os atributos | o **maior** valor (1 = mesma direção) |
+
+Exemplo: u = (0,2 ; 0,4) e v = (0,4 ; 0,8). A distância euclidiana entre eles é 0,447, mas o cosseno
+vale 1,0, porque v é só u multiplicado por 2. Para o cosseno, os dois são idênticos.
+
+Para veículos, a euclidiana costuma fazer mais sentido: um carro com o dobro de cilindrada e o dobro
+de eficiência é um carro diferente, e não "o mesmo carro em escala maior". O cosseno faz mais sentido
+quando a proporção importa mais que o valor absoluto, como na contagem de palavras em textos de
+tamanhos diferentes.
+
+### 4. A escala dos atributos decide quem é sensível a quê
+
+Como o vencedor é decidido por distância, **um atributo com valores numericamente grandes domina a
+decisão**, não importa o quanto ele seja relevante. Exemplo com cilindrada em litros e CO₂ em g/km:
+
+| | Carro 1 | Carro 2 | Diferença |
+|---|---|---|---|
+| Cilindrada (L) | 1,6 | 3,6 | 2,0 |
+| CO₂ (g/km) | 150 | 160 | 10 |
+| **Distância sem normalizar** | | | **10,20** |
+
+Os motores são muito diferentes (um tem mais que o dobro do outro), mas a distância de 10,20 vem quase
+toda da diferença de 10 g/km de CO₂. A cilindrada praticamente não participa da competição.
+
+Normalizando entre 0 e 1, com faixas hipotéticas de 1 a 6 L para cilindrada e de 100 a 400 g/km para CO₂:
+
+| | Diferença normalizada |
+|---|---|
+| Cilindrada | 0,400 |
+| CO₂ | 0,033 |
+| **Distância normalizada** | **0,401** |
+
+Agora é a cilindrada que pesa, como deveria. Sem normalizar, a "sensibilidade" dos neurônios fica
+determinada pela **unidade de medida**, e não pelos dados. É por isso que a seção 5.5 trata a
+normalização como obrigatória na RNC.
+
+### 5. Especialização: o vetor de pesos vira o retrato do grupo
+
+A regra de atualização aproxima o vencedor (e os vizinhos, com força menor) do dado:
+
+```
+w ← w + η · h · (x − w)        η = taxa de aprendizado     h = força da vizinhança (1 no vencedor)
+```
+
+Cada vez que um neurônio vence, ele anda uma fração do caminho até aquele dado. Depois de muitas
+passadas, ele se acomoda **muito perto da média** dos dados que vence. Exemplo: um neurônio que
+começa em (0,6 ; 0,5) e vence sempre estes três veículos:
+
+| Veículo | Cilindrada | Eficiência |
+|---|---|---|
+| 1 | 0,78 | 0,32 |
+| 2 | 0,84 | 0,26 |
+| 3 | 0,81 | 0,28 |
+| **Média** | **0,810** | **0,287** |
+
+Com η = 0,1, depois de 30 passadas pelos três, os pesos estão em **(0,811 ; 0,285)**, praticamente
+na média.
+
+É isso que o PDF chama de "codificação do grupo de dados que ele representa". Na prática, o vetor de
+pesos de um neurônio treinado **é um veículo típico daquele grupo**. Desfazendo a normalização, dá
+para ler diretamente o perfil do grupo ("motores grandes e pouco eficientes", por exemplo). Essa
+interpretabilidade é uma vantagem clara em relação à MLP, cujos pesos não têm leitura direta.
+
+### 6. Vizinhança: quem é vizinho na grade vira vizinho nos dados
+
+Como os vizinhos do vencedor também são puxados em direção ao dado, neurônios próximos na grade
+terminam o treino com vetores de pesos parecidos. O resultado é um mapa que **preserva a topologia**:
+veículos parecidos caem em neurônios próximos, e andar pela grade equivale a andar gradualmente pelo
+espaço dos dados. É o que o PDF descreve como neurônios vizinhos que "respondem de maneira semelhante
+a padrões de entrada semelhantes". Na figura da seção 5.3, isso aparece no neurônio C, que é vizinho
+de B na grade e também se move em direção a x.
+
+### 7. Armadilhas do mapeamento
+
+| Problema | O que acontece | Como evitar |
+|---|---|---|
+| **Neurônio morto** | Um neurônio inicializado longe de todos os dados nunca vence, então nunca aprende e fica inútil | Inicializar os pesos dentro da faixa dos dados; usar vizinhança larga no início do treino; variante com consciência (DeSieno, 1988) |
+| **Poucos neurônios** | Cada região fica grande e grupos diferentes acabam no mesmo neurônio | Aumentar a grade |
+| **Neurônios demais** | Cada neurônio cobre poucos dados e o mapa fragmenta grupos que deveriam estar juntos | Reduzir a grade e avaliar a coesão dos grupos (seção 5.6) |
+| **Atributos em escalas diferentes** | Um atributo domina a distância (item 4) | Normalizar antes de treinar |
+
+> **Ligação com as unidades 7 e 8:** cada combinação treinada (cilindrada × eficiência, cilindrada ×
+> CO₂ e eficiência × CO₂) tem 2 colunas, e é por isso que o código calcula
+> `inshape = combinacao.shape[1]` e obtém 2. Cada mapa tem neurônios com vetores de 2 pesos, e os três
+> treinamentos geram três mapas independentes, cada um organizando os mesmos veículos sob outro par de
+> atributos.
 
 ## 5.3 Arquitetura
 
@@ -1418,6 +1576,14 @@ Camada de Entrada  →  Camada Competitiva  →  Camada de Saída
 | **Neurônios competitivos** | O coração da RNC. Cada um tem um **vetor de pesos** que define sua posição no espaço de entrada; especializam-se em regiões específicas |
 | **Neurônios de saída** | Formam o **mapa** (grade 2D ou multidimensional); ativados pela similaridade entre pesos e entrada |
 | **Conexões** | Entrada → **todos** os competitivos; competitivos → saída |
+
+![Arquitetura da Rede Neural Competitiva](arquitetura_rnc.png)
+
+A figura mostra o caminho completo: um veículo por vez entra pelas duas entradas (cilindrada e
+eficiência), que se ligam aos 16 neurônios da grade. Vence o neurônio com os pesos mais próximos do
+dado, e ele e os vizinhos na grade se aproximam desse dado. Repare que **não há bias**: o neurônio
+competitivo não faz soma ponderada, ele mede distância. O −b aparece tracejado só para mostrar onde
+ele entraria na variante com consciência (DeSieno, 1988).
 
 ## 5.4 Algoritmo de Kohonen — os 6 passos ⭐
 

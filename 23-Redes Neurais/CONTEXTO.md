@@ -185,6 +185,81 @@ preenchendo o relatório final em Word com os resultados obtidos.
   número, só aponta a época.
 - O LinkedIn não renderiza markdown, então o texto foi escrito em texto puro, com títulos
   de seção em caixa alta em vez de asteriscos.
+
+### Frente E — Ilustração da arquitetura da MLP
+- Criada `atividade_1/arquitetura_mlp.png` (gerada por `arquitetura_mlp.py` no
+  scratchpad). Mostra a MLP do notebook (784 → 256 → 128 → 10): imagem real `sete7.png`
+  sendo achatada em 784 entradas, ligações totalmente conectadas entre camadas, um nó de
+  bias (+1) por camada ligado a todos os neurônios da camada seguinte (linhas laranja
+  tracejadas), destaque em azul de tudo que chega no neurônio h₁, saída softmax com o 7
+  destacado, e contagem de parâmetros entre cada par de camadas (total 235.146, conferido
+  por script).
+- Painel de zoom no neurônio h₁: entradas x₁..x₇₈₄ com pesos w, bias +1 com peso b,
+  soma Σ, ativação tanh, fórmula z = Σwx + b, conta de 785 parâmetros por neurônio
+  (× 256 = 200.960) e explicação do bias pela analogia com o b de y = ax + b.
+- **Mal-entendido**: a ilustração da MLP foi feita por engano. O utilizador queria a da
+  **RNC** (Rede Neural Competitiva). O arquivo `arquitetura_mlp.png` continua existindo,
+  não foi apagado nem inserido em lugar nenhum.
+
+### Frente F: Ilustração da arquitetura da RNC (a que foi pedida de fato)
+- Criada `arquitetura_rnc.png` na raiz de `23-Redes Neurais` (gerada por
+  `arquitetura_rnc.py` no scratchpad, 1760x2200).
+- O código Python da RNC do curso (unidades 5, 7 e 8) **não existe nesta máquina**:
+  procurado no repositório, em Downloads, Desktop e Documentos, por conteúdo e por nome.
+  A ilustração se baseia no PDF da unidade 5 (Kohonen/SOM, grade bidimensional, distância
+  euclidiana, vizinhança) e nos dados das unidades 7 e 8 (cilindrada e eficiência como as
+  2 entradas).
+- **Decisão sobre o bias (importante)**: na RNC clássica **não existe bias**. O neurônio
+  competitivo não faz soma ponderada nem aplica ativação, ele calcula a distância
+  ‖x − w‖ e vence o de menor distância. A ilustração mostra isso explicitamente (nó +1
+  riscado) e, para responder à pergunta "como o bias está conectado", mostra onde ele entra
+  na única variante que tem um: a rede com consciência (DeSieno, 1988), em que cada
+  neurônio competitivo recebe um −b_j somado à distância, antes da comparação. Se o código
+  do curso usar bias (por exemplo, uma implementação em Keras com Dense), a ilustração
+  precisa ser revista com esse código em mãos.
+- Conteúdo: (1) arquitetura com base de veículos ilustrativa, 2 entradas, grade 4×4 em
+  perspectiva com ligações de vizinhança, vencedor e vizinhos coloridos por distância na
+  grade, pesos w₁ e w₂ do vencedor destacados, saída como mapa com 1 no vencedor;
+  (2) painel "como a competição é calculada" com a fórmula da distância e o −b tracejado
+  entrando na junção; (3) exemplo numérico verificado por script: x = (0,8; 0,3), distâncias
+  A = 0,85, B = 0,28 (vence), C = 0,36; com η = 0,5, B vai para (0,7; 0,4) e o vizinho C,
+  com metade da força, vai para (0,575; 0,15); (4) tabela MLP × RNC; (5) referências
+  (Kohonen, 2001; DeSieno, 1988).
+- Correções de layout feitas até a versão final: o −b ficava solto sem encostar no fluxo
+  (redesenhado com uma junção explícita); as linhas até o vencedor atravessavam outros
+  neurônios (resolvido buscando por script um espaçamento de grade e uma posição de vencedor
+  com folga de 3,25 unidades); e um texto encostava no rótulo "cilindrada".
+- **Segunda rodada, a pedido do utilizador**:
+  - Legenda: "peso w" e "ligação de vizinhança" tinham cores quase iguais (dois cinzas).
+    A vizinhança passou a roxo (`#8e44ad`, linha mais grossa) e os pesos continuam em cinza claro.
+  - Painel "Como a competição é calculada": a fórmula usava a letra j, mas os blocos só
+    tinham números (1, 2, 16). O bloco do meio virou "neurônio j" em destaque, com as
+    ligações das entradas destacadas, o rótulo "pesos w_j1 e w_j2" e a legenda "onde j é um
+    neurônio qualquer da grade (1 a 16)". Há reticências entre 1 e j e entre j e 16.
+  - Painel do exemplo numérico: ganhou escala nos dois eixos (marcas a cada 0,1, números a
+    cada 0,2), grade leve, projeções tracejadas de cada ponto até os eixos e as coordenadas
+    ao lado de cada letra: A (0,2; 0,9), B (0,6; 0,5), C (0,5; 0,1) e x (0,8; 0,3).
+  - Gravação do PNG: o arquivo final estava bloqueado (`OSError Errno 22`), provavelmente
+    por estar aberto no IDE. O script agora lê o caminho de saída da variável de ambiente
+    `DESTINO_RNC` (com o caminho do projeto como padrão). A renderização vai para um PNG
+    temporário no scratchpad, que depois é copiado por cima do original.
+- **Resumo.md**:
+  - A figura foi incluída na seção 5.3 (`![...](arquitetura_rnc.png)`), com um parágrafo
+    que explica a figura e reforça que não há bias.
+  - Criada a seção **5.2.1 "Mapeamento de entradas para neurônios, em detalhe"**, que
+    parte da frase do PDF da unidade 5. Tópicos, com números conferidos por script:
+    (1) o vetor de pesos tem a dimensão da entrada e é um ponto no espaço dos dados (tabela
+    comparando o peso na MLP e na RNC; perfis de A, B e C); (2) sensibilidade como região de
+    Voronoi, mapeando 4 veículos (0,8;0,3)→B, (0,25;0,85)→A, (0,45;0,15)→C, (0,55;0,55)→B,
+    e a menor distância como indicador de anomalia; (3) euclidiana × cosseno, com
+    u=(0,2;0,4) e v=(0,4;0,8): euclidiana 0,447 e cosseno 1,0; (4) escala dos atributos:
+    carros (1,6 L; 150 g/km) e (3,6 L; 160 g/km) têm distância 10,20 sem normalizar, dominada
+    pelo CO₂, e 0,401 normalizada, dominada pela cilindrada (faixas hipotéticas 1–6 L e
+    100–400 g/km); (5) especialização: com η = 0,1, depois de 30 passadas, o peso vai de
+    (0,6;0,5) para (0,811;0,285), perto da média (0,810;0,287) dos 3 veículos que ele vence;
+    (6) preservação da topologia pela vizinhança; (7) armadilhas (neurônio morto, poucos ou
+    muitos neurônios, escala) e a ligação com o `inshape = 2` das unidades 7 e 8.
+  - A linha "Mapeamento entradas → neurônios" da tabela 5.2 agora aponta para a 5.2.1.
 - Outras correções aplicadas ao notebook: trocado `input_shape=` por camada `Input()`
   explícita (eliminou UserWarning do Keras 3), removida célula de código vazia no fim, e
   reordenada a seção de augmentation que antes aparecia depois do código que já a usava.
