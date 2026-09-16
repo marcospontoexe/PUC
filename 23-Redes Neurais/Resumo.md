@@ -1406,8 +1406,6 @@ Também conhecida como **mapa auto-organizável (SOM)** ou **rede de Kohonen**. 
 
 ## 5.2.1 Mapeamento de entradas para neurônios, em detalhe ⭐
 
-O PDF resume o princípio em duas frases:
-
 > "Cada neurônio na camada competitiva possui um vetor de pesos sinápticos que define sua
 > sensibilidade a diferentes características do padrão de entrada. Durante a ativação, o neurônio
 > com pesos mais próximos ao padrão de entrada é escolhido."
@@ -1419,7 +1417,7 @@ Parece simples, mas quase tudo o que a RNC faz sai dessas duas frases. Vale dest
 O vetor de pesos de um neurônio competitivo tem **exatamente o mesmo tamanho da entrada**. Se cada
 veículo é descrito por 2 atributos (cilindrada e eficiência, como nas unidades 7 e 8), cada neurônio
 competitivo tem 2 pesos. Esses 2 números podem ser desenhados no mesmo gráfico dos veículos: o
-neurônio **é um ponto** no espaço dos dados. É isso que o PDF quer dizer quando afirma que o vetor de
+neurônio **é um ponto** no espaço dos dados. Isso quer dizer que o vetor de
 pesos "define sua posição no espaço de entrada".
 
 Essa é a maior diferença de leitura em relação à MLP:
@@ -1470,15 +1468,33 @@ Dois pontos importantes nessa tabela:
 
 ### 3. Distância euclidiana ou similaridade do cosseno
 
-O PDF cita as duas medidas. Elas respondem perguntas diferentes:
+A RNC aceita duas medidas de similaridade, e elas **não medem a mesma coisa**:
 
-| Medida | O que compara | Quem vence |
-|---|---|---|
-| **Distância euclidiana** | tamanho **e** direção dos vetores (a distância em linha reta) | o **menor** valor |
-| **Similaridade do cosseno** | só a **direção**, ou seja, a proporção entre os atributos | o **maior** valor (1 = mesma direção) |
+| Medida | Fórmula | O que compara | Quem vence |
+|---|---|---|---|
+| **Distância euclidiana** | ‖x − w‖ = √[ Σ (xᵢ − wᵢ)² ] | a **posição** da ponta do vetor: módulo e direção | o **menor** valor |
+| **Similaridade do cosseno** | (x · w) / (‖x‖ · ‖w‖) | só a **direção**, ou seja, a proporção entre os atributos | o **maior** valor (1 = mesma direção) |
 
-Exemplo: u = (0,2 ; 0,4) e v = (0,4 ; 0,8). A distância euclidiana entre eles é 0,447, mas o cosseno
-vale 1,0, porque v é só u multiplicado por 2. Para o cosseno, os dois são idênticos.
+![Distância euclidiana × similaridade do cosseno](similaridade_cosseno_euclidiana.png)
+
+A figura mostra o caso em que a escolha da medida **muda o vencedor**. Um dado x = (0,2 ; 0,4) é
+apresentado a dois neurônios:
+
+| Neurônio | Pesos w | Distância até x | Cosseno com x |
+|---|---|---|---|
+| **B** | (0,4 ; 0,8) | 0,447 | **1,000** ← vence no cosseno |
+| **C** | (0,5 ; 0,1) | **0,424** ← vence na euclidiana | 0,614 |
+
+O motivo: **w_B é exatamente x multiplicado por 2**. Os dois estão na mesma reta que passa pela
+origem, então o ângulo entre eles é 0° e o cosseno é 1,0 — para essa medida, são o mesmo padrão. A
+euclidiana enxerga outra coisa: as pontas estão a 0,447 uma da outra, porque o módulo dobrou. Já w_C
+está a 52,1° de x, mas a ponta dele caiu um pouco mais perto, a 0,424.
+
+**Normalizar o módulo faz as duas medidas concordarem.** Dividindo cada vetor pelo próprio módulo,
+todos passam a ter comprimento 1 e vale a relação `d² = 2 · (1 − cos θ)`: quanto maior o cosseno,
+menor a distância. No exemplo, x̂ e ŵ_B viram o mesmo ponto (d = 0) e a distância de x̂ até ŵ_C fica
+em 0,879. É por isso que, quando a RNC usa cosseno, os pesos costumam ser **renormalizados depois de
+cada atualização**.
 
 Para veículos, a euclidiana costuma fazer mais sentido: um carro com o dobro de cilindrada e o dobro
 de eficiência é um carro diferente, e não "o mesmo carro em escala maior". O cosseno faz mais sentido
@@ -1533,7 +1549,7 @@ começa em (0,6 ; 0,5) e vence sempre estes três veículos:
 Com η = 0,1, depois de 30 passadas pelos três, os pesos estão em **(0,811 ; 0,285)**, praticamente
 na média.
 
-É isso que o PDF chama de "codificação do grupo de dados que ele representa". Na prática, o vetor de
+É isso é chamada de "codificação do grupo de dados que ele representa". Na prática, o vetor de
 pesos de um neurônio treinado **é um veículo típico daquele grupo**. Desfazendo a normalização, dá
 para ler diretamente o perfil do grupo ("motores grandes e pouco eficientes", por exemplo). Essa
 interpretabilidade é uma vantagem clara em relação à MLP, cujos pesos não têm leitura direta.
@@ -1543,7 +1559,7 @@ interpretabilidade é uma vantagem clara em relação à MLP, cujos pesos não t
 Como os vizinhos do vencedor também são puxados em direção ao dado, neurônios próximos na grade
 terminam o treino com vetores de pesos parecidos. O resultado é um mapa que **preserva a topologia**:
 veículos parecidos caem em neurônios próximos, e andar pela grade equivale a andar gradualmente pelo
-espaço dos dados. É o que o PDF descreve como neurônios vizinhos que "respondem de maneira semelhante
+espaço dos dados. Então neurônios vizinhos que "respondem de maneira semelhante
 a padrões de entrada semelhantes". Na figura da seção 5.3, isso aparece no neurônio C, que é vizinho
 de B na grade e também se move em direção a x.
 
@@ -1596,7 +1612,202 @@ ele entraria na variante com consciência (DeSieno, 1988).
    conforme a distância** ao vencedor aumenta. → É isso que gera a **organização topológica**.
 6. **Repetição** — passos 2 a 5 para cada dado de entrada, a cada época.
 
-**Medidas de similaridade usadas:** **distância euclidiana** ou **similaridade do cosseno**.
+**Medidas de similaridade usadas:** **distância euclidiana** ou **similaridade do cosseno**
+(comparadas em detalhe na seção 5.2.1, item 3).
+
+## 5.4.1 Como os pesos sinápticos são alterados, passo a passo ⭐
+
+Os passos 4 e 5 do algoritmo **são** o treinamento da RNC. Vale abrir a conta.
+
+### A regra de atualização
+
+```
+w_j(t+1) = w_j(t) + η(t) · h_jv(t) · [ x(t) − w_j(t) ]
+```
+
+| Termo | O que é | Papel na conta |
+|---|---|---|
+| `x(t)` | o dado apresentado agora | o destino |
+| `w_j(t)` | os pesos atuais do neurônio j | o ponto de partida |
+| `x − w_j` | vetor que aponta do neurônio até o dado | a **direção** do ajuste |
+| `η(t)` | taxa de aprendizado, entre 0 e 1 | o **tamanho** do passo |
+| `h_jv(t)` | vizinhança entre j e o vencedor v | **quem** aprende, e quanto |
+
+A leitura geométrica é direta: **o neurônio anda uma fração do caminho até o dado**, e essa fração é
+o produto η · h. Repare no que **não** aparece na fórmula: não há rótulo, não há erro de saída, não
+há derivada de função de ativação e não há retropropagação. A diferença (x − w) já é o ajuste.
+
+### O que a taxa de aprendizado faz
+
+Um neurônio em (0,6 ; 0,5) recebendo o dado x = (0,8 ; 0,3), sozinho (h = 1):
+
+| η | Fração do caminho | Novos pesos |
+|---|---|---|
+| 1,00 | 100% | (0,800 ; 0,300) — pula em cima do dado |
+| 0,50 | 50% | (0,700 ; 0,400) |
+| 0,10 | 10% | (0,620 ; 0,480) |
+| 0,01 | 1% | (0,602 ; 0,498) |
+
+Com η = 1 o neurônio esquece tudo o que aprendeu e vira uma cópia do último dado que viu, então o
+mapa nunca estabiliza. Com η muito pequeno o mapa demora épocas demais para se organizar. Daí o η
+começar alto e diminuir.
+
+### Quem é atualizado: a função de vizinhança
+
+```
+h_jv = exp( − dist_grade(j, v)² / (2 · σ²) )
+```
+
+O detalhe que mais confunde: **`dist_grade` é medida na grade, não no espaço dos dados**. Dois
+neurônios podem ter vetores de pesos parecidos e mesmo assim serem distantes na grade. É essa
+distância na grade que decide a força do ajuste, e é exatamente isso que arrasta vizinhos juntos e
+preserva a topologia.
+
+| Neurônio | Distância na grade até o vencedor | h (com σ ≈ 0,85) |
+|---|---|---|
+| o vencedor | 0 | 1,000 |
+| vizinho imediato | 1 | 0,500 |
+| a 2 casas | 2 | 0,063 |
+| a 4 casas | 4 | 0,000015 (na prática, parado) |
+
+### O passo completo, com números
+
+Os mesmos três neurônios da figura da seção 5.3, com o dado **x = (0,8 ; 0,3)** e η = 0,5. Na grade,
+C é vizinho imediato de B, e A está a 4 casas de distância:
+
+| Neurônio | Pesos antes | Distância até x | Grade | h | η · h | Pesos depois |
+|---|---|---|---|---|---|---|
+| A | (0,2 ; 0,9) | 0,849 | 4 casas | 0,000015 | 0,000008 | (0,2 ; 0,9) — parado |
+| **B** | (0,6 ; 0,5) | **0,283 vence** | 0 | 1,000 | 0,500 | **(0,700 ; 0,400)** |
+| C | (0,5 ; 0,1) | 0,361 | 1 casa | 0,500 | 0,250 | (0,575 ; 0,150) |
+
+Três coisas para reparar:
+
+- **Todos os neurônios são atualizados a cada dado**, mas com forças tão diferentes que, na prática,
+  só o vencedor e a vizinhança se movem.
+- **A perdeu a competição, mas não foi punido.** Não existe ajuste negativo: nenhum neurônio é
+  empurrado para longe do dado. Quem não vence apenas fica onde está.
+- **C se aproximou de um dado que não era dele.** É o preço da vizinhança, e é justamente o que faz
+  neurônios vizinhos na grade terminarem representando regiões vizinhas dos dados.
+
+### As duas fases do treino: η e σ encolhem juntos
+
+Com η₀ = 0,5, σ₀ = 2 e decaimento exponencial ao longo de 100 épocas:
+
+| Época | η | σ | h do vizinho imediato | Passo efetivo do vizinho |
+|---|---|---|---|---|
+| 0 | 0,500 | 2,000 | 0,883 | 0,441 |
+| 25 | 0,389 | 1,558 | 0,814 | 0,317 |
+| 50 | 0,303 | 1,213 | 0,712 | 0,216 |
+| 75 | 0,236 | 0,945 | 0,571 | 0,135 |
+| 100 | 0,184 | 0,736 | 0,397 | 0,073 |
+
+- **Fase de ordenação** (início, σ grande): blocos inteiros da grade se movem juntos. O mapa se
+  desdobra e acerta a organização global, ou seja, quem fica perto de quem.
+- **Fase de convergência** (fim, σ pequeno): quase só o vencedor se move, e pouco. Ajuste fino
+  dentro de cada região.
+
+Encolher σ rápido demais é um erro clássico: o mapa "congela" torcido, com regiões vizinhas na grade
+representando dados que nada têm a ver, e isso não se conserta mais.
+
+### Por que o peso acaba na média do grupo
+
+Cada vitória puxa o neurônio um pouco na direção daquele dado. Como as puxadas vêm de todos os dados
+da região dele, elas se equilibram em torno da média. Partindo de (0,6 ; 0,5) com η = 0,1 e três
+veículos que sempre caem nesse neurônio:
+
+| Passo | Dado apresentado | Pesos depois |
+|---|---|---|
+| 1 | (0,78 ; 0,32) | (0,618 ; 0,482) |
+| 2 | (0,84 ; 0,26) | (0,640 ; 0,460) |
+| 3 | (0,81 ; 0,28) | (0,657 ; 0,442) |
+| … | … | … |
+| 90 (30 passadas) | | **(0,811 ; 0,285)** |
+
+A média dos três veículos é (0,810 ; 0,287). É o mesmo resultado detalhado na seção 5.2.1, item 5:
+o vetor de pesos vira o **retrato do grupo**.
+
+### Variações que aparecem na literatura
+
+| Variação | O que muda |
+|---|---|
+| **On-line** (Kohonen clássico) | Atualiza a cada dado apresentado. É a versão das fórmulas acima |
+| **Em lote (batch)** | Passa a época inteira, depois põe cada neurônio na média ponderada (por h) dos dados que caíram na vizinhança dele. Mais estável e independente da ordem dos dados |
+| **Vizinhança retangular** | h = 1 dentro de um raio e 0 fora, em vez da gaussiana. Mais simples, resultado mais grosseiro |
+| **Com similaridade do cosseno** | Mesma regra, mas os pesos são renormalizados para módulo 1 depois de cada atualização (seção 5.2.1, item 3) |
+| **Com consciência** (DeSieno, 1988) | Neurônios que vencem demais recebem uma penalidade `− b`, para que os neurônios mortos também tenham chance |
+
+> **Em uma frase:** a cada dado, o vencedor e a vizinhança dele dão um passo na direção desse dado, e
+> tanto o tamanho do passo (η) quanto o tamanho da vizinhança (σ) diminuem ao longo do treino.
+
+## 5.4.2 A vizinhança em detalhe: o que são h e σ ⭐
+
+São os dois símbolos que carregam quase toda a inteligência do algoritmo, e é fácil confundi-los.
+
+- **h** é o **volume** do aprendizado de cada neurônio: que fração do ajuste ele recebe.
+- **σ** é o **alcance**: até onde na grade esse aprendizado ainda chega.
+
+Uma imagem que ajuda: pense numa lanterna apontada para a grade de neurônios. O vencedor é o centro
+do facho, **h é o brilho** que chega em cada neurônio e **σ é a abertura do facho**. Treinar uma RNC
+é ir fechando essa lanterna aos poucos.
+
+### Lendo os índices de h
+
+Em `h_jv(t)`: **j** é o neurônio que está sendo atualizado agora, **v** é o vencedor daquele dado e
+**t** é o instante do treino. Ou seja, h_jv responde: *"quanto o neurônio j aprende, dado que quem
+venceu foi o v, nesta altura do treino?"*. Ele vale sempre entre 0 e 1, e vale exatamente 1 no
+próprio vencedor, onde `dist_grade = 0`.
+
+Vale repetir o ponto que mais confunde, já levantado na seção 5.4.1: **`dist_grade` é medida na
+grade**, o tabuleiro onde os neurônios estão arrumados, e não entre os vetores de pesos. Dois
+neurônios podem ter pesos parecidíssimos e ainda assim estar em cantos opostos da grade, e aí um não
+arrasta o outro. É essa separação entre "vizinho no mapa" e "parecido nos dados" que organiza o mapa:
+como vizinhos de grade são sempre puxados juntos, eles terminam o treino com pesos parecidos.
+
+### O que σ faz com o perfil de h
+
+σ é o desvio-padrão da gaussiana, medido **em casas da grade**. Sozinho, ele decide o tamanho do
+grupo que se move junto:
+
+| Distância na grade | 0 | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|---|
+| σ = 3,0 | 1,000 | 0,946 | 0,801 | 0,607 | 0,411 | 0,249 |
+| σ = 2,0 | 1,000 | 0,883 | 0,607 | 0,325 | 0,135 | 0,044 |
+| σ = 1,0 | 1,000 | 0,607 | 0,135 | 0,011 | 0,0003 | 0,000 |
+| σ = 0,85 | 1,000 | 0,500 | 0,063 | 0,002 | 0,00002 | 0,000 |
+| σ = 0,5 | 1,000 | 0,135 | 0,0003 | 0,000 | 0,000 | 0,000 |
+
+![A vizinhança h e o efeito de σ](vizinhanca_h_sigma.png)
+
+Com σ = 3, um neurônio a 4 casas do vencedor ainda aprende 41% do que o vencedor aprende: pedaços
+grandes da grade viajam em bloco. Com σ = 0,5, o vizinho imediato já recebe só 13,5% e todo o resto
+está parado. A linha de σ = 0,85 é o caso usado na tabela da seção 5.4.1: é o valor que faz o vizinho
+imediato receber exatamente metade do ajuste do vencedor.
+
+### σ ao longo do treino
+
+Na prática, começa-se com **σ₀ perto de metade do lado da grade** (numa grade 4×4, σ₀ = 2) e
+deixa-se cair para **abaixo de 1**, quando já quase só o vencedor se move. É esse encolhimento que
+cria as duas fases descritas na seção 5.4.1:
+
+| Fase | σ | O que acontece |
+|---|---|---|
+| **Ordenação** (início) | grande | O facho é largo e regiões inteiras se movem juntas. O mapa se desenrola e acerta a organização global, ou seja, quem fica perto de quem |
+| **Convergência** (fim) | pequeno | O facho fecha e cada neurônio ajusta o seu grupo em detalhe, sem desarrumar os vizinhos |
+
+Não adianta refinar nada na primeira fase, porque tudo ainda vai se mexer muito. E fechar rápido
+demais é o erro clássico: o mapa congela torcido e não se conserta mais, porque já não existe
+vizinhança larga o bastante para desentortá-lo.
+
+### Duas confusões comuns
+
+- **h não é η.** O η diz o tamanho do passo **naquela época**, e é igual para a rede inteira. O h diz
+  qual fração desse passo cabe **a cada neurônio**. Os dois encolhem ao longo do treino, mas por
+  motivos diferentes: η para estabilizar o aprendizado, σ (e portanto h) para focar a vizinhança.
+- **A gaussiana não é obrigatória.** Existe a versão retangular, com h = 1 para todos dentro de um
+  raio e 0 fora dele. É mais simples e mais barata, mas cria uma fronteira dura entre quem aprendeu e
+  quem não aprendeu, e o mapa sai mais grosseiro. A gaussiana dá a transição suave, e é a que se
+  costuma usar.
 
 ## 5.5 Pré-processamento dos dados (obrigatório na RNC)
 

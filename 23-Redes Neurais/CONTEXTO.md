@@ -1,7 +1,7 @@
 # CONTEXTO DA SESSÃO
 
-- **Última atualização:** 2026-09-05 (sem hora registada)
-- **Sessão nº:** 1
+- **Última atualização:** 2026-09-15 (sem hora registada)
+- **Sessão nº:** 2 (continuação da 1, após compactação do contexto)
 - **Status geral:** pronto para revisão
 
 ## 1. Objetivo da tarefa
@@ -30,9 +30,9 @@ preenchendo o relatório final em Word com os resultados obtidos.
     características é gerado (deslizamento 2D + múltiplos canais + múltiplos filtros),
     weight sharing/backprop dentro da convolução, e uma seção específica mostrando como a
     2ª convolução (64 filtros) processa os 32 mapas empilhados pela 1ª convolução.
-- Nenhuma pendência nesta frente; o resumo está maduro e cobre profundamente MLP e CNN
-  (RNC/RNT das unidades 05-08 ainda estão apenas no nível do resumo original, sem os
-  aprofundamentos que MLP/CNN receberam).
+- Nenhuma pendência nesta frente; o resumo cobre profundamente MLP, CNN e RNC (unidade 05,
+  ver Frentes F e G). As unidades 06-08 (RNT e duplo treinamento) ainda estão apenas no
+  nível do resumo original.
 
 ### Frente B — Atividade Somativa 1 (`atividade_1/`)
 - Lida a orientação (`atividade_1/Orientação.pdf`) e extraído o texto do template Word
@@ -204,19 +204,21 @@ preenchendo o relatório final em Word com os resultados obtidos.
 ### Frente F: Ilustração da arquitetura da RNC (a que foi pedida de fato)
 - Criada `arquitetura_rnc.png` na raiz de `23-Redes Neurais` (gerada por
   `arquitetura_rnc.py` no scratchpad, 1760x2200).
-- O código Python da RNC do curso (unidades 5, 7 e 8) **não existe nesta máquina**:
-  procurado no repositório, em Downloads, Desktop e Documentos, por conteúdo e por nome.
-  A ilustração se baseia no PDF da unidade 5 (Kohonen/SOM, grade bidimensional, distância
-  euclidiana, vizinhança) e nos dados das unidades 7 e 8 (cilindrada e eficiência como as
-  2 entradas).
+- Quando a ilustração foi feita, o código Python da RNC do curso não existia nesta máquina
+  (procurado no repositório, em Downloads, Desktop e Documentos). Ela foi baseada no PDF da
+  unidade 5 (Kohonen/SOM, grade bidimensional, distância euclidiana, vizinhança) e nos dados
+  das unidades 7 e 8 (cilindrada e eficiência como as 2 entradas). **O código apareceu depois,
+  em `RNC/S5_RNC.py` — ver Frente H**, que confirma a decisão sobre o bias e levanta uma
+  diferença entre o PDF e o código.
 - **Decisão sobre o bias (importante)**: na RNC clássica **não existe bias**. O neurônio
   competitivo não faz soma ponderada nem aplica ativação, ele calcula a distância
   ‖x − w‖ e vence o de menor distância. A ilustração mostra isso explicitamente (nó +1
   riscado) e, para responder à pergunta "como o bias está conectado", mostra onde ele entra
   na única variante que tem um: a rede com consciência (DeSieno, 1988), em que cada
-  neurônio competitivo recebe um −b_j somado à distância, antes da comparação. Se o código
-  do curso usar bias (por exemplo, uma implementação em Keras com Dense), a ilustração
-  precisa ser revista com esse código em mãos.
+  neurônio competitivo recebe um −b_j somado à distância, antes da comparação. **Confirmado
+  depois pelo código do professor** (`RNC/S5_RNC.py`): a classe guarda só a matriz de pesos,
+  calcula a norma e pega o argmin, sem bias, sem soma ponderada e sem ativação. A ilustração
+  está correta como está e não precisa de revisão.
 - Conteúdo: (1) arquitetura com base de veículos ilustrativa, 2 entradas, grade 4×4 em
   perspectiva com ligações de vizinhança, vencedor e vizinhos coloridos por distância na
   grade, pesos w₁ e w₂ do vencedor destacados, saída como mapa com 1 no vencedor;
@@ -264,14 +266,173 @@ preenchendo o relatório final em Word com os resultados obtidos.
   explícita (eliminou UserWarning do Keras 3), removida célula de código vazia no fim, e
   reordenada a seção de augmentation que antes aparecia depois do código que já a usava.
 
+### Frente G — Atualização dos pesos e figura de similaridade (unidade 5)
+Pedido do utilizador: "como os pesos sinápticos dos neurônios na camada competitiva são
+alterados?" e "faça outra ilustração para representar a similaridade do cosseno e a
+distância euclidiana".
+- Criada `similaridade_cosseno_euclidiana.png` na raiz de `23-Redes Neurais` (gerada por
+  `similaridade.py` no scratchpad, 1760x2090), na mesma paleta da `arquitetura_rnc.png`.
+  O caminho de saída também é parametrizado por variável de ambiente (`DESTINO_SIM`), pelo
+  mesmo motivo da figura anterior (arquivo bloqueado quando aberto no IDE).
+- Exemplo escolhido para a figura, com números conferidos por
+  `numeros_pesos_similaridade.py` (scratchpad): x = (0,2 ; 0,4), w_B = (0,4 ; 0,8) e
+  w_C = (0,5 ; 0,1). Resultado: d(x, w_B) = 0,447 com cosseno 1,000 (0°), e
+  d(x, w_C) = 0,424 com cosseno 0,614 (52,1°). **As duas medidas elegem vencedores
+  diferentes** com os mesmos dois neurônios: a euclidiana escolhe C, o cosseno escolhe B.
+  Foi esse contraste que definiu a figura inteira. Depois de normalizar para módulo 1,
+  x̂ = ŵ_B (d = 0) e d(x̂, ŵ_C) = 0,879, que é √(2 · (1 − cos θ)).
+- Painéis da figura: (1) euclidiana, com linhas de cota entre as pontas — deslocadas
+  perpendicularmente de propósito, porque x e w_B são colineares e a cota cairia em cima
+  dos próprios vetores; (2) cosseno, com o arco de 52,1° e a reta comum a x e w_B;
+  (3) tabela de quem vence em cada medida; (4) círculo unitário e d² = 2 · (1 − cos θ);
+  (5) tabela "quando usar cada uma"; referências Kohonen (2001) e Haykin (2007).
+- `Resumo.md`, seção 5.2.1 item 3: reescrito. Antes era um exemplo curto com u e v; agora
+  traz a figura, a tabela com os dois vencedores e o parágrafo sobre normalização.
+- `Resumo.md`, nova seção **5.4.1 "Como os pesos sinápticos são alterados, passo a passo"**,
+  logo após os 6 passos de Kohonen. Conteúdo: a regra
+  `w_j(t+1) = w_j(t) + η(t) · h_jv(t) · [x(t) − w_j(t)]` com o papel de cada termo; o que a
+  taxa de aprendizado faz (η = 1 / 0,5 / 0,1 / 0,01 partindo de (0,6 ; 0,5) até x =
+  (0,8 ; 0,3)); a função de vizinhança gaussiana, com o alerta de que `dist_grade` é medida
+  **na grade** e não no espaço dos dados; o passo completo com os 3 neurônios da figura da
+  5.3; as duas fases do treino (ordenação e convergência) com o decaimento de η e σ ao longo
+  de 100 épocas; por que o peso acaba na média do grupo; um esboço de código comentado; e
+  uma tabela de variações (on-line, batch, vizinhança retangular, cosseno, consciência).
+- Três observações que valem manter: nenhum neurônio é empurrado para longe do dado (não há
+  ajuste negativo, quem perde só fica parado); todos os neurônios são atualizados a cada
+  dado, mas com forças tão diferentes que na prática só o vencedor e a vizinhança se movem;
+  e encolher σ rápido demais congela o mapa torcido, sem conserto.
+- Coerência com a figura `arquitetura_rnc.png`: lá o vizinho imediato anda com metade da
+  força e "A não é vizinho: fica parado". No texto isso virou h = 0,5 para o vizinho
+  imediato (equivale a uma gaussiana com σ ≈ 0,849, conferido) e A a 4 casas na grade, com
+  h = 0,000015. Se a figura for refeita, esses dois valores precisam continuar batendo.
+
+### Frente G (continuação) — Seção 5.4.2 e o gráfico da vizinhança
+Pergunta do utilizador: "explique o que é σ e h", seguida de "quero" para transformar a
+explicação em seção do resumo, com gráfico.
+- Criada a seção **5.4.2 "A vizinhança em detalhe: o que são h e σ"** no `Resumo.md`, logo
+  após a 5.4.1. Conteúdo: h como "volume" e σ como "alcance" (analogia da lanterna apontada
+  para a grade, em que o vencedor é o centro do facho); leitura dos índices de `h_jv(t)`;
+  tabela com o perfil de h para σ = 3,0 / 2,0 / 1,0 / 0,85 / 0,5 nas distâncias 0 a 5;
+  σ₀ perto de metade do lado da grade, caindo para abaixo de 1; as duas fases; e duas
+  confusões comuns (h não é η; a gaussiana não é obrigatória, existe a retangular).
+- Criada a figura `vizinhanca_h_sigma.png` na raiz (gerada por `vizinhanca.py` no
+  scratchpad, variável de ambiente `DESTINO_VIZ`). Dois painéis: as curvas de h por
+  distância na grade para três σ, e a mesma grade 5×5 colorida por h com σ = 2,0 e σ = 0,5.
+- **Processo de cor (vale repetir em qualquer gráfico futuro):** a skill `dataviz` foi
+  carregada e exige rodar `scripts/validate_palette.js` em vez de julgar a olho. **O node
+  não está instalado nesta máquina**, então as checagens foram portadas para Python em
+  `valida_paleta.py` (scratchpad): OKLab, simulação de daltonismo por Viénot/Brettel/Mollon
+  (1999) e contraste WCAG, medindo contra a superfície real destes painéis (`#f6f8fb`), e
+  não contra a `#fcfcfb` padrão da skill.
+- Resultado da validação, que mudou o desenho: a rampa azul **ordinal** da skill só pode ir
+  do passo 250 ao 700 no fundo claro, e **4 passos nesse intervalo dão ΔE ≈ 14,5**, abaixo
+  do piso 15 de visão normal, que a skill trata como falha dura que nem codificação
+  secundária desculpa. Como re-espaçar não resolve (o intervalo está esgotado), aplicou-se o
+  remédio prescrito: **cortar séries**, de 4 curvas para 3. Escolhidos `#86b6ef` (σ = 2,0),
+  `#256abf` (σ = 1,0) e `#0d366b` (σ = 0,5), com ΔE 24,2 e 19,5 na visão normal e nunca
+  abaixo de 19,5 sob daltonismo.
+- O passo mais claro fica em 1,98:1 de contraste contra o fundo, abaixo de 3:1. Mitigado
+  como a skill manda (relief rule): cada curva tem rótulo direto e a seção traz a tabela
+  numérica completa, então nenhum valor depende só da cor.
+- σ maior recebeu o tom **mais claro**, invertendo o "maior = mais escuro" intuitivo, porque
+  a curva de σ pequeno é um pico estreito colado no eixo e precisa da tinta mais forte para
+  ser legível. O mapeamento continua monotônico em σ, que é o que a regra exige.
+
+### Frente H — O código da RNC da disciplina (pasta `RNC/`)
+Pedido do utilizador: "me fale sobre o conteúdo de RNC". A pasta apareceu na raiz do projeto
+em 15/09/2026 e traz o material da atividade da unidade 5, que antes não existia aqui.
+- Conteúdo: `RNC/S5_RNC.py` (9,6 KB), `RNC/base_veiculos.csv` (1,7 MB) e
+  `RNC/template da atividade.docx`.
+- **Dúvida do bias resolvida:** a classe `RNC` do professor guarda só
+  `weights = np.random.rand(num_neurons, input_shape)`, calcula
+  `np.linalg.norm(input_sample - weights, axis=1)` e pega o `argmin`. Sem bias, sem soma
+  ponderada, sem ativação. A `arquitetura_rnc.png` está correta como está.
+- **Descoberta mais importante:** `update_weights` atualiza **apenas o vencedor**. Não há
+  grade, não há vizinhança, não há h nem σ. O código implementa **aprendizado competitivo
+  puro** (quantização vetorial on-line), e não um mapa de Kohonen, embora o PDF da unidade 5
+  descreva vizinhança topológica e traga o passo 5 "atualização dos pesos dos neurônios
+  vizinhos". As seções 5.4.1 e 5.4.2 do `Resumo.md` descrevem o SOM completo, que é o que o
+  PDF pede. **Pendente de decisão do utilizador:** incluir ou não uma nota no `Resumo.md`
+  registrando essa diferença entre o PDF e o código, como já foi feito com outras duas
+  imprecisões dos materiais.
+- **Parâmetros padrão do código:** `taxa_aprend_rnc = 2.0`, `epocas_rnc = 1`,
+  `num_neur_rnc = 4`, `ordem_pol = 1`, `cilindrada_info = 1.0`.
+- **η = 2,0 é destrutivo, e isso foi medido** (`analisa_rnc_curso.py` no scratchpad, que
+  replica a classe do professor): 78,4% das atualizações jogam o peso para fora da faixa dos
+  dados; os pesos finais param em (30,97; 37,00) e (−1,51; 48,59), sendo que a base vai só
+  até 8,4 L e 24,7 km/L; 2 dos 4 neurônios ficam vazios e 37.962 dos 37.967 veículos caem num
+  único grupo. Com η = 1,0 os 4 grupos se formam; com η = 0,1 sobra um neurônio morto (5
+  elementos). Razão aritmética: `w + η(x − w)` com η = 2 devolve `2x − w`, que fica à mesma
+  distância do dado, do lado oposto (medido: 2,24 antes, 2,24 depois).
+- **A base:** 37.967 linhas; colunas Make, Model, Cilindrada, Eficiencia, CO2; 125 montadoras
+  e 3.681 modelos. Nenhum valor ausente e nenhum zero, então o `dropna()` e o filtro de zeros
+  do código não removem nada. **23.179 linhas (61%) são duplicadas.** Cilindrada vai de 0,6 a
+  8,4 L e eficiência de 2,98 a 24,66 km/L, amplitudes 2,78× diferentes, e o código **não
+  normaliza**, ao contrário do que o próprio PDF exige (seção 5.5 do Resumo).
+- **O código não roda como está:** lê `C:/RN/base_veiculos.csv`, que não existe. `C:\RN\` tem
+  apenas os 20 PNGs do MNIST da atividade_1. Copiar o CSV para lá resolve, seguindo a mesma
+  convenção da atividade anterior.
+- **A atividade (template .docx):** ajustar número de neurônios (sugere de 3 a 10), épocas,
+  taxa de aprendizado e ordem do polinômio; depois entregar relatório em DOCX ou PDF no AVA
+  com tabela de parâmetros, gráfico, tabela de agrupamentos, função polinomial, previsão de
+  eficiência e um texto de análise. O template manda baixar "S5_RNC.spy", mas o arquivo
+  entregue é `.py`.
+
+### Frente H (continuação) — Execução e ajuste da atividade da unidade 5
+O utilizador copiou `base_veiculos.csv` para `C:\RN\` e pediu para executar o código, buscar
+os parâmetros por experimentação e analisar as saídas. Scripts de apoio no scratchpad:
+`busca_parametros_rnc.py`, `diagnostico_rnc.py`, `escolhe_parametros_rnc.py`, `grafico_rnc.py`.
+- **Linha de base (parâmetros de fábrica):** só 2 grupos não vazios de 4, um com 3 veículos e
+  outro com 37.964. `f(x) = -1.18x + 12.41`, previsão de 11,23 km/L para 1,0 L.
+- **Causa raiz descoberta e medida:** `np.random.rand` sorteia os pesos em [0,1) nos dois
+  eixos, mas a eficiência dos dados começa em 2,98 km/L. **Todo neurônio nasce abaixo da
+  nuvem de dados**, e só os poucos mais próximos conseguem vencer; os demais nunca são
+  atualizados e ficam congelados na posição inicial. Com k = 6, quatro dos seis terminaram
+  nas coordenadas exatas em que nasceram. É por isso que k de 3 a 10 dava erro idêntico.
+- **Épocas são inertes neste código:** 1, 5, 20 e 50 dão resultado igual até a quarta casa,
+  inclusive com os dados embaralhados. Com taxa constante e sem decaimento, a memória do
+  modelo é de ~1/η amostras, então o que define os pesos finais é o fim da base, não quantas
+  vezes ela foi percorrida. Se algum dia for preciso que épocas importem, é o decaimento de η
+  (seção 5.4.1 do Resumo) que falta, não mais iterações.
+- **Normalizar resolveria:** com min-max, os neurônios mortos somem e o erro passa a cair com
+  k (1,229 em k=3 até 0,888 em k=10). Mas normalizar é mudar o código, e a atividade pede
+  ajuste dos quatro parâmetros numéricos, então ficou como observação para o relatório.
+- **Busca:** 56 configurações (k de 3 a 10 × 7 taxas), 3 sementes cada. **Só 6 não deixam
+  nenhum grupo vazio.** Critério declarado antes de ver os números: descartar quem deixa
+  grupo vazio, depois menor erro de quantização, desempate pelo menor k.
+- **Parâmetros escolhidos e aplicados em `RNC/S5_RNC.py`** (valores originais entre
+  parênteses): `num_neur_rnc = 3` (era 4), `taxa_aprend_rnc = 0.3` (era 2.0),
+  `epocas_rnc = 5` (era 1), `ordem_pol = 5` (era 1). `cilindrada_info = 1.0` não mudou.
+- **Ordem do polinômio validada contra a realidade**, não só por R²: comparada com a média
+  real de eficiência por faixa de cilindrada. A ordem 5 prevê 15,44 km/L para 1,0 L contra
+  15,38 km/L reais (186 veículos entre 0,9 e 1,1 L), e 5,84 em 8,0 L contra 5,49 reais. A
+  ordem 7 ajusta as faixas um pouco melhor (0,2728 contra 0,3263) mas erra mais na ponta, onde
+  há poucos dados para segurá-la.
+- **Resultado final:** 3 grupos com 467, 14.659 e 22.841 veículos; pesos (1,92 ; 19,33),
+  (2,00 ; 10,20) e (4,25 ; 7,93). `f(x) = -0.01x⁵ + 0.23x⁴ - 2.18x³ + 9.92x² - 23.03x + 30.51`,
+  previsão de **15,44 km/L** para 1,0 L.
+- **Reprodutibilidade, apesar de o código não fixar semente:** duas execuções seguidas deram
+  particionamento idêntico (mesmos 467/14.659/22.841 e mesmas faixas). O que muda é só a
+  **numeração** dos grupos, porque depende de qual neurônio sorteado ocupou cada região. Ao
+  escrever o relatório, referir-se aos grupos pelo perfil, nunca pelo número.
+- **Achado para a análise:** os grupos se separam quase só por eficiência (faixas limpas:
+  2,98–10,20 / 7,23–14,45 / 14,88–24,66) enquanto a cilindrada se sobrepõe muito (1,3–8,4
+  contra 0,9–4,3). É a falta de normalização: a eficiência tem amplitude 2,78× maior e domina
+  a distância, exatamente o que a seção 5.2.1, item 4, do Resumo prevê.
+- **Figura `RNC/resultado_rnc.png`** gerada por `grafico_rnc.py`, porque o código da
+  disciplina só chama `plt.show()` e não deixa arquivo para o relatório.
+- **Nota no `Resumo.md`** (seção 5.4, linha 1618): registra que o código implementa competição
+  pura, sem vizinhança, enquanto o PDF descreve o SOM completo.
+- **Pendente:** montar o relatório em DOCX/PDF pedido pelo template, se o utilizador quiser.
+
 ## 3. Em andamento 🔧
 Nenhuma tarefa em andamento no momento deste checkpoint. Ambas as frentes estão em ponto de
 entrega/revisão.
 
 ## 4. Próximos passos (planejado) 📋
 Nenhum passo obrigatório pendente. Possibilidades, caso o utilizador queira continuar:
-1. Frente A: aplicar aos PDFs 05-08 (RNC/RNT) o mesmo nível de aprofundamento que MLP/CNN
-   já receberam no `Resumo.md`.
+1. Frente A: a unidade 05 (RNC) já recebeu o aprofundamento (seções 5.2.1 e 5.4.1, mais
+   duas figuras). Falta aplicar o mesmo às unidades 06-08 (RNT e duplo treinamento).
 2. Frente B: revisar visualmente o `.docx` gerado no Word e preencher "Nome Completo:";
    opcionalmente também gerar os gráficos de treino (`plt.plot` do `S4_CNN.py`) como
    imagens para anexar ao relatório, já que a execução automatizada usou backend `Agg`
@@ -310,6 +471,8 @@ Nenhum passo obrigatório pendente. Possibilidades, caso o utilizador queira con
 - Diretório do projeto: `c:\Users\marcos\Documents\GitHub\PUC\23-Redes Neurais`
 - Branch git: `main`. Alterações não commitadas (nada foi commitado nesta sessão):
   - Modificados: `Resumo.md`.
+  - Novos na raiz: `arquitetura_rnc.png` e `similaridade_cosseno_euclidiana.png` (as duas
+    figuras da unidade 05, referenciadas pelo `Resumo.md`).
   - Novo/atualizado: `CONTEXTO.md` (este ficheiro).
   - Novos em `atividade_1/Python/`: `S4_MLP_partB.py`, `S4_CNN_partB.py`,
     `S4_MLP_aug.py`, `S4_CNN_aug.py`.
@@ -355,7 +518,7 @@ Nenhum passo obrigatório pendente. Possibilidades, caso o utilizador queira con
 
 ## 9. Como retomar
 Leia este ficheiro. Se o pedido for sobre o **resumo de estudo**, vá a `Resumo.md` (já
-maduro para MLP/CNN; RNC/RNT ainda no nível básico). Se for sobre a **atividade somativa**,
+maduro para MLP, CNN e RNC; RNT e as unidades 07-08 ainda no nível básico). Se for sobre a **atividade somativa**,
 os 4 scripts finais e o `.docx` de resposta já estão prontos em `atividade_1/` — falta só
 o utilizador preencher o nome na capa e, se quiser, revisar/rodar no Spyder para ver os
 gráficos interativos.
