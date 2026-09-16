@@ -421,9 +421,50 @@ os parâmetros por experimentação e analisar as saídas. Scripts de apoio no s
   a distância, exatamente o que a seção 5.2.1, item 4, do Resumo prevê.
 - **Figura `RNC/resultado_rnc.png`** gerada por `grafico_rnc.py`, porque o código da
   disciplina só chama `plt.show()` e não deixa arquivo para o relatório.
-- **Nota no `Resumo.md`** (seção 5.4, linha 1618): registra que o código implementa competição
-  pura, sem vizinhança, enquanto o PDF descreve o SOM completo.
+- **Nota no `Resumo.md`** sobre competição pura × SOM: foi escrita na seção 5.4, mas o
+  utilizador **removeu-a depois**, junto com todo o material da atividade que havia entrado no
+  resumo. **Decisão editorial a respeitar: o `Resumo.md` é material teórico e não menciona a
+  pasta `RNC/`, o `S5_RNC.py`, a base `base_veiculos.csv` nem os resultados da atividade.**
+  Referências ao código das unidades 07/08 (como `inshape = combinacao.shape[1]`) continuam lá e
+  são aceitáveis. Não reintroduzir o conteúdo removido sem pedido explícito.
 - **Pendente:** montar o relatório em DOCX/PDF pedido pelo template, se o utilizador quiser.
+
+### Frente I — Seção 5.2.2 do Resumo: o espaço de dados
+Pedido: "me fale mais sobre o espaço de dados" e, em seguida, "transforme isso numa seção".
+- Criada a seção **5.2.2 "O espaço de dados: onde os dados e os neurônios moram"**, entre a
+  5.2.1 e a 5.3. Números conferidos por `numeros_secao_522.py` (scratchpad).
+- Ancorada de propósito nos **mesmos neurônios didáticos da 5.2.1** — A = (0,2 ; 0,9),
+  B = (0,6 ; 0,5), C = (0,5 ; 0,1) — e **não** nos pesos treinados da atividade, porque o
+  utilizador tinha acabado de tirar o material da atividade do resumo.
+- Conteúdo: um eixo por atributo e cada registro como ponto; pesos morando no mesmo espaço;
+  divisão por Voronoi com as três mediatrizes calculadas (A×B a 45°, B×C quase horizontal),
+  com a leitura de que a fronteira é perpendicular ao segmento entre os neurônios e portanto
+  decidida pela direção em que eles mais diferem; a área que cada região ocupa (A 24,1%,
+  B 45,0%, C 30,9%) e o alerta de que tamanho de região não é tamanho de grupo; o efeito da
+  unidade de medida (multiplicar um eixo por 3 faz **30,5% do espaço trocar de dono**, e o
+  ponto (0,40 ; 0,45) sai de B para C); a maldição da dimensionalidade medida (contraste das
+  distâncias cai de 82,7× em 2D para 0,16× em 784D) com a ressalva honesta de que dados reais
+  vivem numa superfície de dimensão menor; e uma tabela final traduzindo cada conceito da RNC
+  para a sua leitura geométrica.
+- A checagem cruzada confirmou que os quatro veículos da tabela da 5.2.1 vencem A, B e C
+  exatamente como já estava escrito lá.
+- **Figura `voronoi_rnc.png`** (gerada por `voronoi.py` no scratchpad, variável de ambiente
+  `DESTINO_VOR`), inserida na 5.2.2 ao fim da subseção sobre a régua. Dois painéis:
+  (1) o espaço como ele é, com as mediatrizes inteiras tracejadas, as fronteiras reais em
+  cor, os segmentos entre cada par de neurônios com o ponto médio marcado e os quatro
+  veículos da tabela da 5.2.1; (2) o mesmo espaço com o atributo 1 medido numa unidade 3×
+  maior, com a área que trocou de dono hachurada e um ✕ no ponto (0,40 ; 0,45), que sai da
+  região de B para a de C.
+- Cor da figura: fatias categóricas 1 a 3 da skill `dataviz`, mas as áreas são preenchidas com
+  a versão bem clara de cada tom (bloco grande saturado é anti-padrão) e a cor cheia fica só
+  no ponto do neurônio; cada região tem rótulo direto, então a identidade nunca depende da cor.
+- **Lição de medição:** a primeira versão imprimia A 24,2% e B 44,9% porque calculava as áreas
+  na mesma malha do desenho (700 pontos), divergindo da tabela da seção. Passou a medir numa
+  malha de 6001×6001 percorrida em blocos: **A 24,12%, B 45,00%, C 30,87%**, com a outra régua
+  A 33,87%, B 50,49%, C 15,65%, e troca de dono de 30,47%. Isso **confirmou** os valores que já
+  estavam no texto (24,1 / 45,0 / 30,9 e 30,5%). Se a figura for refeita, manter a malha fina.
+- Achado visual que entrou na legenda: com o atributo 1 valendo 3× mais, as fronteiras ficam
+  quase verticais, ou seja, o atributo 2 quase deixa de participar da decisão.
 
 ## 3. Em andamento 🔧
 Nenhuma tarefa em andamento no momento deste checkpoint. Ambas as frentes estão em ponto de

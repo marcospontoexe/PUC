@@ -1578,6 +1578,127 @@ de B na grade e também se move em direção a x.
 > treinamentos geram três mapas independentes, cada um organizando os mesmos veículos sob outro par de
 > atributos.
 
+## 5.2.2 O espaço de dados: onde os dados e os neurônios moram ⭐
+
+A expressão "espaço dos dados" aparece o tempo todo quando se fala de RNC, e ela **não é figura de
+linguagem**: é um espaço geométrico de verdade. Entender como ele funciona explica quase tudo o que a
+rede faz.
+
+### Como o espaço é construído
+
+A regra é simples: **um eixo por atributo**, e cada registro vira um **ponto** com aquelas coordenadas.
+
+Com dois atributos normalizados, o espaço é um quadrado que cabe numa folha de papel. Um veículo de
+cilindrada 0,45 e eficiência 0,15 não é "uma linha da tabela": é o ponto (0,45 ; 0,15). Com 10
+atributos o espaço tem 10 dimensões e ninguém consegue desenhá-lo, mas todas as contas continuam
+valendo exatamente iguais.
+
+E o ponto central, já adiantado no item 1 da seção 5.2.1: **os vetores de pesos moram nesse mesmo
+espaço**. O neurônio é um ponto, medido na mesma unidade dos dados. É isso que permite ler o peso de
+um neurônio treinado como se fosse um veículo de verdade.
+
+### Como o espaço é dividido: o diagrama de Voronoi
+
+Cada neurônio fica dono dos pontos que estão mais perto dele do que de qualquer outro. A fronteira
+entre dois neurônios é o lugar onde as duas distâncias **empatam**, e esse lugar é sempre a
+**mediatriz** do segmento que liga os dois: passa pelo ponto médio e é perpendicular ao segmento.
+
+Com os três neurônios do exemplo da seção 5.2.1, A = (0,2 ; 0,9), B = (0,6 ; 0,5) e C = (0,5 ; 0,1):
+
+| Fronteira | Equação da reta | Ponto médio | Quem decide ali |
+|---|---|---|---|
+| A × B | atributo₂ = 1,000 · atributo₁ + 0,300 | (0,40 ; 0,70) | os dois atributos, em peso igual |
+| A × C | atributo₂ = 0,375 · atributo₁ + 0,369 | (0,35 ; 0,50) | mais o atributo₂ que o atributo₁ |
+| B × C | atributo₂ = −0,250 · atributo₁ + 0,437 | (0,55 ; 0,30) | quase só o atributo₂ |
+
+Duas leituras importantes dessa tabela:
+
+- **A inclinação da fronteira revela qual atributo decide.** A fronteira é perpendicular ao segmento
+  que liga os dois neurônios, então quem manda é **a direção em que os dois mais diferem**. B e C têm
+  atributo₁ quase igual (0,6 e 0,5) e atributo₂ bem diferente (0,5 e 0,1), logo a fronteira entre eles
+  é quase horizontal e a decisão sai praticamente só pelo atributo₂. Já A e B diferem igualmente nos
+  dois eixos, e a fronteira sai a 45°.
+- **As regiões não têm o mesmo tamanho.** Medindo a área que cada uma ocupa no quadrado de 0 a 1:
+
+| Região | Fatia do espaço |
+|---|---|
+| A | 24,1% |
+| B | 45,0% |
+| C | 30,9% |
+
+  B governa quase metade do espaço só por estar no meio. Atenção: **tamanho da região não é tamanho do
+  grupo** — o que conta para o tamanho do grupo é onde os dados de fato estão. Uma região enorme numa
+  parte vazia do espaço rende um neurônio morto (item 7 da seção 5.2.1).
+
+### A geometria depende da unidade de medida
+
+Esta é a parte que costuma passar despercebida. "Distância" parece uma propriedade objetiva dos dados,
+mas ela é **consequência das unidades que você escolheu**.
+
+Experimento: mantendo os mesmos dados e os mesmos neurônios, o atributo₁ passa a ser medido numa
+unidade 3 vezes maior. Tudo naquele eixo é multiplicado por 3, dados e pesos juntos, então as posições
+**relativas** não mudam nada. Mesmo assim:
+
+- **30,5% do espaço troca de dono.**
+- O ponto (0,40 ; 0,45), por exemplo, era vencido por B e passa a ser vencido por C.
+
+Nenhum dado mudou, nenhum peso mudou, só a régua. Por isso a normalização não é "boa prática"
+opcional na RNC: é ela que define qual geometria você está usando, e portanto quais grupos existem.
+É o mesmo fenômeno do item 4 da seção 5.2.1, visto agora pelo lado geométrico.
+
+![Diagrama de Voronoi dos três neurônios](voronoi_rnc.png)
+
+No painel da esquerda, as linhas tracejadas cinza são as **mediatrizes inteiras** e as linhas
+coloridas são as **fronteiras de verdade**: repare que cada fronteira é só o pedaço da mediatriz em
+que aqueles dois neurônios são os dois mais próximos. O resto da reta fica "por baixo" da região de
+um terceiro neurônio. Os segmentos finos ligam cada par de neurônios e o pontinho no meio deles é o
+ponto médio, por onde a mediatriz obrigatoriamente passa. Os losangos são os quatro veículos da
+tabela da seção 5.2.1, cada um caindo na região do neurônio que a tabela diz que vence.
+
+No painel da direita está o mesmo espaço medido com a outra régua. A área hachurada é a que trocou
+de dono, e o ✕ marca o ponto (0,40 ; 0,45), que sai da região de B e vai para a de C. Repare como as
+fronteiras ficaram **quase verticais**: quando o atributo 1 passa a valer mais, é ele quem decide
+quase sozinho quem vence, e o atributo 2 quase deixa de participar.
+
+### Quando o espaço tem muitas dimensões
+
+Com 2 atributos dá para desenhar. Uma imagem de 28×28 do MNIST (unidade 03) vira um ponto num espaço
+de **784 dimensões**, um eixo por pixel. As fórmulas continuam idênticas, mas a intuição quebra.
+
+Sorteando 2.000 pontos ao acaso dentro do cubo unitário e medindo a distância deles até um ponto de
+referência:
+
+| Dimensões | Mais perto | Mais longe | Contraste |
+|---|---|---|---|
+| 2 | 0,013 | 1,106 | 82,7× |
+| 10 | 0,507 | 1,944 | 2,8× |
+| 50 | 2,004 | 3,658 | 0,83× |
+| 784 | 10,490 | 12,180 | **0,16×** |
+
+Em 2 dimensões, o vizinho mais próximo está 82 vezes mais perto que o mais distante. Em 784
+dimensões, o mais distante está apenas 16% mais longe que o mais próximo: **todos ficam
+praticamente à mesma distância de todos**, e a ideia de "o mais próximo" perde a força. Isso é
+conhecido como **maldição da dimensionalidade**. Some-se a densidade: para cobrir o espaço com meros
+10 pontos por eixo seriam necessários 10⁷⁸⁴ exemplos.
+
+> **Ressalva honesta:** esse teste usa pontos sorteados uniformemente, que é o pior caso possível.
+> Dados reais não preenchem o espaço todo, eles se acumulam numa superfície de dimensão muito menor
+> (dígitos manuscritos não são pixels aleatórios). É isso que salva a situação na prática. Ainda
+> assim, a lição vale: **quanto mais atributos, menos informativa fica a distância**, e por isso
+> reduzir dimensões antes de treinar uma RNC costuma ajudar mais do que atrapalhar.
+
+### Por que isso importa
+
+| Conceito da RNC | O que ele é, visto no espaço de dados |
+|---|---|
+| Vetor de pesos | a posição do neurônio |
+| Competição | qual ponto está mais perto do dado |
+| Grupo | a região de Voronoi de um neurônio |
+| Treinamento | os neurônios caminhando até as áreas densas |
+| Neurônio morto | um neurônio numa região vazia do espaço |
+| Normalização | a escolha da régua, e portanto do formato das regiões |
+| Detecção de anomalia | um dado que caiu longe de qualquer neurônio |
+
 ## 5.3 Arquitetura
 
 ```
