@@ -1392,7 +1392,7 @@ função de ativação, função de perda, nº de camadas, nº de neurônios, ot
 Também conhecida como **mapa auto-organizável (SOM)** ou **rede de Kohonen**. Baseia-se em
 **competição entre neurônios**. Usada para **agrupamento, classificação e reconhecimento de padrões**.
 
-## 5.2 Princípios básicos ⭐
+## 5.2 Princípios básicos
 
 | Princípio | Explicação |
 |---|---|
@@ -1404,7 +1404,7 @@ Também conhecida como **mapa auto-organizável (SOM)** ou **rede de Kohonen**. 
 | **Mapeamento entradas → neurônios** | Vence o neurônio cujo **vetor de pesos está mais próximo** do padrão de entrada (detalhado na seção 5.2.1) |
 | **Generalização** | Depois de treinada, reconhece padrões semelhantes aos vistos no treino |
 
-## 5.2.1 Mapeamento de entradas para neurônios, em detalhe ⭐
+## 5.2.1 Mapeamento de entradas para neurônios, em detalhe
 
 > "Cada neurônio na camada competitiva possui um vetor de pesos sinápticos que define sua
 > sensibilidade a diferentes características do padrão de entrada. Durante a ativação, o neurônio
@@ -1578,7 +1578,7 @@ de B na grade e também se move em direção a x.
 > treinamentos geram três mapas independentes, cada um organizando os mesmos veículos sob outro par de
 > atributos.
 
-## 5.2.2 O espaço de dados: onde os dados e os neurônios moram ⭐
+## 5.2.2 O espaço de dados: onde os dados e os neurônios moram 
 
 A expressão "espaço dos dados" aparece o tempo todo quando se fala de RNC, e ela **não é figura de
 linguagem**: é um espaço geométrico de verdade. Entender como ele funciona explica quase tudo o que a
@@ -1660,6 +1660,56 @@ de dono, e o ✕ marca o ponto (0,40 ; 0,45), que sai da região de B e vai para
 fronteiras ficaram **quase verticais**: quando o atributo 1 passa a valer mais, é ele quem decide
 quase sozinho quem vence, e o atributo 2 quase deixa de participar.
 
+### Nem toda mudança de escala importa
+
+O experimento acima mexeu em **um** eixo só. Falta perguntar o que acontece quando a escala de
+**todos** muda junto, e a resposta é: nada.
+
+| Transformação | Quanto do espaço troca de dono |
+|---|---|
+| Multiplicar **os dois** eixos por 5 | **0%** |
+| Multiplicar **os dois** eixos por 0,001 | **0%** |
+| Multiplicar **só o atributo₁** por 3 | 30,5% |
+| Multiplicar **só o atributo₂** por 1,5 | 12,7% |
+
+(A medição numa malha finita devolve 0,02% nas duas primeiras linhas: são pontos que caem exatamente
+sobre uma fronteira, onde o empate acaba decidido por arredondamento. O valor exato é zero.)
+
+A demonstração cabe em uma linha. Multiplicando tudo por um mesmo fator s:
+
+```
+‖s·x − s·w‖ = s · ‖x − w‖
+```
+
+Todas as distâncias crescem na mesma proporção, a ordem entre elas não muda e o vencedor é o mesmo.
+Trocar a unidade de **todos** os eixos ao mesmo tempo, de metros para centímetros por exemplo, é
+irrelevante para a competição. O que muda o resultado é **a escala de um eixo em relação aos outros**.
+
+### Então normalizar é obrigatório?
+
+Depende do que "obrigatório" quer dizer, e vale separar as duas coisas:
+
+- **O algoritmo não exige.** A RNC roda sem normalização, não dá erro e produz grupos.
+- **A metodologia exige**, porque sem normalizar quem escolhe a geometria é a unidade em que os dados
+  foram registrados, e não você. O agrupamento continua sendo válido; ele só não foi *decidido*.
+
+Na prática:
+
+| Situação | Normalizar |
+|---|---|
+| Atributos na **mesma unidade** e em faixas parecidas (todos os pixels de 0 a 255, por exemplo) | **Cosmético.** É uma escala uniforme e não muda nenhum vencedor. Ajuda o treino de MLP e CNN por causa do gradiente, mas não altera quem ganha uma competição por distância |
+| Atributos em **unidades diferentes** (litros e km/L, reais e anos, quilos e metros) | **Inevitável.** Somar litros com km/L dentro de uma raiz quadrada só faz sentido depois de decidir quanto um vale em relação ao outro, e é isso que a normalização faz |
+
+É por isso que a seção 5.5 trata o pré-processamento como obrigatório: no caso geral, com atributos de
+unidades distintas, a resposta é sim, e essa é a escolha segura. A exceção é estreita e precisa ser
+justificada.
+
+> **Cuidado:** "normalizar" não é um ato único. A normalização **min-max** divide cada eixo pela
+> amplitude; a padronização **z-score** divide pelo desvio-padrão. Como os fatores são diferentes, as
+> duas produzem **geometrias diferentes** e podem gerar grupos diferentes, exatamente pelo mesmo
+> motivo da tabela acima. A pergunta certa não é "normalizei?", e sim "qual peso relativo entre os
+> atributos eu quis dar?".
+
 ### Quando o espaço tem muitas dimensões
 
 Com 2 atributos dá para desenhar. Uma imagem de 28×28 do MNIST (unidade 03) vira um ponto num espaço
@@ -1722,7 +1772,7 @@ dado, e ele e os vizinhos na grade se aproximam desse dado. Repare que **não h�
 competitivo não faz soma ponderada, ele mede distância. O −b aparece tracejado só para mostrar onde
 ele entraria na variante com consciência (DeSieno, 1988).
 
-## 5.4 Algoritmo de Kohonen — os 6 passos ⭐
+## 5.4 Algoritmo de Kohonen — os 6 passos
 
 1. **Inicialização dos pesos** — valores aleatórios pequenos, geralmente **entre 0 e 1**.
 2. **Apresentação dos dados** — um dado de entrada por vez.
@@ -1736,7 +1786,7 @@ ele entraria na variante com consciência (DeSieno, 1988).
 **Medidas de similaridade usadas:** **distância euclidiana** ou **similaridade do cosseno**
 (comparadas em detalhe na seção 5.2.1, item 3).
 
-## 5.4.1 Como os pesos sinápticos são alterados, passo a passo ⭐
+## 5.4.1 Como os pesos sinápticos são alterados, passo a passo
 
 Os passos 4 e 5 do algoritmo **são** o treinamento da RNC. Vale abrir a conta.
 
@@ -1861,7 +1911,7 @@ o vetor de pesos vira o **retrato do grupo**.
 > **Em uma frase:** a cada dado, o vencedor e a vizinhança dele dão um passo na direção desse dado, e
 > tanto o tamanho do passo (η) quanto o tamanho da vizinhança (σ) diminuem ao longo do treino.
 
-## 5.4.2 A vizinhança em detalhe: o que são h e σ ⭐
+## 5.4.2 A vizinhança em detalhe: o que são h e σ 
 
 São os dois símbolos que carregam quase toda a inteligência do algoritmo, e é fácil confundi-los.
 
@@ -1964,6 +2014,82 @@ que armazenam informações anteriores para decidir em momentos futuros.
 Adequada quando **a ordem e a relação entre os elementos importam**: séries temporais, linguagem
 natural, processamento de sinais.
 
+## 6.1.1 A conexão recorrente, em detalhe
+
+### O que muda em relação a uma conexão comum
+
+Numa MLP ou numa CNN, a saída de um neurônio só anda **para frente**: vai para a camada seguinte e
+acabou. Quando a próxima amostra chega, nada do que a rede calculou antes continua ali. É por isso
+que essas redes tratam cada entrada de forma isolada.
+
+A conexão recorrente acrescenta um caminho a mais: a saída do neurônio **volta para ele mesmo**, mas
+no **instante seguinte**. O neurônio passa a ter duas fontes de informação:
+
+```
+h(t) = f( W · x(t)  +  U · h(t−1)  +  b )
+         └────┬────┘   └─────┬────┘
+          o que chega     o que ele
+            agora        já sabia
+```
+
+| Símbolo | O que é |
+|---|---|
+| `x(t)` | a entrada do instante atual (a cotação de hoje, a palavra atual) |
+| `h(t−1)` | o estado do neurônio no instante anterior, ou seja, a memória |
+| `W` | pesos que leem a entrada nova |
+| `U` | pesos que leem o passado. **Esta é a conexão recorrente** |
+| `f` | a função de ativação, geralmente tanh |
+
+### Como a informação fica realmente armazenada
+
+Aqui mora o mal-entendido mais comum: **a rede não guarda um histórico**. Não existe uma lista dos
+valores passados em lugar nenhum. O que existe é um **vetor de estado de tamanho fixo**, o `h`, que é
+**sobrescrito a cada instante**. O passado sobrevive apenas na medida em que influenciou o valor
+atual desse vetor.
+
+Dá para ver o efeito com um neurônio só, com `W = 0,5`, `U = 0,8` e `h(0) = 0`, alimentado com um
+único pulso no primeiro instante e silêncio depois:
+
+| Instante | Entrada `x(t)` | Estado `h(t)` |
+|---|---|---|
+| 1 | 1 | 0,4621 |
+| 2 | 0 | 0,3537 |
+| 3 | 0 | 0,2757 |
+| 4 | 0 | 0,2170 |
+| 5 | 0 | 0,1719 |
+| 6 | 0 | 0,1367 |
+
+A entrada apareceu **uma única vez**, no instante 1, e ainda assim o estado continua diferente de
+zero cinco instantes depois: é o eco dela. Isso é a memória. Repare também que o eco **vai
+enfraquecendo**, porque a cada passo ele é multiplicado por `U = 0,8`. Essa mesma multiplicação
+repetida, vista do lado do treinamento, é exatamente a origem do *vanishing gradient* (seção 6.6.1).
+
+Três consequências que valem guardar:
+
+- **A memória tem tamanho fixo.** Uma camada com 50 neurônios temporais tem 50 números de memória,
+  não importa se a série tem 10 ou 10 mil pontos. Guardar o passado é, necessariamente, **comprimir**
+  o passado.
+- **O que não couber é esquecido.** Como o vetor é sobrescrito a cada instante, informação antiga
+  compete com informação nova pelo mesmo espaço.
+- **O estado inicial costuma ser zero.** No começo da sequência a rede não sabe nada, e por isso as
+  primeiras previsões de uma série costumam ser as piores.
+
+### Desenrolar no tempo
+
+Para entender o treinamento, costuma-se **desenrolar** (*unroll*) a rede: desenhar uma cópia dela
+para cada instante da janela, ligadas em fila pelo estado.
+
+```
+x(1) → [rede] → h(1) → [rede] → h(2) → [rede] → h(3) → saída
+                  ↑ x(2)          ↑ x(3)
+```
+
+O ponto essencial: **são cópias da mesma rede, com os mesmos pesos**. `W` e `U` não mudam de um
+instante para o outro. É o mesmo princípio de compartilhamento de pesos da CNN (Unidade 3), só que
+ali o filtro é reaproveitado ao longo do **espaço** da imagem e aqui os pesos são reaproveitados ao
+longo do **tempo**. E é isso que permite à rede lidar com sequências de qualquer comprimento sem
+mudar de tamanho.
+
 ## 6.2 Aplicações práticas
 
 | Área | Exemplos |
@@ -1986,6 +2112,129 @@ natural, processamento de sinais.
 **Característica-chave:** **conexões retroalimentadas** — a informação flui tanto **para frente
 quanto para trás** na rede.
 
+![Arquitetura da Rede Neural Temporal](arquitetura_rnt.png)
+
+Os quatro painéis respondem a perguntas diferentes. O **1** mostra a rede como ela é escrita no
+código, com a conexão recorrente saindo da camada e voltando nela mesma. O **2** mostra a mesma rede
+desenrolada nos cinco instantes da janela, e o essencial ali é que `W` e `U` são **idênticos** em
+todas as cópias. O **3** segue o dado do começo ao fim e marca o ponto em que a dimensão do tempo
+desaparece: da camada densa em diante, sobra apenas o resumo. O **4** torna concreto o que significa
+"armazenar informação": uma entrada que aparece uma única vez continua ecoando no potencial de
+memória vários instantes depois, cada vez mais fraca.
+
+## 6.3.1 Neurônios temporais e o potencial de memória
+
+> "Neurônios temporais: são unidades de processamento que possuem uma propriedade única chamada
+> memória temporal. Eles são capazes de armazenar informações do passado e atualizá-las ao longo do
+> tempo. Cada neurônio temporal possui um estado interno chamado de **potencial de memória**, que é
+> atualizado a cada instante de tempo."
+
+O **potencial de memória** é o `h(t)` da seção 6.1.1: **um número por neurônio**, que resume tudo o
+que aquele neurônio viu até agora. Numa camada com 50 neurônios temporais, o potencial de memória da
+camada é um vetor de 50 números.
+
+| | Neurônio da MLP | Neurônio temporal |
+|---|---|---|
+| Estado interno | **nenhum**; calcula e esquece | **potencial de memória**, que persiste entre instantes |
+| O que vê | só a entrada atual | a entrada atual **e** o próprio estado anterior |
+| Mesma entrada, resposta igual? | sempre | **não**: depende do que veio antes |
+| O que faz o tempo passar | nada, cada amostra é independente | cada instante atualiza o potencial |
+
+A última linha é a diferença que realmente importa. Apresente o número 30 a um neurônio de MLP e ele
+sempre devolve a mesma coisa. Apresente 30 a um neurônio temporal e a resposta depende de a série
+vir subindo de 10 para 20 para 30 ou vir caindo de 50 para 40 para 30. **É o contexto que muda a
+resposta**, e o contexto está no potencial de memória.
+
+> **Cuidado com a palavra "armazenar":** o potencial de memória **não é um histórico**. Ele não
+> guarda os valores passados, guarda um **resumo comprimido** deles, de tamanho fixo, sobrescrito a
+> cada instante. Perguntar "qual era o valor de três instantes atrás?" não tem resposta: aquilo
+> virou parte de um número, misturado com tudo o mais.
+
+**Na LSTM o estado tem duas partes**, e a disciplina trata as duas pelo mesmo nome:
+
+| Estado | Papel |
+|---|---|
+| `h` (*hidden state*) | a memória de **curto prazo**; é também o que a célula entrega para a camada seguinte |
+| `c` (*cell state*) | a memória de **longo prazo**; atravessa os instantes quase sem alteração, e é o que permite à LSTM lembrar de coisas distantes |
+
+## 6.3.2 Sinapses temporais, em detalhe
+
+> "Sinapses temporais: são as conexões entre os neurônios em uma RNT. Cada sinapse possui um peso
+> associado que determina a importância da informação transmitida de um neurônio para outro. Esses
+> pesos são atualizados durante o treinamento da rede."
+
+A definição do PDF vale para qualquer rede. O que torna a sinapse **temporal** é ela ligar dois
+instantes diferentes, e não dois neurônios da mesma passada. Existem duas famílias de pesos:
+
+| Família | Liga | Símbolo | Papel |
+|---|---|---|---|
+| Sinapse de entrada | o dado do instante atual → o neurônio | `W` | decide quanto a novidade importa |
+| **Sinapse temporal (recorrente)** | o estado do instante anterior → o neurônio | `U` | decide quanto o passado importa |
+
+Isso não é abstração: aparece nomeado no próprio modelo. Montando em Keras a arquitetura típica da
+disciplina, com `neuronios_LSTM = 50` e uma variável por instante, os pesos da camada LSTM são:
+
+| Peso | Formato | O que é |
+|---|---|---|
+| `kernel` | (1, 200) | as sinapses de entrada: 1 variável → 4 portões × 50 neurônios |
+| `recurrent_kernel` | (50, 200) | **as sinapses temporais**: 50 estados anteriores → 4 portões × 50 neurônios |
+| `bias` | (200,) | um viés por portão de cada neurônio |
+
+São 200 + 10.000 + 200 = **10.400 parâmetros, e 10.000 deles (96%) são sinapses temporais**. Numa
+LSTM, a esmagadora maioria dos pesos existe para ler o próprio passado, não a entrada nova.
+
+Duas propriedades decorrem disso:
+
+- **A mesma sinapse é usada em todos os instantes.** Não existe "o peso do instante 3": existe um
+  `U` só, aplicado repetidamente. É o que permite processar sequências de qualquer comprimento.
+- **Reaplicar o mesmo peso é justamente o problema.** Se `U` é reaplicado 100 vezes, o gradiente que
+  volta por esse caminho é multiplicado 100 vezes pelo mesmo fator. Daí o *vanishing* e o *exploding
+  gradient* (seção 6.6.1).
+
+## 6.3.3 A camada de saída: classificação, regressão e geração de texto
+
+O PDF diz que a camada de saída "pode ter diferentes configurações, como neurônios de classificação,
+neurônios de regressão ou neurônios de geração de texto", sem detalhar. As três são bem diferentes:
+
+| Objetivo | Neurônios na saída | Ativação | Função de perda | O que sai |
+|---|---|---|---|---|
+| **Regressão** (série temporal) | **1** | linear (nenhuma) | `mean_squared_error` | o valor previsto, por exemplo a cotação de amanhã |
+| **Classificação** | **1 por classe** | `softmax` | `categorical_crossentropy` | a probabilidade de cada classe |
+| **Geração de texto** | **1 por item do vocabulário** | `softmax` | `categorical_crossentropy` | a probabilidade de cada palavra ser a próxima |
+
+### Como funciona a saída para geração de texto
+
+Geração de texto é **classificação repetida**: a cada passo, a rede responde "qual é o próximo
+token?", escolhendo entre todos os itens do vocabulário.
+
+1. **Vocabulário.** Primeiro define-se o conjunto de tokens possíveis. Se o token for a palavra, o
+   vocabulário tem milhares de itens; se for o caractere, tem umas poucas dezenas.
+2. **Saída do tamanho do vocabulário.** A camada final tem um neurônio por token e um `softmax`, que
+   transforma a saída numa **distribuição de probabilidade**: cada token recebe uma probabilidade, e
+   a soma dá 1.
+3. **Escolha do token.** Pegar sempre o de maior probabilidade (*greedy*) gera texto repetitivo. Na
+   prática **sorteia-se** o próximo token segundo as probabilidades, e a **temperatura** controla a
+   ousadia do sorteio: perto de 0 o texto fica conservador e repetitivo, acima de 1 fica criativo e
+   incoerente.
+4. **Retroalimentação da saída.** O token escolhido vira a **entrada do passo seguinte**, e o laço
+   recomeça. É por isso que esse tipo de geração se chama **autorregressiva**.
+5. **Parada.** O laço termina num limite de tamanho ou quando a rede emite um token especial de fim.
+
+### O custo escondido dessa arquitetura
+
+A camada de saída de geração de texto é, de longe, a parte mais cara do modelo. Com 50 neurônios
+LSTM e um vocabulário de 5.000 palavras:
+
+| Camada | Parâmetros |
+|---|---|
+| LSTM(50) | 10.400 |
+| Saída `Dense(5000)` | **255.000** |
+
+A saída sozinha tem **24 vezes mais parâmetros que a rede recorrente inteira**. É por isso que
+modelos de texto costumam trabalhar com vocabulários reduzidos, com *embeddings*, ou com tokens de
+sub-palavra em vez de palavras inteiras. E é também por isso que o exercício da disciplina usa
+**regressão** e não geração de texto: para prever uma cotação basta **um** neurônio na saída.
+
 ## 6.4 Fluxo de informação
 
 1. **Etapas de tempo discretas** — a cada etapa, os neurônios atualizam seu estado interno com base
@@ -1993,7 +2242,60 @@ quanto para trás** na rede.
 2. **Retroalimentação temporal** — informações do passado influenciam o presente e o futuro.
 3. **Propagação do erro** — o erro é propagado **ao longo das etapas de tempo** para atualizar os pesos.
 
-## 6.5 Algoritmos de aprendizado ⭐
+## 6.4.1 Retroalimentação temporal, em detalhe
+
+> "Uma das principais características da RNT é a retroalimentação temporal, que permite que as
+> informações do passado influenciem o processamento no presente e futuro. Isso é alcançado por meio
+> das conexões retroalimentadas, que permitem que as informações fluam entre as camadas e etapas de
+> tempo."
+
+### Três coisas diferentes com o mesmo nome
+
+Aqui está a maior fonte de confusão da unidade, e ela começa na própria frase do material de que "a
+informação flui tanto para frente quanto para trás na rede". Existem **três** retroalimentações
+distintas, e elas acontecem em momentos diferentes:
+
+| | Quando acontece | O que circula | Em que direção |
+|---|---|---|---|
+| **1. Retroalimentação de estado** | sempre, inclusive em produção | o estado `h(t−1)` | **para frente no tempo**: do instante 1 para o 2, do 2 para o 3 |
+| **2. Retropropagação do erro (BPTT)** | só durante o treinamento | o gradiente do erro | **para trás no tempo**: do último instante de volta ao primeiro |
+| **3. Retroalimentação da saída** | só em uso autorregressivo | a própria previsão da rede | volta à entrada como o próximo dado |
+
+Repare que **no uso normal nada flui para trás**. A rede só olha para frente: o instante 3 usa o
+estado deixado pelo 2. O "para trás" do material se refere ao treinamento, quando o erro medido no
+fim precisa voltar por todos os instantes para saber o quanto cada um contribuiu. São duas coisas
+diferentes que compartilham a palavra.
+
+### 1. Retroalimentação de estado: o que torna a rede um sistema dinâmico
+
+É o que a seção 6.1.1 descreve: `h(t)` depende de `h(t−1)`. A consequência prática é que **a rede
+deixa de ser uma função pura**. A mesma entrada pode produzir saídas diferentes, porque o resultado
+depende do estado acumulado. Numa MLP, entrada igual significa saída igual, sempre. Numa RNT, não.
+
+Isso tem um efeito colateral pouco lembrado: **a ordem em que os dados são apresentados passa a
+importar**, e embaralhar a série destrói a informação. Nas outras redes, embaralhar as amostras é
+recomendado; aqui é proibido.
+
+### 2. Retropropagação do erro: por que o erro precisa voltar no tempo
+
+Se a previsão do instante 10 saiu errada, a culpa não é só do que entrou no instante 10: o estado
+que chegou ali foi construído pelos instantes 1 a 9. Para corrigir os pesos, o treinamento precisa
+medir quanto **cada instante passado** contribuiu para o erro de agora, e é isso que o BPTT faz
+(seção 6.5). Como os pesos são os mesmos em todos os instantes, as contribuições de todos eles são
+**somadas** antes de atualizar.
+
+### 3. Retroalimentação da saída: a armadilha da previsão de vários passos
+
+Para prever o próximo valor, a rede usa dados reais. Mas para prever **30 dias à frente** só há uma
+saída: usar a própria previsão do dia 1 como entrada do dia 2, e assim por diante.
+
+O problema é que **o erro se acumula e se realimenta**. O erro do dia 1 entra como se fosse dado
+verdadeiro no dia 2, que erra um pouco mais, e assim sucessivamente. Por isso previsões de longo
+prazo em série temporal degradam rápido, e é bom desconfiar de gráficos que mostram uma RNT prevendo
+meses à frente com precisão. Em geração de texto o mesmo mecanismo existe, mas ali ele não é defeito:
+é exatamente o que produz texto novo.
+
+## 6.5 Algoritmos de aprendizado
 
 | Algoritmo | Descrição |
 |---|---|
@@ -2001,6 +2303,21 @@ quanto para trás** na rede.
 | **TBPTT** (*Truncated BPTT*) | Divide a sequência temporal em **segmentos menores** — reduz o custo computacional do BPTT |
 | **RTRL** (*Real-Time Recurrent Learning*) | Calcula o gradiente **em tempo real** usando equações de diferenças parciais |
 | **LSTM** (*Long Short-Term Memory*) | Célula de memória recorrente projetada para **resolver o vanishing/exploding gradient**. **É a usada nos exercícios da disciplina** |
+
+> ⚠️ **Atenção ao ler o material**: a tabela acima reproduz a lista do PDF, que apresenta os quatro
+> como "algoritmos de aprendizado". Mas eles não são a mesma categoria de coisa. **BPTT, TBPTT e
+> RTRL são algoritmos de treinamento**: definem como o gradiente é calculado, e podem ser aplicados
+> à mesma rede. **LSTM é uma arquitetura de célula**: muda o que existe dentro do neurônio. Tanto
+> que se pode treinar uma LSTM **com** BPTT, que é exatamente o que o Keras faz no exercício da
+> disciplina. Não são alternativas entre si.
+
+![BPTT, TBPTT e RTRL comparados](treinamento_rnt.png)
+
+A figura desenha a **mesma** rede de oito instantes nos três painéis, de propósito: o que muda entre
+os algoritmos é só o caminho percorrido pelo gradiente. No BPTT ele volta pelos oito instantes; no
+TBPTT a sequência é cortada e o gradiente não atravessa o corte; no RTRL nada volta, porque as
+derivadas são carregadas para frente junto com o estado, o que permite atualizar os pesos a cada
+instante.
 
 ## 6.6 Problemas comuns no treinamento
 
@@ -2013,7 +2330,104 @@ quanto para trás** na rede.
 
 **Otimizadores recomendados:** SGD, **Adam**, RMSprop.
 
-## 6.7 Parâmetros ajustáveis do modelo (código da disciplina) ⭐
+## 6.6.1 Vanishing e exploding gradient, em detalhe
+
+### De onde vem o problema
+
+Os dois problemas têm **a mesma causa**, e ela é a repetição. Quando o erro volta no tempo, a cada
+etapa ele é multiplicado pelo mesmo fator, porque os pesos são os mesmos em todos os instantes
+(seção 6.3.2). Voltar 100 instantes significa multiplicar 100 vezes pelo mesmo número.
+
+E multiplicação repetida não tem meio-termo: ou o resultado desaparece, ou explode. Esta tabela
+mostra quanto sobra do gradiente depois de N etapas:
+
+| Fator por etapa | 5 etapas | 25 etapas | 50 etapas | 100 etapas |
+|---|---|---|---|---|
+| 0,50 | 0,0312 | 3,0 × 10⁻⁸ | 8,9 × 10⁻¹⁶ | 7,9 × 10⁻³¹ |
+| 0,90 | 0,5905 | 0,0718 | 0,0052 | 2,7 × 10⁻⁵ |
+| 0,99 | 0,9510 | 0,7778 | 0,6050 | 0,3660 |
+| **1,00** | **1,0000** | **1,0000** | **1,0000** | **1,0000** |
+| 1,01 | 1,0510 | 1,2824 | 1,6446 | 2,7048 |
+| 1,10 | 1,6105 | 10,83 | 117,4 | 1,4 × 10⁴ |
+| 1,50 | 7,59 | 2,5 × 10⁴ | 6,4 × 10⁸ | 4,1 × 10¹⁷ |
+
+Leia a tabela de baixo para cima e o problema fica evidente: **só o fator exatamente 1,00 é
+estável**. Qualquer valor um pouco menor leva o gradiente a zero; qualquer valor um pouco maior o
+faz explodir. Com 0,9 sobram 0,0027% do gradiente depois de 100 passos, e a rede simplesmente não
+consegue aprender nada que dependa de 100 instantes atrás.
+
+### Por que o fator quase nunca é 1
+
+O fator de cada etapa é, aproximadamente, o peso recorrente multiplicado pela derivada da ativação.
+E a derivada da `tanh`, que é `1 − tanh²(x)`, tem um teto baixo:
+
+| x | tanh(x) | derivada |
+|---|---|---|
+| 0,0 | 0,0000 | **1,0000** |
+| 0,5 | 0,4621 | 0,7864 |
+| 1,0 | 0,7616 | 0,4200 |
+| 2,0 | 0,9640 | 0,0707 |
+| 4,0 | 0,9993 | 0,0013 |
+
+Ela vale no máximo 1, e só no ponto exato x = 0. Assim que o neurônio satura, a derivada despenca.
+Por isso **o vanishing é o caso comum** e o exploding aparece sobretudo quando os pesos recorrentes
+são grandes.
+
+### Os dois se manifestam de formas opostas
+
+| | *Vanishing gradient* | *Exploding gradient* |
+|---|---|---|
+| Sintoma na perda | ela **melhora e estaciona** | ela **salta, vira `NaN` ou `inf`** |
+| Como você percebe | **quase não percebe** | imediatamente, o treino quebra |
+| O que a rede aprende | só dependências curtas; ignora o passado distante | nada, os pesos são destruídos |
+| Gravidade real | **pior**, porque é silencioso | assustador, mas fácil de detectar e corrigir |
+
+A assimetria é importante: o exploding avisa, o vanishing não. Uma RNT com vanishing **continua
+treinando e entregando resultado**, só que o resultado usa apenas os últimos instantes, e você pode
+concluir que "a série não tem memória longa" quando o problema era a rede.
+
+### Como mitigar
+
+| Técnica | Contra o quê | O que faz |
+|---|---|---|
+| **Gradiente truncado / clipping** | exploding | corta o gradiente num teto, por exemplo 1,0. Simples e muito eficaz |
+| **TBPTT** | ambos | limita quantas etapas o erro volta, então o fator é elevado a um expoente menor |
+| **Inicialização adequada** | ambos | começar com pesos recorrentes de norma perto de 1 mantém o fator perto de 1 |
+| **LSTM** | sobretudo vanishing | muda a arquitetura da célula para criar um caminho com fator ≈ 1 |
+
+### Por que a LSTM resolve
+
+A LSTM acrescenta um segundo estado, o **cell state** `c`, cuja atualização é quase uma soma:
+
+```
+c(t) = f(t) · c(t−1)  +  i(t) · g(t)
+       └──┬──┘            └────┬───┘
+     portão de esquecer    o que entra de novo
+```
+
+Ao voltar no tempo por esse caminho, o fator de cada etapa é o **portão de esquecimento** `f(t)`. E
+`f` é aprendido: se aquela informação importa, a rede aprende a deixar `f` perto de 1, e pela tabela
+acima **fator 1 é exatamente o caso estável**. O cell state funciona como uma esteira que atravessa
+os instantes quase sem alteração, e a informação é depositada e retirada dela pelos portões.
+
+> A LSTM **mitiga**, não elimina. Com sequências muito longas o problema volta, e por isso existem
+> arquiteturas que abandonam a recorrência para tratar a sequência inteira de uma vez.
+
+![Por dentro da célula LSTM](celula_lstm.png)
+
+A linha verde que atravessa a célula de ponta a ponta é o **cell state**, e ela é a razão de tudo:
+repare que o único operador no caminho dela é uma multiplicação pelo portão `f` e uma soma. Não há
+ativação espremendo o sinal ali, e é isso que mantém o fator perto de 1. Os quatro portões laranja
+recebem todos a mesma entrada, a concatenação de `h(t−1)` com `x(t)`, e é por isso que a camada tem
+quatro conjuntos de pesos em vez de um — os `4 × 50` que aparecem no formato `(50, 200)` da seção
+6.3.2.
+
+A tabela do rodapé fecha a comparação entre os três tipos de neurônio vistos na disciplina, e mostra
+o preço da memória: para as mesmas 50 unidades e uma variável de entrada, o neurônio denso custa 100
+parâmetros, o recorrente simples custa 2.600, e a célula LSTM custa **exatamente quatro vezes** o
+recorrente simples, 10.400, que é o preço dos quatro portões.
+
+## 6.7 Parâmetros ajustáveis do modelo (código da disciplina)
 
 | Parâmetro | O que controla |
 |---|---|
@@ -2025,7 +2439,87 @@ quanto para trás** na rede.
 | `epocas` | Quantas vezes o modelo percorre o conjunto de dados. **Muitas épocas → aprende demais a base e não generaliza** para dados futuros diferentes |
 | `lote` (batch) | Quantos subconjuntos por época. 100 dados com lote = 2 → **50 dados por lote, 2 baterias por época** |
 
-## 6.8 💡 Como avaliar o modelo (console do Spyder)
+## 6.7.1 `neuronios_LSTM` × `neuronios_dense`: qual a diferença
+
+Os dois parâmetros parecem a mesma coisa, já que ambos são "quantidade de neurônios de uma camada".
+Mas as duas camadas fazem trabalhos completamente diferentes.
+
+### A diferença em uma frase
+
+**A camada LSTM enxerga o tempo; a camada densa não.** A LSTM percorre a janela instante por
+instante, mantendo memória entre eles, e no fim entrega **um único vetor**: o resumo da janela. A
+camada densa recebe esse vetor pronto e nunca vê a sequência.
+
+```
+janela de 5 instantes
+   ↓  ↓  ↓  ↓  ↓
+[ camada LSTM ]  ← percorre os 5 instantes, um de cada vez, com memória
+   ↓
+1 vetor de 50 números (o resumo da janela)
+   ↓
+[ camada densa ]  ← vê só o resumo; para ela o tempo não existe
+   ↓
+[ saída ]  → o valor previsto
+```
+
+### As duas lado a lado
+
+| | `neuronios_LSTM` | `neuronios_dense` |
+|---|---|---|
+| Tem estado interno? | **sim**, o potencial de memória | **não**, calcula e esquece |
+| Vê a sequência? | **sim**, um instante por vez | **não**, só o resumo final |
+| Portões | **4 por neurônio** (esquecer, entrar, candidato, sair) | nenhum |
+| Pesos | `kernel`, `recurrent_kernel` e `bias` | `kernel` e `bias` |
+| O que controla | **quanta memória e quantos padrões temporais** a rede consegue reter | **quanta capacidade de combinar** esse resumo para chegar à resposta |
+
+### O custo de cada um, medido
+
+Para a arquitetura típica da disciplina, `LSTM(50) → Dense(25) → Dense(1)`, com `janela_prev = 5` e
+uma variável por instante (conferido com o Keras):
+
+| Camada | Parâmetros | Conta |
+|---|---|---|
+| `LSTM(50)` | **10.400** | 4 × 50 × (1 + 50 + 1) |
+| `Dense(25)` | 1.275 | 25 × (50 + 1) |
+| `Dense(1)` | 26 | 1 × (25 + 1) |
+| **Total** | **11.701** | |
+
+A camada LSTM sozinha é **89% do modelo**. As fórmulas explicam por quê:
+
+```
+LSTM :  4 · n · (entrada + n + 1)     → o 4 são os portões, e o n dentro do parêntese
+                                        torna o crescimento quadrático
+Densa:      n · (entrada + 1)         → crescimento linear
+```
+
+Na prática: **dobrar `neuronios_LSTM` de 50 para 100 multiplica os parâmetros dessa camada por
+3,92** (de 10.400 para 40.800), enquanto dobrar `neuronios_dense` apenas dobra os dela. São botões
+de custo muito diferente.
+
+### O que a janela de previsão faz com cada uma
+
+| `janela_prev` | `LSTM(50)` | Uma densa de 50 sobre a janela achatada |
+|---|---|---|
+| 5 | 10.400 | 300 |
+| 10 | 10.400 | 550 |
+| 30 | 10.400 | 1.550 |
+| 100 | **10.400** | 5.050 |
+
+A LSTM **não cresce** quando a janela aumenta, porque reaplica os mesmos pesos a cada instante
+(seção 6.3.2). Uma camada densa precisaria de um peso novo para cada posição da janela. É essa
+propriedade que torna a recorrência adequada a sequências, e não apenas a memória em si.
+
+### Como ajustar na prática
+
+- **`neuronios_LSTM` de menos** → a rede não consegue reter os padrões da série e erra por
+  subajuste. **De mais** → decora a série de treino, e em séries curtas isso acontece fácil, porque
+  10.400 parâmetros para algumas centenas de pontos já é muita capacidade.
+- **`neuronios_dense`** é o botão barato. Mexer nele muda pouco o total de parâmetros e ajusta a
+  capacidade de transformar o resumo na resposta final.
+- Como a camada LSTM domina a contagem, **comece ajustando `neuronios_LSTM`** e use
+  `neuronios_dense` para o ajuste fino.
+
+## 6.8 Como avaliar o modelo (console do Spyder)
 
 | Métrica | Leitura |
 |---|---|

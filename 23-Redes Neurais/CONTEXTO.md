@@ -465,6 +465,65 @@ Pedido: "me fale mais sobre o espaço de dados" e, em seguida, "transforme isso 
   estavam no texto (24,1 / 45,0 / 30,9 e 30,5%). Se a figura for refeita, manter a malha fina.
 - Achado visual que entrou na legenda: com o atributo 1 valendo 3× mais, as fronteiras ficam
   quase verticais, ou seja, o atributo 2 quase deixa de participar da decisão.
+- **Pergunta do utilizador que gerou duas subseções novas na 5.2.2:** "normalização é obrigatória
+  ou não?". A resposta exigia uma distinção que faltava no texto: **escala uniforme não muda
+  nada; escala por eixo muda tudo**. Medido: multiplicar os dois eixos por 5 ou por 0,001 troca
+  0% do espaço de dono (a malha finita devolve 0,02%, que são pontos exatamente sobre a
+  fronteira), enquanto multiplicar só um eixo troca 30,5% ou 12,7%. A prova é
+  `‖s·x − s·w‖ = s·‖x − w‖`: todas as distâncias crescem igual, a ordem não muda.
+- Daí a resposta em duas partes, agora na seção: **o algoritmo não exige** normalização (a RNC
+  roda e produz grupos sem ela), mas **a metodologia exige**, porque sem normalizar quem escolhe
+  a geometria é a unidade de registro dos dados. Cosmético quando todos os atributos estão na
+  mesma unidade (pixels de 0 a 255); inevitável quando as unidades diferem. Fechou com o alerta
+  de que min-max e z-score dividem por fatores diferentes e portanto **produzem geometrias
+  diferentes**, então "normalizei?" é a pergunta errada.
+
+### Frente J — Aprofundamento da unidade 06 (RNT) e três figuras
+Pedido do utilizador: "vamos avançar para a unidade 6", com sete perguntas conceituais e um
+pedido de ilustrações. A unidade 6 estava no nível de tabela-resumo, como as unidades 2 e 3
+antes do aprofundamento.
+- **Sete seções novas no `Resumo.md`**, todas sem ⭐ (o utilizador vem removendo as estrelas):
+  - **6.1.1 A conexão recorrente**: a fórmula `h(t) = f(W·x(t) + U·h(t−1) + b)`, o que
+    "armazenar" realmente significa (vetor de tamanho fixo, sobrescrito a cada instante), a
+    tabela do eco de um pulso único (0,4621 → 0,1367 em seis instantes) e o desenrolar no tempo
+    com compartilhamento de pesos, em paralelo com a CNN.
+  - **6.3.1 Neurônios temporais e potencial de memória**: o potencial é um número por neurônio;
+    tabela comparando com o neurônio da MLP; alerta de que não é histórico, é resumo
+    comprimido; e os dois estados da LSTM (`h` curto prazo, `c` longo prazo).
+  - **6.3.2 Sinapses temporais**: a distinção entre `W` (entrada) e `U` (recorrente), provada
+    com os formatos de peso do Keras — `kernel (1,200)`, `recurrent_kernel (50,200)`,
+    `bias (200)` — de onde sai que **96% dos parâmetros da LSTM são sinapses temporais**.
+  - **6.3.3 Camada de saída para geração de texto**: as três configurações (regressão,
+    classificação, geração), o laço autorregressivo, temperatura, e o custo escondido: com
+    vocabulário de 5.000 palavras a saída tem 255.000 parâmetros, 24× a LSTM inteira.
+  - **6.4.1 Retroalimentação temporal**: separa **três** coisas que o PDF mistura ao dizer que a
+    informação "flui para frente e para trás" — retroalimentação de estado (para frente no
+    tempo), retropropagação do erro (para trás, só no treino) e retroalimentação da saída
+    (autorregressiva), com o alerta do acúmulo de erro em previsão de vários passos.
+  - **6.6.1 Vanishing e exploding gradient**: tabela do fator elevado a N etapas (só o fator
+    1,00 é estável), tabela da derivada da tanh (máximo 1, despenca ao saturar), a assimetria
+    entre os dois (o exploding avisa, o vanishing é silencioso) e por que a LSTM resolve.
+  - **6.7.1 `neuronios_LSTM` × `neuronios_dense`**: a frase-chave é "a camada LSTM enxerga o
+    tempo; a densa não". Contagens conferidas no Keras: LSTM(50)=10.400, Dense(25)=1.275,
+    Dense(1)=26, total 11.701, com 89% na LSTM. Dobrar `neuronios_LSTM` multiplica por 3,92
+    (crescimento quadrático); a LSTM não cresce com a janela (10.400 de janela 5 a 100)
+    enquanto uma densa sobre a janela achatada vai de 300 a 5.050.
+- **Correção conceitual registrada no Resumo (seção 6.5):** o PDF lista BPTT, TBPTT, RTRL e LSTM
+  juntos como "algoritmos de aprendizado". Os três primeiros são **algoritmos de treinamento**;
+  LSTM é **arquitetura de célula**. Tanto que o Keras treina uma LSTM **com** BPTT. Não são
+  alternativas entre si.
+- **Três figuras novas na raiz**, geradas por `arquitetura_rnt.py`, `treinamento_rnt.py` e
+  `celula_lstm.py` (scratchpad), com variáveis de ambiente `DESTINO_RNT`, `DESTINO_TREINO` e
+  `DESTINO_LSTM`:
+  - `arquitetura_rnt.png` (seção 6.3): rede enrolada, desenrolada, caminho do dado com
+    parâmetros, e o gráfico do eco.
+  - `treinamento_rnt.png` (seção 6.5): BPTT, TBPTT e RTRL sobre a **mesma** cadeia de oito
+    instantes, mudando só o caminho do gradiente, mais tabela comparativa.
+  - `celula_lstm.png` (seção 6.6.1): os quatro portões, a esteira do cell state, por que
+    resolve o vanishing, e a tabela neurônio simples × LSTM × denso (100 / 2.600 / 10.400
+    parâmetros — a LSTM é exatamente 4× o recorrente simples).
+- Números conferidos em `numeros_rnt.py` (scratchpad), que monta o modelo no Keras de verdade
+  em vez de confiar nas fórmulas.
 
 ## 3. Em andamento 🔧
 Nenhuma tarefa em andamento no momento deste checkpoint. Ambas as frentes estão em ponto de
