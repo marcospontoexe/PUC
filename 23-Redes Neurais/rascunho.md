@@ -4,5 +4,3 @@
 
 
 
-* explique mais detalhadamente hidden state, cell state, portões, fator de esquecimento, como .
-* voce disse: "A LSTM mitiga, não elimina. Com sequências muito longas o problema volta, e por isso existem arquiteturas que abandonam a recorrência para tratar a sequência inteira de uma vez." que arquitetura são essas e como tratam a sequecia inteira de uma vez?
