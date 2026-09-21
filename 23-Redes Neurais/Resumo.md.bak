@@ -533,37 +533,25 @@ texturas e formas simplesmente evaporou.** É exatamente isso que a unidade 01 q
 | **Compartilhamento de pesos** | O **mesmo** filtro percorre a imagem toda | Poucos parâmetros + **invariância à translação**: um detector de borda aprendido no canto superior funciona no centro também |
 | **Hierarquia** | Camadas empilhadas combinam características simples em complexas | Bordas → cantos → partes de objeto → objeto |
 
-## 3.2 O vocabulário da CNN: canal, kernel, filtro e mapa de características
+## 3.1.1 O que é um canal? 
 
-Antes de ver a convolução em ação, vale fixar quatro palavras que o material usa o tempo todo e que
-são a maior fonte de confusão da unidade. Elas se encaixam umas dentro das outras:
-
-```
-   CANAL     uma grade 2D de números (uma "fatia" do volume)
-   KERNEL    uma matriz de pesos que atua sobre UM canal
-   FILTRO    um kernel por canal de entrada + 1 viés
-   MAPA      a grade 2D que UM filtro produz na saída
-```
-
-E a regra que amarra tudo:
-
-> **1 filtro → 1 mapa de características → 1 canal da saída.**
-
-![Canal, kernel, filtro e mapa de características](cnn_canal_filtro_kernel.png)
-
-### Canal: uma fatia 2D do volume
-
+Antes de ver a convolução em ação, vale definir um termo usado à exaustão nas próximas seções.
 Um **canal** é uma "fatia" 2D de informação, empilhada em profundidade junto com outras fatias do
 **mesmo tamanho**, todas descrevendo **as mesmas posições espaciais**, mas cada uma guardando um
 tipo diferente de informação sobre elas.
 
-**Imagem em escala de cinza (1 canal).** Cada pixel é **um único número** (intensidade de luz:
-0 = preto, 255 = branco, ou normalizado entre 0 e 1). A imagem inteira é **uma única matriz 2D**. É
-por isso que o MNIST (seção 2.4) tem shape `28 × 28 × 1` — o "1" no final é literalmente "1 canal".
+### Imagem em escala de cinza (1 canal)
 
-**Imagem colorida RGB (3 canais).** Aqui o pixel não é mais 1 número — são **3 números**: quanto de
-Vermelho, quanto de Verde, quanto de Azul há naquela posição. A imagem inteira não é 1 grade, são
-**3 grades empilhadas**, cada uma do mesmo tamanho, cada uma alinhada aos mesmos pixels:
+Cada pixel é **um único número** (intensidade de luz: 0 = preto, 255 = branco, ou normalizado entre
+0 e 1). A imagem inteira é **uma única matriz 2D**. É por isso que o MNIST (seção 2.4) tem shape
+`28 × 28 × 1` — o "1" no final é literalmente "1 canal".
+
+### Imagem colorida RGB (3 canais)
+
+Aqui o pixel não é mais 1 número — são **3 números**: quanto de Vermelho, quanto de Verde, quanto de
+Azul há naquela posição. Isso significa que a imagem inteira não é 1 grade, são **3 grades
+empilhadas**, cada uma do mesmo tamanho, cada uma alinhada aos mesmos pixels, cada uma guardando uma
+cor diferente:
 
 ```
      Canal R (vermelho)      Canal G (verde)       Canal B (azul)
@@ -578,92 +566,38 @@ Vermelho, quanto de Verde, quanto de Azul há naquela posição. A imagem inteir
 ```
 
 Pense nisso como **3 folhas transparentes sobrepostas** — cada uma do mesmo tamanho, mostrando a
-mesma "forma", mas cada uma pintando uma cor diferente.
+mesma "forma", mas cada uma pintando uma cor diferente. Sobrepostas, formam a imagem colorida que
+você vê.
 
-### Kernel × filtro: a diferença que o dia a dia apaga
+### O salto conceitual: depois da primeira camada convolucional
 
-Os dois termos são usados como sinônimos na prática, mas tecnicamente não são a mesma coisa:
-
-| Termo | O que é | Atua sobre |
-|---|---|---|
-| **Kernel** | a matriz 2D de pesos (ex.: 3×3) | **um único canal** |
-| **Filtro** | o conjunto completo: **um kernel por canal de entrada + 1 viés** | **o volume inteiro** |
-
-Quando a entrada tem só 1 canal, **kernel e filtro coincidem exatamente** — e é por isso que as
-pessoas os trocam à vontade. A diferença só aparece quando a entrada tem profundidade:
+Aqui mora a parte que mais confunde. Depois de uma `Conv2D` com, digamos, 32 filtros, a **saída**
+tem 32 canais — mas esses 32 canais **não são mais cor**. Cada um agora é um **mapa de
+características** (seção 3.2.1): um pode representar "onde há bordas verticais", outro "onde há
+bordas horizontais", outro "onde há manchas claras" — a rede decide sozinha o que cada um vira.
 
 ```
-1 FILTRO da camada (atuando sobre uma entrada RGB, 3 canais)
-
-   Canal R           Canal G           Canal B
- ┌─────────┐       ┌─────────┐       ┌─────────┐
- │ kernel  │       │ kernel  │       │ kernel  │      ← cada kernel é 3×3,
- │  R (3×3)│   +   │  G (3×3)│   +   │  B (3×3)│        um por canal
- └─────────┘       └─────────┘       └─────────┘
-      │                  │                  │
-      └──────────────────┼──────────────────┘
-                         │
-                  SOMA dos 3 resultados + viés
-                         │
-                         ▼
-             1 MAPA DE CARACTERÍSTICAS (saída deste filtro)
+   ENTRADA                    32 FILTROS                   SAÍDA
+ altura×largura×1     →     (pesos aprendidos)     →   altura×largura×32
+ (1 canal = cor              cada filtro produz          (32 canais = 32
+  em cinza)                   1 mapa próprio               características
+                                                             aprendidas)
 ```
 
-No Keras, `Conv2D(32, kernel_size=(3,3))` sobre uma imagem RGB significa: **32 filtros**, cada um
-sendo um volume **3×3×3** (3 kernels empilhados). O `kernel_size` descreve só a dimensão espacial de
-**cada kernel**; o `filters` diz quantos filtros — e portanto quantos mapas de saída — a camada gera.
+A palavra **"canal" generaliza**: a partir da 1ª camada convolucional, ela deixa de significar
+"componente de cor" e passa a significar "uma característica aprendida, guardada como grade 2D,
+empilhada com as demais". E o mais importante: **mecanicamente, a 2ª camada convolucional trata
+esses 32 canais exatamente como a 1ª camada tratou os 3 canais RGB** (seção 3.2.1, peça 2) — cada
+filtro da 2ª camada terá 32 kernels, um por canal de entrada, convolui cada um com seu canal
+correspondente e soma tudo + viés.
 
-### A profundidade que fica escondida
-
-Quando se diz "filtro 3×3", omite-se uma terceira dimensão: **o filtro sempre atravessa toda a
-profundidade da entrada**.
-
-| Entrada | "Filtro 3×3" na verdade é | Parâmetros de 1 filtro |
-|---|---|---|
-| Imagem cinza (1 canal) | 3 × 3 × **1** | 9 + 1 (viés) = 10 |
-| Imagem RGB (3 canais) | 3 × 3 × **3** | 27 + 1 = 28 |
-| Saída de uma conv com 32 filtros | 3 × 3 × **32** | 288 + 1 = 289 |
-
-Daí sai a fórmula de parâmetros de uma camada convolucional, usada na seção 3.10:
-
-```
-params = (F × F × canais_entrada + 1) × nº_filtros
-                                  ↑
-                              o viés
-```
-
-### Mapa de características: a saída de um filtro
-
-Cada filtro produz exatamente **um** mapa de características: uma grade 2D em que cada posição diz
-"o quanto aquilo que este filtro procura apareceu aqui". Empilhando os mapas de todos os filtros da
-camada, tem-se o volume de saída — e **cada mapa vira um canal da entrada da camada seguinte**.
-
-```
-   ENTRADA              32 FILTROS             SAÍDA
-  28×28×1      →      cada um 3×3×1     →    26×26×32
-  (1 canal)           (32 detectores          (32 mapas de
-                       diferentes)             características)
-
-  Um detecta bordas verticais, outro bordas horizontais,
-  outro manchas claras... a rede decide sozinha quais criar.
-```
-
-### O salto conceitual: "canal" muda de significado
-
-Aqui mora a parte que mais confunde. Depois de uma `Conv2D` com 32 filtros, a saída tem 32 canais —
-mas esses 32 canais **não são mais cor**. Cada um é um mapa de características aprendido.
+### Resumo da evolução do significado
 
 | Onde | O que "canal" significa ali | Quantos canais tem |
 |---|---|---|
 | Imagem cinza (entrada) | Intensidade de luz | 1 |
 | Imagem RGB (entrada) | Componente de cor (R, G ou B) | 3 |
 | Saída de uma `Conv2D` | Um mapa de característica aprendido (borda, textura, mancha...) | = nº de filtros da camada |
-
-A palavra **"canal" generaliza**: a partir da 1ª camada convolucional, deixa de significar
-"componente de cor" e passa a significar "uma característica aprendida, guardada como grade 2D,
-empilhada com as demais". E o mais importante: **mecanicamente, a 2ª camada convolucional trata
-esses 32 canais exatamente como a 1ª tratou os 3 canais RGB** — cada filtro da 2ª camada terá 32
-kernels, um por canal de entrada (detalhado na seção 3.11).
 
 ### A estrutura de dados (shape)
 
@@ -672,18 +606,17 @@ Em Python/Keras, uma imagem ou volume é sempre um array 3D: `(altura, largura, 
 ```python
 imagem_cinza.shape    # (28, 28, 1)     - MNIST, 1 canal
 imagem_colorida.shape # (224, 224, 3)   - foto RGB, 3 canais
-saida_conv.shape      # (26, 26, 32)    - depois de Conv2D(32, ...), 32 canais
+saida_conv.shape       # (26, 26, 32)   - depois de Conv2D(32, ...), 32 canais
 ```
 
-> É esse último número do shape — o canal — que determina **quantos kernels cada filtro precisa
-> ter**. Um filtro que entra num volume de 32 canais carrega 32 kernels, sempre.
+> É esse último número do shape — o canal — que a seção 3.4 chama de "profundidade da entrada", e é
+> ele que determina quantos kernels cada filtro precisa ter (peça 2 da seção 3.2.1).
 
-## 3.3 A operação de convolução, passo a passo
+## 3.2 A operação de convolução, passo a passo
 
-Esta é a operação que dá nome à rede. Vamos começar pelo caso mais simples, o de **uma
-entrada com um único canal** — aqui o filtro tem um kernel só, e os dois termos coincidem
-(seção 3.2). Um **kernel** é uma pequena matriz de pesos que **desliza** sobre a imagem; em
-cada posição faz-se a **multiplicação elemento a elemento** seguida da **soma** de tudo.
+Esta é a operação que dá nome à rede. Um **filtro**
+(ou *kernel*) é uma pequena matriz de pesos que **desliza** sobre a imagem. Em cada posição, faz-se
+a **multiplicação elemento a elemento** seguida da **soma** de tudo.
 
 ### Os ingredientes
 
@@ -738,7 +671,7 @@ Repetindo para todas as posições (a janela também desce), obtém-se o **mapa 
 (*feature map*):
 
 ```
-   MAPA DE CARACTERÍSTICAS (3×3)        Depois da ReLU (seção 3.14)
+   MAPA DE CARACTERÍSTICAS (3×3)        Depois da ReLU (seção 3.12)
    ┌────────────┐                       ┌───────────┐
    │ -3   0   3 │                       │ 0   0   3 │
    │ -3   0   3 │       ReLU →          │ 0   0   3 │
@@ -760,7 +693,7 @@ naquela orientação específica.
 > são aprendidos pela backpropagation (seção 2.10). A rede **descobre sozinha** quais detectores
 > precisa criar para resolver o problema.
 
-## 3.4 Como o mapa de características é gerado, do início ao fim
+## 3.2.1 Como o mapa de características é gerado, do início ao fim
 
 O exemplo acima mostrou só 3 das 9 posições, e só um canal. Faltam três peças para fechar o
 raciocínio: o **deslizamento vertical**, a **soma através dos canais** e a **repetição por filtro**.
@@ -799,7 +732,7 @@ verticalmente). Por isso o mapa final mostrado acima tem as 3 linhas repetidas:
 
 ### Peça 2 — quando a entrada tem múltiplos canais (soma através da profundidade)
 
-A seção 3.2 já estabeleceu isso conceitualmente; aqui está com números. Entrada com **2 canais**, cada um
+A seção 3.4 descreve isso conceitualmente; aqui está com números. Entrada com **2 canais**, cada um
 3×3 (do tamanho exato do kernel, para focar numa única posição de saída):
 
 ```
@@ -827,7 +760,7 @@ z = soma_A + soma_B + viés = 0 + 0 + 0.5 = 0.5
 a = ReLU(0.5) = 0.5      ← ESTE número é 1 pixel do mapa de características
 ```
 
-Essa é a mecânica exata por trás da tabela da seção 3.2 ("filtro 3×3 na verdade é 3×3×canais"): o
+Essa é a mecânica exata por trás da tabela da seção 3.4 ("filtro 3×3 na verdade é 3×3×canais"): o
 filtro tem um kernel **por canal**, cada um convolui com seu canal correspondente, e os resultados
 são **somados** (junto com o viés) para virar **um único** valor de saída — não um valor por canal.
 
@@ -848,7 +781,7 @@ Cada filtro repete **as peças 1 e 2 inteiramente sozinho**, com seus próprios 
                                     empilhados  →  SAÍDA 26×26×32
 ```
 
-É por isso que **nº de filtros = nº de canais da saída** (seção 3.2): cada filtro, independente dos
+É por isso que **nº de filtros = nº de canais da saída** (seção 3.4): cada filtro, independente dos
 demais, contribui com exatamente 1 fatia da profundidade de saída.
 
 ### A fórmula que une as três peças
@@ -875,10 +808,10 @@ para cada filtro k (1 até nº_de_filtros):                    ← gera 1 mapa p
 ```
 
 Rodar esse laço por completo, para todos os filtros de uma camada, **é** a operação de convolução —
-o resultado é o volume de mapas de características que segue para o pooling (seção 3.6) ou para a
+o resultado é o volume de mapas de características que segue para o pooling (seção 3.5) ou para a
 próxima camada convolucional.
 
-## 3.5 Padding, stride e o cálculo das dimensões
+## 3.3 Padding, stride e o cálculo das dimensões 
 
 Repare que no exemplo acima a imagem **encolheu**: entrou 5×5, saiu 3×3. Dois parâmetros controlam
 esse comportamento.
@@ -930,9 +863,78 @@ Além de preservar o tamanho, o padding evita que os **pixels da borda sejam sub
     I = tamanho da entrada     P = padding
 ```
 
-**Conferindo com o exemplo da seção 3.3:** I=5, F=3, P=0, S=1 → (5−3+0)/1 + 1 = **3** ✓
+**Conferindo com o exemplo da seção 3.2:** I=5, F=3, P=0, S=1 → (5−3+0)/1 + 1 = **3** ✓
 
-## 3.6 Pooling na prática
+## 3.4 Canais e profundidade — o detalhe que mais confunde
+
+Quando se diz "filtro 3×3", omite-se uma terceira dimensão: **o filtro sempre atravessa toda a
+profundidade da entrada**.
+
+| Entrada | "Filtro 3×3" na verdade é | Parâmetros de 1 filtro |
+|---|---|---|
+| Imagem cinza (1 canal) | 3 × 3 × **1** | 9 + 1 (viés) = 10 |
+| Imagem RGB (3 canais) | 3 × 3 × **3** | 27 + 1 = 28 |
+| Saída de uma conv com 32 filtros | 3 × 3 × **32** | 288 + 1 = 289 |
+
+E a regra que fecha o raciocínio:
+
+> **Cada filtro produz exatamente 1 mapa de características.**
+> Portanto: **nº de filtros da camada = nº de canais da saída.**
+
+```
+   ENTRADA              32 FILTROS             SAÍDA
+  28×28×1      →      cada um 3×3×1     →    26×26×32
+  (1 canal)           (32 detectores          (32 mapas de
+                       diferentes)             características)
+
+  Um detecta bordas verticais, outro bordas horizontais,
+  outro manchas claras... a rede decide sozinha quais criar.
+```
+
+**Fórmula de parâmetros de uma camada convolucional:**
+
+```
+params = (F × F × canais_entrada + 1) × nº_filtros
+                                  ↑
+                              o viés
+```
+
+### Kernel × Filtro — qual a diferença?
+
+Os dois termos são usados como sinônimos no dia a dia, mas tecnicamente não são a mesma coisa:
+
+- **Kernel** = a matriz 2D de pesos (ex.: 3×3) que atua sobre **um único canal**.
+- **Filtro** = o conjunto completo — um kernel por canal de entrada + um viés — que juntos produzem
+  **um único mapa de características de saída**.
+
+Quando a entrada tem só 1 canal (imagem em cinza), kernel e filtro coincidem exatamente — é por isso
+que as pessoas costumam usá-los como sinônimos. A diferença aparece quando a entrada tem múltiplos
+canais:
+
+```
+1 FILTRO da camada (atuando sobre uma entrada RGB, 3 canais)
+
+   Canal R           Canal G           Canal B
+ ┌─────────┐       ┌─────────┐       ┌─────────┐
+ │ kernel  │       │ kernel  │       │ kernel  │      ← cada kernel é 3×3,
+ │  R (3×3)│   +   │  G (3×3)│   +   │  B (3×3)│        um por canal
+ └─────────┘       └─────────┘       └─────────┘
+      │                  │                  │
+      └──────────────────┼──────────────────┘
+                          │
+                   SOMA dos 3 resultados + viés
+                          │
+                          ▼
+              1 MAPA DE CARACTERÍSTICAS (saída deste filtro)
+```
+
+Um `Conv2D(32, (3,3))` sobre uma imagem RGB tem, portanto, **32 filtros**, e cada filtro é na
+verdade um volume **3×3×3** (3 kernels empilhados) — exatamente a tabela do início desta seção. No
+Keras, o parâmetro `kernel_size=(3,3)` descreve só a dimensão espacial de **cada kernel**; o
+parâmetro `filters=32` é que diz quantos filtros (e, consequentemente, quantos mapas de saída =
+canais) a camada vai gerar.
+
+## 3.5 Pooling na prática
 
 Reduz a dimensionalidade espacial mantendo o que há de mais forte em cada região. O padrão do
 material é **MaxPooling 2×2** (pega o maior valor de cada bloco 2×2), com stride 2.
@@ -964,7 +966,7 @@ material é **MaxPooling 2×2** (pega o maior valor de cada bloco 2×2), com str
 ### O tamanho do kernel de convolução e o tamanho da janela de pooling são independentes
 
 Uma dúvida comum: **pode usar pooling 2×2 com um kernel de convolução 3×3?** Sim, sem problema —
-e é a combinação mais comum na prática (é exatamente a usada no exemplo da seção 3.10). A confusão
+e é a combinação mais comum na prática (é exatamente a usada no exemplo da seção 3.9). A confusão
 vem de achar que os dois "tamanhos de janela" precisam se relacionar. Não precisam, porque são
 **duas operações sequenciais sobre dados diferentes**:
 
@@ -991,7 +993,7 @@ janela/stride do pooling (ex.: mapa 13×13 com pooling 2×2), o framework trunca
 ou usa `padding='same'` para arredondar — isso é um detalhe de implementação, não uma restrição que
 impeça a combinação.
 
-## 3.7 Flatten e camadas densas
+## 3.6 Flatten e camadas densas
 
 Depois das convoluções e poolings, temos um **volume 3D** de mapas de características. As camadas
 densas só aceitam **vetores 1D** — o Flatten faz essa ponte.
@@ -1015,7 +1017,7 @@ densas só aceitam **vetores 1D** — o Flatten faz essa ponte.
 - Saída de **classificação**: nº de neurônios = nº de classes.
 - Saída de **regressão**: 1 neurônio (ou o nº de saídas desejadas).
 
-## 3.8 As camadas de uma CNN — visão consolidada
+## 3.7 As camadas de uma CNN — visão consolidada
 
 Fluxo: `Entrada → Convolução → Pooling → (repete) → Flatten → Densa(s) → Saída`
 
@@ -1047,7 +1049,7 @@ flowchart LR
 > saída prevista com os rótulos conhecidos, calcula-se a perda e atualizam-se os pesos via otimizador
 > — exatamente o ciclo detalhado na seção 2.10.
 
-## 3.9 Como os pesos do filtro são ajustados — *weight sharing* na prática
+## 3.8 Como os pesos do filtro são ajustados — *weight sharing* na prática
 
 O ciclo geral (forward → perda → backprop → otimizador) é o mesmo da seção 2.10. Mas na convolução
 existe uma particularidade importante, decorrente do **compartilhamento de pesos** (seção 3.1): o
@@ -1105,7 +1107,7 @@ De forma geral, para qualquer peso `w_{i,j}` do kernel:
 ∂L/∂b    = Σ (sobre todas as posições p,q de saída)    ∂L/∂z_pq
 ```
 
-E o otimizador (seção 3.16) atualiza normalmente:
+E o otimizador (seção 3.14) atualiza normalmente:
 
 ```
 w_ij_novo = w_ij_antigo − taxa_de_aprendizado × ∂L/∂w_ij
@@ -1117,14 +1119,14 @@ w_ij_novo = w_ij_antigo − taxa_de_aprendizado × ∂L/∂w_ij
   posições onde foi aplicado — é como se cada filtro fosse treinado com muito mais exemplos do que
   uma MLP equivalente teria, já que a mesma "pergunta" (há uma borda aqui?) é feita repetidamente
   pela imagem toda.
-- É exatamente isso que sustenta a economia de parâmetros das seções 3.1 e 3.10: você não aprende um
+- É exatamente isso que sustenta a economia de parâmetros das seções 3.1 e 3.9: você não aprende um
   peso por posição da imagem, aprende **um kernel só**, informado por todas as posições.
 - Depois de atualizado, esse **mesmo** kernel volta a ser usado em **todas** as posições no próximo
   forward pass — reforçando o compartilhamento.
 
-## 3.10 Arquitetura completa comentada — MNIST do início ao fim
+## 3.9 Arquitetura completa comentada — MNIST do início ao fim 
 
-Rastreando **cada dimensão e cada parâmetro** com as fórmulas das seções 3.5 e 3.2:
+Rastreando **cada dimensão e cada parâmetro** com as fórmulas das seções 3.3 e 3.4:
 
 ```
 CAMADA                      SAÍDA          CÁLCULO DA DIMENSÃO        PARÂMETROS
@@ -1152,7 +1154,7 @@ Dense(10) + Softmax         10             = nº de classes            128·10 +
    usa **menos parâmetros** e ainda assim tem desempenho superior no MNIST — porque respeita a
    estrutura espacial.
 
-## 3.11 A 2ª convolução por dentro: como 64 filtros processam os 32 mapas da 1ª
+## 3.9.1 A 2ª convolução por dentro: como 64 filtros processam os 32 mapas da 1ª 
 
 Na tabela acima, a saída da 1ª convolução+pooling é `13×13×32` e a 2ª convolução tem **64 filtros**.
 Vale destrinchar exatamente o que acontece nessa transição, porque é onde mora a confusão mais comum:
@@ -1163,7 +1165,7 @@ os 32 mapas são **empilhados** (não somados) num volume só, e cada um dos 64 
 
 Depois de `Conv2D(32,...) + MaxPooling`, você não tem "32 imagens separadas" — tem **um único
 volume** de shape `13×13×32`, exatamente como uma imagem RGB é um volume `altura×largura×3` (seção
-3.2). Os 32 mapas ficam **empilhados em profundidade**, cada um preservando sua identidade:
+3.1.1). Os 32 mapas ficam **empilhados em profundidade**, cada um preservando sua identidade:
 
 ```
 VOLUME DE SAÍDA DA 1ª CONVOLUÇÃO + POOLING (13×13×32)
@@ -1186,7 +1188,7 @@ compartilham a mesma "grade" espacial 13×13.
 Cada um dos 64 filtros da 2ª convolução **não escolhe um dos 32 mapas** para processar — ele precisa
 ter profundidade 32 para enxergar o volume inteiro de uma vez. Ou seja: cada filtro da 2ª camada é,
 na prática, um volume `3×3×32` — **32 kernels (um por mapa de entrada) + 1 viés**, exatamente o
-mecanismo da seção 3.4 (peça 2), só que escalado de 2 canais para 32.
+mecanismo da seção 3.2.1 (peça 2), só que escalado de 2 canais para 32.
 
 ```
 1 FILTRO da 2ª convolução (produz 1 dos 64 mapas de saída)
@@ -1209,7 +1211,7 @@ mecanismo da seção 3.4 (peça 2), só que escalado de 2 canais para 32.
 ```
 
 Isso se repete para **cada posição (p, q)** do volume (deslizando pelas 13×13 posições), gerando
-**um** mapa de saída completo (11×11) para esse filtro. A fórmula é a da seção 3.4, só trocando
+**um** mapa de saída completo (11×11) para esse filtro. A fórmula é a da seção 3.2.1, só trocando
 "2 canais" por "32 canais":
 
 ```
@@ -1221,7 +1223,7 @@ mapa_k[p][q]  =  ativação(  viés_k  +  Σ(c=1 até 32) Σi Σj  peso_k[c][i][
 Cada um dos 64 filtros tem **seu próprio** conjunto de 32 kernels + viés — totalmente independente
 dos outros 63. O Filtro 1 pode aprender a combinar "bordas verticais + bordas horizontais" (2 dos 32
 mapas) para detectar **cantos**; o Filtro 2 pode combinar outra combinação de mapas para detectar
-**curvas**; e assim por diante — é exatamente a hierarquia de características da seção 3.12 a seguir.
+**curvas**; e assim por diante — é exatamente a hierarquia de características da seção 3.10 a seguir.
 
 ```
 VOLUME DE ENTRADA (13×13×32)
@@ -1235,7 +1237,7 @@ VOLUME DE ENTRADA (13×13×32)
                               empilhados  →  SAÍDA (11×11×64)
 ```
 
-### Conferindo com a tabela da seção 3.10
+### Conferindo com a tabela da seção 3.9
 
 ```
 Nº de parâmetros de 1 filtro = (3 × 3 × 32 canais_entrada + 1 viés) = 289
@@ -1252,7 +1254,7 @@ se cada filtro "visse" só 1 mapa de entrada, seriam apenas `(9+1)×64 = 640` pa
 | Os 32 mapas são sobrepostos? | **Empilhados**, sim — formam 1 volume 13×13×32, mas continuam **separados** (não somados) até aqui |
 | Como os 64 filtros convolucionam sobre eles? | Cada filtro tem **32 kernels próprios** (1 por mapa de entrada); em cada posição, pega um pedaço 3×3 de **cada um dos 32 mapas**, multiplica pelo kernel correspondente, e **soma tudo** (32×9 produtos + viés) num único valor de saída |
 
-## 3.12 Hierarquia de características — o que cada camada aprende
+## 3.10 Hierarquia de características — o que cada camada aprende
 
 O material menciona "características hierárquicas" sem explicar. É isto:
 
@@ -1270,11 +1272,11 @@ Por que isso acontece naturalmente: cada camada só enxerga a **saída da anteri
 pixels crus e só consegue detectar transições simples. A camada 2 vê *mapas de bordas* — combinando
 "borda vertical aqui + borda horizontal ali" ela detecta um canto. E assim por diante.
 
-> É por isso que a regra "aumentar o nº de filtros nas camadas profundas" (seção 3.13) faz sentido:
+> É por isso que a regra "aumentar o nº de filtros nas camadas profundas" (seção 3.11) faz sentido:
 > existem **poucas** formas de borda elementar, mas **muitas** combinações possíveis de partes de
 > objeto. Camadas profundas precisam de mais detectores.
 
-## 3.13 Quantidade de neurônios/filtros
+## 3.11 Quantidade de neurônios/filtros
 
 **Camadas convolutivas:**
 - O nº de filtros **aumenta conforme se avança** para camadas mais profundas.
@@ -1291,14 +1293,14 @@ profundidade o que se perdeu em resolução espacial.
 > ⚠️ **Excesso de neurônios → mais parâmetros → *overfitting***: o modelo se ajusta demais aos dados
 > de treinamento e perde a capacidade de generalizar para dados novos.
 > Técnica sugerida para calibrar: **validação cruzada** (seção 2.11).
-> Como a camada densa concentra a maior parte dos parâmetros (seção 3.10), **é nela que o dropout
+> Como a camada densa concentra a maior parte dos parâmetros (seção 3.9), **é nela que o dropout
 > costuma ser mais eficaz**.
 
-## 3.14 Funções de ativação
+## 3.12 Funções de ativação
 
 As mesmas da MLP: **ReLU, Sigmoid, Tangente hiperbólica, Softmax** (softmax na saída).
 
-## 3.15 Funções de perda (lista ampliada da CNN)
+## 3.13 Funções de perda (lista ampliada da CNN)
 
 | Função | Uso |
 |---|---|
@@ -1309,7 +1311,7 @@ As mesmas da MLP: **ReLU, Sigmoid, Tangente hiperbólica, Softmax** (softmax na 
 | **Categorical hinge** | Multiclasse; versão adaptada da *hinge* usada em classificação binária |
 | **Logcosh** | Regressão; combina erro logarítmico e hiperbólico, **menos sensível a outliers** |
 
-## 3.16 Otimizadores (lista ampliada da CNN)
+## 3.14 Otimizadores (lista ampliada da CNN)
 
 | Otimizador | Característica |
 |---|---|
@@ -1321,7 +1323,7 @@ As mesmas da MLP: **ReLU, Sigmoid, Tangente hiperbólica, Softmax** (softmax na 
 | **Adamax** | Variante do Adam com norma infinita (em vez de L2); bom quando a escala dos gradientes varia muito |
 | **Nadam** | Nesterov Accelerated Gradient + Adam; bom com **gradientes esparsos** |
 
-## 3.17 Métricas de desempenho
+## 3.15 Métricas de desempenho
 
 | Métrica | Quando usar |
 |---|---|
@@ -1329,7 +1331,7 @@ As mesmas da MLP: **ReLU, Sigmoid, Tangente hiperbólica, Softmax** (softmax na 
 | **MSE** | **Regressão** — média dos quadrados das diferenças; quanto menor, melhor |
 | **MAE** | **Regressão** — média das diferenças absolutas; magnitude média do erro |
 
-## 3.18 Épocas e tamanho do lote (*batch size*)
+## 3.16 Épocas e tamanho do lote (*batch size*) 
 
 | Conceito | Definição | Trade-off |
 |---|---|---|
