@@ -90,12 +90,26 @@ tinta mais forte para ser legível. O mapeamento continua monotônico em σ, que
 ## Conteúdo e números de cada figura
 
 ### `cnn_canal_filtro_kernel.png`
-Feita para resolver a confusão entre os quatro termos da unidade 03. Três painéis: (1) as palavras
-**encaixadas** — uma camada contém filtros, um filtro contém um kernel por canal de entrada, e cada
-filtro produz um mapa; (2) como um filtro devolve **um** número, com os três canais somados pela
-profundidade; (3) o pipeline do MNIST camada a camada, com os shapes e os parâmetros reais (320,
-18.496, 206.218), deixando explícito que a profundidade de cada volume é o número de filtros da
-camada que o produziu, e é ela que define quantos kernels o próximo filtro precisa ter.
+Feita para resolver a confusão entre os quatro termos da unidade 03. **Os painéis 1 e 2 foram
+refeitos a pedido do utilizador**, usando `foto.png` (um retrato dele) convoluída **de verdade**: os
+mapas mostrados são saídas reais de convolução, não desenhos esquemáticos. O script carrega a foto
+em escala de cinza, reduz para 150×200 e aplica os kernels com uma convolução 2D escrita à mão.
+
+- **Painel 1 — camada 1:** entrada de **1 canal** e **3 filtros**. A foto aparece dividida em
+  regiões, com uma janela 3×3 destacada e ampliada mostrando os 9 valores de pixel. Os 3 kernels
+  são Sobel vertical, Sobel horizontal e laplaciano, e os 3 mapas resultantes mostram
+  respectivamente bordas verticais, horizontais e contornos. O ponto pedagógico: **com 1 canal, cada
+  filtro tem 1 kernel só, e aí filtro e kernel são a mesma coisa.**
+- **Painel 2 — camada 2:** os 3 mapas anteriores viram **3 canais de entrada**, e a camada tem
+  **6 filtros**. Um filtro é aberto para mostrar seus 3 kernels, um por canal, convergindo para
+  `Σ + b`. O ponto pedagógico: **é aqui que filtro e kernel deixam de ser a mesma coisa.** Fecha com
+  a conta: 6 × 3 = 18 kernels, e (3×3×3 + 1) × 6 = 168 parâmetros.
+- **Painel 3:** o pipeline do MNIST camada a camada, com os shapes e os parâmetros reais (320,
+  18.496, 206.218). Mantido como estava, a pedido do utilizador.
+
+> A escolha de 1 canal na camada 1 e 3 canais na camada 2 foi do utilizador, e é melhor que a versão
+> anterior: mostra a progressão em que a distinção entre filtro e kernel **aparece**, em vez de
+> apresentá-la já pronta.
 
 ### `arquitetura_rnc.png`
 Grade 4×4 em perspectiva, vencedor e vizinhos coloridos por distância na grade, e o nó de bias

@@ -1,6 +1,5 @@
-* na seção "3.8 Como os pesos do filtro são ajustados — weight sharing na prática" da unidade 03, faltou representar o a matriz w no diagrama.
-* A UNIDADE 03 — Rede Neural Convolucional (CNN), esta confusa para entender o que é canal, filtro e kernel, e como esses termos se relacionam, organize a unidade 3 inteira para ficar mais facil o entendimento, e ficar coerente e coesa, os tópicos estão em uma ordem que dificuta o entendimento. Depois da reorganização, verifique se os conceitos estão espalhados entre as diversas seções, e deixe cada conteudo em sua devida seção. faça uma ilustração para facilitar a compreensão de como esses termos se relacionam, e para demostrar como é gerado os mapas de características, camada a camada.
 
-
-
+* nA UNIDADE 03 — Rede Neural Convolucional (CNN):
+A ilustração @C:\Users\marcos\Documents\GitHub\PUC\23-Redes Neurais\cnn_canal_filtro_kernel.png ainda esta meio confusa, a parte 3. camada a camada ficou boa, mas a parte 1 e 2 esta confusa, melhore.
+Use a foto @C:\Users\marcos\Documents\GitHub\PUC\23-Redes Neurais\foto.png como exemplo de imagem a ser convulocionada, divida a imagen em regioes, na primeira camada tera um canal e 3 filtros, na segunda camada, tera 6 filtros.
 
