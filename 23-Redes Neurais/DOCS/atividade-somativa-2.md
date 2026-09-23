@@ -128,12 +128,68 @@ isso, soltar as relações de imagem e as de `customXml` do template (o `python-
 partes `customXml/itemN.xml` mas mantém as relações, deixando 4 referências órfãs) derrubou o
 arquivo de 1.631 KB para 983 KB.
 
+## Post do LinkedIn
+
+[`post_linkedin.md`](../atividade_2/post_linkedin.md) (versão longa e curta) e
+[`post_linkedin_leakage.png`](../atividade_2/post_linkedin_leakage.png) (1080×1350, proporção 4:5).
+Script gerador: `imagem_post_s8.py`, no scratchpad.
+
+**Avaliação pedida pelo utilizador:** o trabalho em si não rende post (ajustar hiperparâmetros é o
+que todo estudante faz, e criticar os bugs do código da disciplina em público pega mal). Rendem dois
+achados: o target leakage do CO₂ e a LSTM contra o preditor trivial. Os dois têm a mesma tese, então
+viraram **um** post só, aberto pelo conceito de target leakage a pedido do utilizador.
+
+### A investigação foi além do que estava no relatório
+
+Ao montar a imagem, o histograma do produto `eficiência × CO₂` revelou que **não é um valor, são
+dois**:
+
+| faixa | veículos | produto medido | fator oficial EPA |
+|---|---|---|---|
+| gasolina | 33.597 (88,5%) | **2.347,7 g/L** | **2.347,7 g/L** (8.887 g/galão) |
+| diesel | 971 (2,6%) | **2.689,6 g/L** | **2.689,3 g/L** (10.180 g/galão) |
+
+A gasolina bate em quatro casas significativas. As duas faixas cobrem 91% da base. E os modelos da
+faixa do diesel são VW Jetta, Golf e New Beetle, picapes Chevrolet/GMC e Isuzu Pickup, todos com
+versão a diesel, o que corrobora a leitura.
+
+A média geral de 2.353,8 que constava do relatório era a mistura dos dois combustíveis. O valor
+limpo da gasolina é 2.347,7.
+
+### Fonte confirmada
+
+[EPA, Greenhouse Gas Emissions from a Typical Passenger Vehicle](https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle).
+O fator de 8.887 g CO₂ por galão foi fixado no rulemaking conjunto EPA/DOT de 7 de maio de 2010. A
+página afirma que a EPA e as montadoras medem economia de combustível em testes padronizados de
+laboratório e **derivam** o CO₂ dali, em vez de medir o escapamento. Isso confirma por documentação
+o que antes era inferência estatística.
+
+## Estilo do `.docx`, a pedido do utilizador
+
+O primeiro `.docx` saiu longo demais e com cara de texto de LLM. Refeito com dois critérios:
+
+- **Mais curto e mais direto**, no registo de um aluno de tecnólogo. De 17 para **14 páginas** e
+  2.959 palavras. Cortes: diagnósticos viraram lista de tópicos, parágrafos de análise foram
+  fundidos, e as duas tabelas de observações do código viraram uma só. As figuras passaram de
+  6,69 para 5,9 pol de largura.
+- **Sem travessão (`—`) no corpo**, que é uma marca registada de texto gerado. Substituído por
+  vírgula, dois-pontos ou ponto, reescrevendo a frase quando preciso. Os títulos dentro das
+  próprias figuras também foram refeitos (`Cilindrada × Eficiência (3 neurônios, ...)` em vez de
+  `... — 3 neurônios`), e os números passaram a usar vírgula decimal. O único traço longo que
+  sobrou é o `–` das legendas de figura, que é o padrão do próprio template.
+
+Confirmado por busca no documento: zero ocorrências de `—`. Evitar também construções como
+"Registre-se que", "Vale observar", "A leitura correta é", que davam o mesmo tom.
+
+**O markdown [`relatorio-atividade-somativa-2.md`](../atividade_2/relatorio-atividade-somativa-2.md)
+não foi alterado** e continua na versão longa, com travessões. O pedido foi só sobre o `.docx`.
+
 ## Outras decisões
 
 - **Figuras separadas no `.docx`.** As figuras combinadas (3 painéis numa linha) ficam legíveis na
-  tela, mas comprimidas nos 6,69 pol úteis do A4 os rótulos somem. O `.docx` usa cinco figuras
-  individuais, em [../atividade_2/figuras/](../atividade_2/figuras/), numeradas como no enunciado.
-  O markdown continua com as combinadas.
+  tela, mas comprimidas na página A4 os rótulos somem. O `.docx` usa cinco figuras individuais, em
+  [../atividade_2/figuras/](../atividade_2/figuras/), numeradas como no enunciado. O markdown
+  continua com as combinadas.
 - **O `.docx` parte do próprio template**, o que preserva estilos, margens, cabeçalho com o brasão,
   rodapé e numeração de página da PUCPR.
 - **"Nome completo:" ficou em branco** na capa, para o utilizador preencher.
