@@ -20,6 +20,8 @@ python -c "import docx,sys; open(sys.argv[2],'w',encoding='utf-8').write('\n'.jo
 
 ## Onde está cada conceito
 
+O resumo de estudo das 8 unidades fica em [resumo.md](resumo.md). Ele não cobre as atividades formativas. O estado da sessão fica em [CONTEXTO.md](CONTEXTO.md).
+
 | Unidade | Conceitos |
 |---|---|
 | 1 | O que é um SE (ou SBC), quando ele é a escolha certa, ética |

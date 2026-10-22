@@ -31,7 +31,7 @@ python -c "import pypdf,sys; open(sys.argv[2],'w',encoding='utf-8').write('\n===
 | [guia.pdf](guia.pdf) | Etapas oficiais (Definição → Planejamento → Execução) em checklist; o tempo de planejamento conta na carga horária |
 | [critérios avaliativos das praticas extensionistas.pdf](crit%C3%A9rios%20avaliativos%20das%20praticas%20extensionistas.pdf) | Os 11 critérios do tutor: aderência, impacto, presencialidade, ODS/ESG, experiência, tipo, postagem, qualidade, alinhamento, evidências, documentos |
 | [como registrar suas práticas extensionistas.pdf](como%20registrar%20suas%20pr%C3%A1ticas%20extensionistas.pdf) | Evidências obrigatórias e complementares. Produto digital exige gravação de tela, mas isso não substitui foto do estudante junto à comunidade |
-| [Calculadora.pdf](Calculadora.pdf) | Estado atual do usuário: **224 h** de extensão no total; planejados Formação (30 h) + 1 Projeto (100 h, harness de LLM local numa startup) |
+| [Calculadora.pdf](Calculadora.pdf) | **224 h** de extensão no total. O PDF ainda mostra 1 Projeto. O plano atual é Formação (30 h) + 2 Prestações de serviços de 100 h cada, detalhadas em [DOCS/](DOCS/) |
 | [documentação/](documenta%C3%A7%C3%A3o/) | Modelos em branco: Carta de apresentação + Termo de aceite (já emitidos em nome do usuário), Atestado de matrícula, TCLE, Termo de uso de imagem, Feedback da comunidade |
 
 ## Regras que toda proposta precisa cumprir
