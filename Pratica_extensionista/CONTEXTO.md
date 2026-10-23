@@ -1,7 +1,7 @@
 # CONTEXTO DA SESSÃO
 
-- **Última atualização:** 2026-10-14 20:36
-- **Sessão nº:** 2
+- **Última atualização:** 2026-10-22
+- **Sessão nº:** 3
 - **Status geral:** em andamento
 
 ## 1. Objetivo da tarefa
@@ -16,8 +16,11 @@ Planejar e documentar as práticas extensionistas do curso Tecnologia em IA Apli
 - A Carta de apresentação e o Termo de aceite já foram emitidos e estão em [documentação/](documenta%C3%A7%C3%A3o/). Esse Termo serve para uma prática só, então a segunda vai precisar de outro.
 
 ## 3. Em andamento 🔧
-- Nenhuma tarefa ficou pela metade.
-- Próximo passo imediato: o usuário atualizar a Calculadora, mudando a prática do harness para Prestação de serviços (com a nova descrição) e cadastrando a prestação do AGV.
+- **2026-10-22:** o tutor recusou a descrição do harness na Calculadora por ser genérica (atividades, comunidade, interação e presencialidade). Uma versão revisada, com campos entre colchetes para preencher, está em [DOCS/prestacao-1-harness-llm.md](DOCS/prestacao-1-harness-llm.md). O usuário precisa preenchê-la e reenviar. **A postagem tem no máximo 3 tentativas.**
+- **Outras ideias avaliadas:**
+  - **Robô que segue pessoa (AMR, ROS 2):** descartado como extensão, porque é tarefa do emprego do usuário.
+  - **KPIs dos logs do robô:** só serve se não for tarefa do emprego.
+  - **Chatbot para a ArtSolar (energia solar e projetos elétricos):** o melhor candidato a substituir o AGV. Seria Prestação de serviços, ODS 7, meta 7.2, com base no AtendeBot de [19-Agentes Conversacionais](../19-Agentes%20Conversacionais/). O plano completo está em [DOCS/prestacao-3-chatbot-artsolar.md](DOCS/prestacao-3-chatbot-artsolar.md).
 
 ## 4. Próximos passos (planejado) 📋
 1. **Na Calculadora** (feito pelo usuário):
@@ -46,6 +49,10 @@ Planejar e documentar as práticas extensionistas do curso Tecnologia em IA Apli
 
 ## 7. Bloqueios e pendências ⚠️
 - **Harness, dados da startup:** área de atuação, número de funcionários, gasto mensal com assinaturas de IA e hardware.
+- **Chatbot (ArtSolar):**
+  - dados para a descrição: cidade, tamanho da equipe e contatos por mês;
+  - plataforma do site;
+  - confirmar que o usuário não é sócio nem funcionário da empresa.
 - **AGV, elegibilidade:**
   - em que empresa fica o AGV;
   - se é o local de trabalho do usuário;

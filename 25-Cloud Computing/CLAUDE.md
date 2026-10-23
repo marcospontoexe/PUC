@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Visão geral
 
-Pasta do repositório `PUC` (github.com/marcospontoexe/PUC) com o material da disciplina **Cloud Computing** (PUCPR EAD). Há os PDFs das 8 unidades e o resumo de estudo [resumo.md](resumo.md). Não há código, build, testes nem entregas de atividades. Escrever sempre em pt-BR. O estado da sessão fica em [CONTEXTO.md](CONTEXTO.md).
+Pasta do repositório `PUC` (github.com/marcospontoexe/PUC) com o material da disciplina **Cloud Computing** (PUCPR EAD). Há os PDFs das 8 unidades, o resumo de estudo [resumo.md](resumo.md) e a pasta [atividade forrmativa/](atividade%20forrmativa/) (o nome tem "rr" mesmo). Nela, cada atividade é um `.md` com o enunciado em "# Proposta" e a resposta em "# Solução". Não há código, build nem testes. Escrever sempre em pt-BR. O estado da sessão fica em [CONTEXTO.md](CONTEXTO.md).
 
 No [resumo.md](resumo.md), o que não está nos PDFs fica marcado como **Nota do resumo**. Mantenha essa marcação ao editar, para separar o conteúdo da disciplina dos complementos.
 
@@ -21,10 +21,9 @@ python -c "import pypdf,sys; open(sys.argv[2],'w',encoding='utf-8').write('\n===
 
 - Boa parte do conteúdo é imagem: capturas do portal do Azure (marcadas com `#ParaTodosVerem`) e diagramas. Para vê-las, use Read com `pages`, um intervalo por chamada (ex.: `"3-4"`).
 - Os vídeos não estão nos PDFs. Nas Unidades 4 a 7, o passo a passo prático está quase todo neles, e o PDF traz só o título (`Vídeo 01/14 – Criação da VM`) e uma ou duas frases. Por isso a Unidade 4 tem 53 páginas e pouco texto.
-- Os visualizadores embutidos (Canva/PDF) foram capturados cortados, e o texto deles não sai na extração:
-  - Unidade 2, p. 10, "Nuvem, estrutura local e nuvem privada": só o Exemplo 1 (nuvem pública) aparece inteiro. O Exemplo 2 (on-premises) é cortado no meio e o seguinte não aparece.
-  - Unidade 2, p. 12, glossário: os cartões de nuvem privada, nuvem pública e servidores locais são legíveis. O cartão verde (pelo contexto, nuvem híbrida) e o de infraestrutura de nuvem saem cortados na lateral.
-  - Unidade 3, p. 20, infográfico "Do que preciso saber para provisionar serviços na nuvem?": está cortado, mas as mesmas perguntas estão em texto nas pp. 15–18.
+- Os infográficos (Canva/PDF) são imagens, e o texto deles não sai na extração:
+  - Unidade 2, pp. 10 e 12 ("Nuvem, estrutura local e nuvem privada" e o glossário): o PDF atual, reexportado em 22/10, mostra os dois inteiros. Na p. 10, o zoom de 37% deixa a letra miúda. Para ler, extraia a imagem embutida com `pypdf` (`page.images`), recorte o infográfico (na imagem de 806 px, ele fica entre x ≈ 228 e 527) e amplie 3x com o PIL.
+  - Unidade 3, p. 20, infográfico "Do que preciso saber para provisionar serviços na nuvem?": é uma captura cortada. A versão completa, com as 15 perguntas em 2 páginas, está no [PDF 3.1](3.1-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf), cujo texto sai na extração.
 
 ## Onde está cada conceito
 
@@ -33,6 +32,7 @@ python -c "import pypdf,sys; open(sys.argv[2],'w',encoding='utf-8').write('\n===
 | [1](1-A%20nuvem%20que%20%C3%A9%20feita%20de...%20bits%20e%20bytes.pdf) | 14 | Por que usar nuvem; IaaS, PaaS e SaaS (FaaS e CaaS só citados); exercício com 6 situações e gabarito |
 | [2](2-TIC%20na%20ess%C3%AAncia%20da%20nuvem.pdf) | 16 | TIC e nuvem; portal do Azure; região (custo × latência × LGPD/GDPR); licença própria; nuvem pública, privada, híbrida e servidores locais; multicloud; case de agronegócio |
 | [3](3-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf) | 33 | Provisionar VM: região, imagem (licença Windows custa mais), x64 × Arm64; perguntas de levantamento; séries de VM e IOPS; abordagens de sizing; grupo de recursos; exercício do sistema de crédito |
+| [3.1](3.1-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf) | 2 | Infográfico completo da Unidade 3: ficha com as 15 perguntas de levantamento para provisionar na nuvem |
 | [4](4-sistema%20l%C3%A1%20na%20nuvem.pdf) | 53 | Prática: duas VMs Linux (chave `.pem`, IP privado × público, ping/telnet), Banco de Dados SQL e firewall, Aplicativo de Funções (plano de consumo, gatilho HTTP), Aplicativo Web (CI/CD com GitHub, FTP) |
 | [5](5-Gerenciar%20o%20gerenciamento%20e%20monitorar%20o%20monitoramento.pdf) | 18 | Monitoramento: interface de rede e IP público, alertas, métricas (diagnóstico e planejamento), desligamento automático de dev/homologação, plano de ação × plano de contingência, gestão à vista; quiz de 4 questões |
 | [6](6-Protegendo%20seus%20custos%20com%20firewall%20e%20login.pdf) | 20 | Segurança × custo: WAF global (Front Door) × regional (Application Gateway), modo detecção × prevenção (HTTP 403), Gateway de Aplicativo |

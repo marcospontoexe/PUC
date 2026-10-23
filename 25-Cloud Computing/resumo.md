@@ -14,8 +14,8 @@ Resumo de estudo das 8 unidades da disciplina **Cloud Computing** (PUCPR EAD). E
 |---|---|---|
 | — | [A ideia central da disciplina](#a-ideia-central-da-disciplina) | — |
 | 1 | [A nuvem e os modelos de serviço](#unidade-1-a-nuvem-e-os-modelos-de-serviço) | [PDF](1-A%20nuvem%20que%20%C3%A9%20feita%20de...%20bits%20e%20bytes.pdf) |
-| 2 | [TIC, Azure e tipos de nuvem](#unidade-2-tic-azure-e-tipos-de-nuvem) | [PDF](2-TIC%20na%20ess%C3%AAncia%20da%20nuvem.pdf) |
-| 3 | [Provisionamento e dimensionamento](#unidade-3-provisionamento-e-dimensionamento) | [PDF](3-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf) |
+| 2 | [TIC, Azure e tipos de nuvem](#unidade-2-tic-tecnologia-da-informação-e-comunicação-azure-e-tipos-de-nuvem) | [PDF](2-TIC%20na%20ess%C3%AAncia%20da%20nuvem.pdf) |
+| 3 | [Provisionamento e dimensionamento](#unidade-3-provisionamento-e-dimensionamento) | [PDF](3-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf) e [infográfico](3.1-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf) |
 | 4 | [O sistema na nuvem (prática no Azure)](#unidade-4-o-sistema-na-nuvem-prática-no-azure) | [PDF](4-sistema%20l%C3%A1%20na%20nuvem.pdf) |
 | 5 | [Gerenciamento e monitoramento](#unidade-5-gerenciamento-e-monitoramento) | [PDF](5-Gerenciar%20o%20gerenciamento%20e%20monitorar%20o%20monitoramento.pdf) |
 | 6 | [Segurança com WAF e o custo dela](#unidade-6-segurança-com-waf-e-o-custo-dela) | [PDF](6-Protegendo%20seus%20custos%20com%20firewall%20e%20login.pdf) |
@@ -160,21 +160,29 @@ Exemplo de latência do material: dois sistemas, um em VM no Brasil e outro em V
 
 Algumas empresas adotam uma **estratégia híbrida**, com recursos na nuvem, recursos em servidores locais (físicos) e até uma nuvem privada. Os motivos podem ser a LGPD, a latência, os custos ou sistemas que precisam estar no local, como os de maquinário industrial. A escolha depende da estratégia da empresa junto com o time de TI.
 
-**Glossário da aula** (montado a partir do infográfico da p. 12, que está parcialmente cortado no PDF):
+**Glossário da aula** (infográfico da p. 12):
 
 | Termo | Definição |
 |---|---|
 | **Nuvem pública** | Serviços de computação oferecidos pela internet, que qualquer usuário que conheça a localização do serviço pode acessar. Recursos escaláveis e sob demanda, em geral pagos conforme o uso |
 | **Nuvem privada** | Infraestrutura de nuvem operada **exclusivamente para uma única organização**, gerenciada por ela ou por terceiros e hospedada internamente ou fora. Dá mais controle sobre dados e recursos; é indicada para quem precisa de muita segurança e privacidade. A empresa vira "provedora de nuvem" só para si, sem comercializar |
-| **Nuvem híbrida** | Combinação de nuvem pública com servidores locais e/ou nuvem privada. O cartão do infográfico está cortado; esta definição vem do texto da unidade |
+| **Nuvem híbrida** | **Combinação de nuvens públicas e privadas que operam de forma integrada**, de modo que dados e aplicativos são compartilhados entre elas. Dá mais flexibilidade e mais opções de implantação: a organização ajusta a TI a cada demanda. O texto da unidade usa o termo de forma mais ampla e inclui também os servidores locais na combinação |
 | **Servidores locais** (*on-premises*) | Computadores de alta capacidade que fornecem serviços, arquivos ou aplicações a uma rede local (LAN): e-mail, hospedagem de sites, firewall, proxy, impressão, banco de dados, controlador de domínio |
-| **Infraestrutura de nuvem** | Os componentes de hardware e software usados para fornecer nuvem pela internet: servidores, armazenamento, equipamentos de rede e virtualização. É o que permite ao provedor oferecer recursos escaláveis e sob demanda |
+| **Infraestrutura de nuvem** | Os **componentes de hardware e software** usados para fornecer nuvem pela internet: servidores, armazenamento, equipamentos de rede e tecnologias de virtualização. É o que permite ao provedor oferecer recursos escaláveis e sob demanda |
 
-**Como escolher** (infográfico da p. 10, também cortado no PDF):
+### Como escolher: nuvem pública, infraestrutura local ou nuvem privada
 
-- **Nuvem pública:** é o exemplo de uma startup que precisa escalar rápido. Os critérios são custo e escalabilidade, mais um investimento inicial menor, já que se paga só pelo uso. Em troca, há menos controle e menos personalização da segurança, porque o provedor gerencia o hardware e a rede.
-- **Infraestrutura local:** é o exemplo de uma grande empresa financeira, como um banco, com dados confidenciais e regulados. O critério é o controle total sobre infraestrutura, dados e segurança, e a conformidade com as normas locais.
-- **Nuvem privada:** o terceiro exemplo não aparece no PDF.
+O infográfico da p. 10 compara as três opções com um exemplo cada. A decisão depende de custo, segurança, controle e flexibilidade.
+
+| | **Nuvem pública** | **Infraestrutura local** (*on-premises*) | **Nuvem privada** |
+|---|---|---|---|
+| **Quem escolhe** | Uma *startup* de tecnologia que precisa escalar rápido e com flexibilidade | Uma grande empresa financeira, como um banco, com dados altamente confidenciais e regulados | Uma multinacional que precisa de mais controle e segurança do que a nuvem pública oferece, mas não quer lidar com a complexidade de manter uma infraestrutura local |
+| **Exemplo de solução** | Serviços de IaaS da AWS, do Google Cloud ou do Azure, pagando só pelo uso | Manter os próprios servidores na empresa | IBM Cloud Private ou Microsoft Azure Stack, que criam um ambiente de nuvem privada **dentro do data center da empresa** |
+| **Critério 1** | **Custo e escalabilidade:** escalar recursos rapidamente conforme a demanda, sem grandes investimentos em infraestrutura | **Controle total** sobre infraestrutura, dados e segurança | **Segurança e controle com mais flexibilidade:** o controle de uma infraestrutura local com a flexibilidade e a escalabilidade de uma nuvem pública |
+| **Critério 2** | **Menor investimento inicial:** paga-se só pelo uso, sem comprar servidores | **Segurança e conformidade:** dados sensíveis ou regulamentados (financeiros, de saúde) ficam no local para cumprir LGPD, GDPR ou normas do setor | **Requisitos muito específicos** das cargas de trabalho, como alto nível de personalização em segurança e redes |
+| **Considerações** | Menos controle sobre a infraestrutura e menos personalização da segurança, porque o provedor cuida do hardware e da rede | Investimentos altos em hardware, manutenção e pessoal especializado, e mais responsabilidade pela gestão e pela segurança | Exige investimento inicial em hardware e pessoal, mas dá mais controle sobre segurança e personalização. Junta os benefícios da nuvem com os controles da infraestrutura local |
+
+Repare na progressão: a nuvem pública dá o máximo de flexibilidade com o mínimo de controle, a infraestrutura local dá o máximo de controle com o máximo de responsabilidade, e a nuvem privada fica no meio.
 
 ### Case: transformação digital no agronegócio
 
@@ -209,6 +217,12 @@ Dá para usar um recurso do Azure integrado a outro da AWS, conforme o caso. Com
 <summary>2. Qual a diferença entre nuvem privada e servidores locais?</summary>
 
 Servidores locais são máquinas físicas que atendem a rede local. A nuvem privada é uma *infraestrutura de nuvem* (com virtualização, recursos sob demanda etc.) operada só para uma organização; pode estar no prédio da empresa ou fora dele.
+</details>
+
+<details>
+<summary>3. Uma multinacional quer mais controle e segurança do que a nuvem pública oferece, mas não quer a complexidade de manter infraestrutura local. Qual opção, e qual o custo dela?</summary>
+
+**Nuvem privada** (ex.: Microsoft Azure Stack ou IBM Cloud Private no data center da empresa). Ela dá o controle da infraestrutura local com a flexibilidade da nuvem, mas exige investimento inicial em hardware e pessoal.
 </details>
 
 ---
@@ -292,24 +306,27 @@ Escolha o SO e a versão com o time de desenvolvimento. A pegadinha é a **licen
 
 ### As perguntas de levantamento
 
-Antes de dimensionar, responda (pp. 15–18; a lista também está no infográfico "Do que preciso saber para provisionar serviços na nuvem?"):
+Antes de dimensionar, responda a estas perguntas. Elas são explicadas no texto (pp. 15–18) e reunidas no infográfico **"Do que preciso saber para provisionar serviços na nuvem?"** ([PDF 3.1](3.1-Provisionando%20na%20nuvem%20o%20provisionamento%20do%20papel.pdf)). O infográfico é uma **ficha para preencher**, com um espaço de anotação ao lado de cada pergunta. O material avisa que essas perguntas são importantes para resolver as atividades da disciplina: use a ficha como checklist sempre que for planejar um projeto.
 
-| Tema | Pergunta | Por que importa |
-|---|---|---|
-| Quantidade de usuários | Quantos usuários simultâneos diários, em média? | Base do dimensionamento |
-| Pico de acessos | Qual o pico de usuários simultâneos? | A infraestrutura precisa aguentar o pico |
-| Tempo de aplicação | Quanto tempo leva cada etapa do fluxo? | Dimensiona o processamento |
-| Processamento | O que roda no front, no back e no banco? | As VMs não precisam ser iguais. Se o peso está no banco, front e back podem ser mais simples |
-| Funcionamento | O sistema é crítico, 24 h, ou só em horário comercial? | Define se precisa de redundância e de plano de *disaster recovery* |
-| Síncrono × assíncrono | Que funções podem rodar em segundo plano? | Ex.: "Vamos processar o seu crédito e avisaremos". Pode justificar uma VM de back-end só para a análise (conceito de **mensageria**) |
-| Big data / BI | Haverá consultas pesadas, como detecção de fraude? | Podem derrubar a aplicação no horário de uso |
-| Integrações | Outros sistemas vão consultar dados por API? | APIs consomem recursos das VMs |
-| Balanceamento de carga | Uma VM de front-end aguenta? | Várias cópias atrás de um **balanceador de carga** dão escalabilidade |
-| Cache | Precisa de cache para o banco ou para as páginas? | Cache na nuvem é caro, porque usa memória rápida |
-| Segurança | A aplicação é exposta ao público? | Colocar um **WAF** na frente |
-| Resiliência | Se cair no meio da execução, precisa retomar de onde parou? | Às vezes "deu erro, tente novamente" basta. Resiliência exige boa programação |
-| Autenticação | Login próprio para clientes? **SSO** (ex.: Active Directory) para atendentes? | Muda a arquitetura |
-| Permissões | Controle feito na aplicação ou pelo **IAM** do provedor? | Recursos de IAM precisam ser integrados à arquitetura |
+A tabela segue a ordem do infográfico (15 perguntas, sendo 7 na primeira página e 8 na segunda):
+
+| # | Tema | Pergunta | Por que importa |
+|---|---|---|---|
+| 1 | Quantidade de usuários | Quantos usuários simultâneos diários acessarão a aplicação? | É a base do dimensionamento |
+| 2 | Pico de acessos | Qual o pico de usuários simultâneos diários? | A infraestrutura precisa aguentar o pico, não só a média |
+| 3 | Tempo de aplicação | Quanto tempo levará cada etapa do fluxo da aplicação? | Mostra onde está o processamento pesado. Ex.: no caminho feliz, quanto demora do cadastro até a entrega do contrato? |
+| 4 | Processamento | O que será processado pelo front-end, pelo back-end ou pelo banco de dados? | As VMs não precisam ser iguais. Se o peso está no banco, front e back podem ser mais simples e a VM do banco mais robusta |
+| 5 | Funcionamento do sistema | O sistema é crítico e precisa funcionar 24 horas por dia? | Define se é preciso redundância e um plano de *disaster recovery*, ou se basta o horário comercial |
+| 6 | Funcionalidades síncronas e assíncronas | Quais funcionalidades serão síncronas e quais serão assíncronas? | Ex.: "Agora vamos processar o seu crédito. Avisaremos quando terminar." Pode justificar uma VM de back-end só para a análise (conceito de **mensageria**) |
+| 7 | *Big data* | Terá alguma aplicação de *big data*? | Consultas pesadas de BI, como a detecção de fraude, podem derrubar a aplicação no horário de uso e exigir um banco mais forte |
+| 8 | Integrações | Outro sistema precisará consultar dados da minha aplicação? | APIs para outros sistemas consomem recursos das VMs |
+| 9 | VMs | Quantas VMs de front-end serão necessárias para aguentar os acessos à aplicação? | Uma VM só pode não dar conta de milhares de clientes |
+| 10 | Balanceador de carga | É necessário ter cópias da VM de front-end e colocar um balanceador de carga na frente? | O balanceador manda cada usuário para a VM menos ocupada. Com cópias, dá para crescer só acrescentando VMs (**escalabilidade**) |
+| 11 | *Cache* | É necessário algum mecanismo de *cache* para otimizar o banco de dados ou as páginas web? | *Cache* na nuvem é caro, porque usa memória de alta performance |
+| 12 | Segurança | É preciso algum mecanismo de segurança inicial para evitar ataques cibernéticos? | Para aplicação exposta ao público, o comum é colocar um **WAF** na frente |
+| 13 | Resiliência | Tem alguma funcionalidade que precisa ser resiliente? | Se cair no meio da execução, precisa retomar de onde parou, ou basta "deu erro, tente novamente"? Resiliência exige boa programação e pode pedir outros recursos |
+| 14 | Autenticação | Como clientes e atendentes vão se autenticar na aplicação? | Ex.: login e senha próprios para clientes e **SSO** da empresa (Active Directory) para atendentes. Muda a arquitetura |
+| 15 | Controle das permissões | Como controlar o que cada usuário poderá ver e executar na aplicação? | Pela própria aplicação ou pelo **IAM** do provedor, que precisa ser integrado à arquitetura |
 
 **Escalabilidade automática:** dá para configurar regras como "se todas as VMs passarem de 70% de CPU ou memória, crie mais uma; se todas ficarem abaixo de 30%, desligue uma ou mais". Escalar o **banco** é mais difícil, porque os dados precisam ser espelhados em tempo real entre as VMs, e isso é caro. Além disso, escalabilidade depende também da **aplicação**: ela precisa ter sido feita para escalar.
 
@@ -871,7 +888,7 @@ As lições de custo espalhadas pelas 8 unidades, reunidas para revisão:
 | **LGPD / GDPR** | Leis de proteção de dados do Brasil e da União Europeia | 2, 6 |
 | **Mensageria** | Troca de mensagens entre sistemas para processamento assíncrono (ex.: Kafka) | 3, 4, 7 |
 | **Métrica** | Série histórica do uso de um recurso (CPU, memória, rede) | 5 |
-| **Nuvem pública / privada / híbrida** | Aberta a qualquer cliente / exclusiva de uma organização / combinação com servidores locais | 2 |
+| **Nuvem pública / privada / híbrida** | Aberta a qualquer cliente / exclusiva de uma organização / nuvens públicas e privadas integradas, compartilhando dados e aplicativos | 2 |
 | **Plano de ação** | O que fazer quando um alerta dispara, com tempo estimado e prioridade | 5 |
 | **Plano de contingência** | Como manter o negócio funcionando, inclusive de forma manual, durante a falha | 5, 7 |
 | **Redundância** | Ter mais de uma cópia do recurso, para uma assumir se a outra cair | 7 |

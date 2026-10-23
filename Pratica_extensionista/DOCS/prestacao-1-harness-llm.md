@@ -4,7 +4,15 @@ Prática do tipo **Prestação de serviços**. Até 2026-10-14 ela estava regist
 
 Fontes das regras: [guia.pdf](../guia.pdf), [critérios avaliativos](../crit%C3%A9rios%20avaliativos%20das%20praticas%20extensionistas.pdf), [como registrar](../como%20registrar%20suas%20pr%C3%A1ticas%20extensionistas.pdf) e o [exemplo de Prestação de serviços](../Exemplos%20de%20Pr%C3%A1ticas/Exemplo_PraticasExtensionistas_Prestacao_Servicos_3.pdf).
 
-## Descrição para a Calculadora (493 caracteres)
+## Descrição para a Calculadora
+
+**Feedback do tutor (2026-10-22) sobre a versão anterior:** "potencial de execução e relação com a área de formação, porém contém informações insuficientes, genéricas ou pouco detalhadas sobre as atividades, a comunidade beneficiada, a interação proposta ou a presencialidade". A postagem do planejamento tem no máximo 3 tentativas.
+
+Versão revisada. Tem cerca de 486 caracteres com valores de exemplo; o usuário substitui os colchetes pelos dados reais:
+
+> Na startup [Nome Ltda], de [desenvolvimento de software], em [Curitiba], os [8] funcionários gastam R$ [900]/mês com assinaturas de IA. Em 4 visitas presenciais vou: 1) entrevistar a equipe para mapear as tarefas que usam IA; 2) instalar no computador da empresa um harness que roda um LLM aberto, testado nessas tarefas; 3) dar uma oficina prática de uso aos funcionários; 4) apresentar a economia obtida e coletar o feedback. Meta: reduzir custos e manter os dados internos (ODS 8.2).
+
+Versão anterior, recusada:
 
 > Implantação de um modelo de linguagem aberto (LLM) em um computador local de uma startup, por meio de um harness: software que executa o modelo e o integra às ferramentas da equipe. A partir de um levantamento presencial das necessidades, o serviço vai comparar modelos abertos, instalar a solução e treinar os funcionários para usá-la. O objetivo é reduzir gastos com assinaturas mensais de IA, manter os dados da empresa em ambiente interno e otimizar o tempo dos projetos (ODS 8, meta 8.2).
 
